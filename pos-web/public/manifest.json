@@ -1,0 +1,51 @@
+{
+  "name": "Sistema POS — Miscelánea María José",
+  "short_name": "POS MJ",
+  "description": "Sistema de punto de venta completo con inventario, alquileres, seguros escolares y asistente Orion.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#0f172a",
+  "theme_color": "#6366f1",
+  "lang": "es-CO",
+  "categories": ["business", "productivity", "finance"],
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='80' fill='%236366f1'/><text y='340' x='60' font-size='360' font-family='serif'>🏪</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Caja POS",
+      "short_name": "POS",
+      "description": "Ir a la caja registradora",
+      "url": "/?tab=pos",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Inventario",
+      "short_name": "Inventario",
+      "description": "Gestionar productos e inventario",
+      "url": "/?tab=inventory",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Ventas del Día",
+      "short_name": "Ventas",
+      "description": "Ver historial de ventas",
+      "url": "/?tab=sales",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    }
+  ],
+  "screenshots": [],
+  "prefer_related_applications": false
+}

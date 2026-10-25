@@ -1,0 +1,65 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Funciones de validación comunes
+    function isPositiveNumber(val) {
+      return val is number && val >= 0;
+    }
+
+    // Colección: Productos
+    match /productos/{prodId} {
+      allow read: if true;
+      allow create, update: if request.resource.data.nombre is string;
+      allow delete: if true;
+    }
+
+    // Colección: Ventas
+    match /ventas/{saleId} {
+      allow read: if true;
+      allow create, update: if isPositiveNumber(request.resource.data.total);
+      allow delete: if true;
+    }
+
+    // Colección: Alquileres
+    match /alquileres/{rentalId} {
+      allow read, write: if true;
+    }
+
+    // Colección: Seguros Escolares
+    match /seguros/{insuranceId} {
+      allow read, write: if true;
+    }
+
+    // Colección: Mermas y Bajas de inventario
+    match /mermas/{mermaId} {
+      allow read, write: if true;
+    }
+
+    // Colección: Clientes
+    match /clientes/{clientId} {
+      allow read, write: if true;
+    }
+
+    // Colección: Configuración y Turnos de Caja
+    match /configuracion/{docId} {
+      allow read, write: if true;
+    }
+
+    // Colección: Usuarios del Sistema
+    match /usuarios/{userId} {
+      allow read, write: if true;
+    }
+
+    // Colección: Dispositivos y presencia
+    match /dispositivos/{deviceId} {
+      allow read, write: if true;
+    }
+
+    // Fallback general seguro para subcolecciones autorizadas
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}

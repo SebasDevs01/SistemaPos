@@ -22,8 +22,7 @@ import {
   DollarSign,
   Clock,
   Wifi,
-  WifiOff,
-  LayoutDashboard
+  WifiOff
 } from "lucide-react";
 import { getColombiaTimeInfo, isShiftOwner } from "../services/firestoreService";
 
@@ -62,7 +61,6 @@ export default function Header({
 
 
   const tabs = [
-    { id: "dashboard",  label: "Dashboard",     icon: <LayoutDashboard size={15} />, everyone: true },
     { id: "pos",        label: "Caja POS",      icon: <ShoppingCart size={15} />, everyone: true },
     { id: "inventory",  label: "Inventario",     icon: <Package size={15} />,      adminOnly: true },
     { id: "rentals",    label: "Alquiler",       icon: <Armchair size={15} />,     everyone: true,  alert: overdueRentalsCount },

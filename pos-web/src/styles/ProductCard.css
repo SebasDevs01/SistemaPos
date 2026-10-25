@@ -1,27 +1,29 @@
 .product-card {
   display: flex;
   flex-direction: column;
-  background: var(--card-bg);
-  border: 1px solid var(--card-border);
-  border-radius: 20px;
+  background: var(--ios-glass-card, rgba(18, 24, 38, 0.65));
+  backdrop-filter: var(--ios-blur-card);
+  -webkit-backdrop-filter: var(--ios-blur-card);
+  border: 1px solid var(--ios-glass-border, rgba(255, 255, 255, 0.08));
+  border-radius: var(--radius-lg, 18px);
   overflow: hidden;
-  box-shadow: var(--card-shadow);
-  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), 
-              box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-              border-color 0.25s ease;
+  box-shadow: var(--shadow-card);
+  transition: transform var(--transition-spring), 
+              box-shadow var(--transition-spring),
+              border-color var(--transition-smooth);
   position: relative;
   height: 100%;
 }
 
 .product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
-  border-color: rgba(220, 38, 38, 0.45);
+  transform: translateY(-3px) scale(1.01);
+  box-shadow: var(--shadow-floating);
+  border-color: var(--ios-glass-border-specular, rgba(255, 255, 255, 0.2));
 }
 
 .product-card.in-cart {
-  border: 2px solid #DC2626;
-  box-shadow: 0 0 18px rgba(220, 38, 38, 0.35);
+  border: 1.5px solid var(--ios-blue, #007AFF);
+  box-shadow: 0 0 20px rgba(0, 122, 255, 0.3);
 }
 
 .product-card.unavailable {

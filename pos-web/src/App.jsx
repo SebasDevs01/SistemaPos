@@ -23,7 +23,6 @@ const InsurancesView = lazy(() => import("./components/InsurancesView"));
 const UserManagementView = lazy(() => import("./components/UserManagementView"));
 const StoreConfigModal = lazy(() => import("./components/StoreConfigModal"));
 const CashRegisterModal = lazy(() => import("./components/CashRegisterModal"));
-const DashboardView = lazy(() => import("./components/DashboardView"));
 
 const TabLoadingFallback = () => (
   <div style={{
@@ -177,7 +176,7 @@ function loadStoredSession(availableUsers) {
   return null;
 }
 
-const VALID_TABS = ["dashboard", "pos", "inventory", "rentals", "insurances", "barcodes", "sales", "clients", "users"];
+const VALID_TABS = ["pos", "inventory", "rentals", "insurances", "barcodes", "sales", "clients", "users"];
 
 export default function App() {
   const [currentTab, setCurrentTab] = useState(() => {
@@ -1476,20 +1475,6 @@ export default function App() {
         )}
 
         <Suspense fallback={<TabLoadingFallback />}>
-          {currentTab === "dashboard" && (
-            <DashboardView
-              sales={sales}
-              products={products}
-              clients={clients}
-              rentals={rentals}
-              insurances={insurances}
-              activeShift={activeShift}
-              storeConfig={storeConfig}
-              currentUser={currentUser}
-              onNavigate={setCurrentTab}
-            />
-          )}
-
           {currentTab === "rentals" && (
             <RentalsView
               rentals={rentals}

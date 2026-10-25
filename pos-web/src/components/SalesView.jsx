@@ -32,6 +32,7 @@ import {
   Trash2,
   Sparkles
 } from "lucide-react";
+import ReportsModal from "./ReportsModal";
 
 export default function SalesView({ 
   sales = [], 
@@ -51,6 +52,7 @@ export default function SalesView({
   const [selectedSale, setSelectedSale] = useState(null);
   const [isExportingExcel, setIsExportingExcel] = useState(false);
   const [isExportingPdf, setIsExportingPdf] = useState(false);
+  const [isReportsModalOpen, setIsReportsModalOpen] = useState(false);
 
   // ──────────────────────────────────────────────
   // Filtro de ventas por Fecha y Criterios (Zona Horaria Colombia)
@@ -376,6 +378,16 @@ export default function SalesView({
           >
             <FileText size={18} />
             <span>{isExportingPdf ? "Generando PDF..." : "Exportar PDF / Imprimir"}</span>
+          </button>
+
+          <button
+            onClick={() => setIsReportsModalOpen(true)}
+            className="btn btn-primary"
+            style={{ padding: "10px 18px", fontSize: "0.92rem", background: "linear-gradient(135deg, #6366f1, #4f46e5)", gap: "8px" }}
+            title="Abrir generador oficial de reportes PDF (Ventas, Inventario y Arqueos)"
+          >
+            <FileText size={18} />
+            <span>Reportes PDF Oficiales</span>
           </button>
 
           {onCleanDuplicates && (
@@ -1306,6 +1318,17 @@ function CashMovementsSection({ activeShift, shiftClosings, dateFilter, customDa
           </div>
         </>
       )}
+
+      {/* Modal de Reportes PDF Oficiales */}
+      <ReportsModal
+        isOpen={isReportsModalOpen}
+        onClose={() => setIsReportsModalOpen(false)}
+        sales={sales}
+        products={products}
+        activeShift={activeShift}
+        storeConfig={storeConfig}
+        currentUser={currentUser}
+      />
     </div>
   );
 }

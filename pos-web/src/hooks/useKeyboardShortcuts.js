@@ -92,7 +92,6 @@ export function useKeyboardShortcuts({
       if (e.altKey && !e.ctrlKey && !e.metaKey) {
         const key = e.key?.toLowerCase();
         const navMap = {
-          d: "dashboard",
           p: "pos",
           i: "inventory",
           v: "sales",

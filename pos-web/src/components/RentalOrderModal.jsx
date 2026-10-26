@@ -261,8 +261,8 @@ export default function RentalOrderModal({
       <div
         className="modal-content modal-card rental-order-modal-card"
         style={{
-          maxWidth: "620px",
-          width: "100%",
+          maxWidth: "680px",
+          width: "96%",
           maxHeight: "min(92vh, 880px)",
           overflowY: "auto",
           overflowX: "hidden",
@@ -276,7 +276,7 @@ export default function RentalOrderModal({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Cabecera Sticky */}
-        <div style={{
+        <div className="rental-modal-header" style={{
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
@@ -285,68 +285,43 @@ export default function RentalOrderModal({
           top: "-24px",
           paddingTop: "6px",
           paddingBottom: "12px",
-          background: "inherit",
-          backdropFilter: "blur(24px)",
-          WebkitBackdropFilter: "blur(24px)",
           zIndex: 10,
           borderBottom: "1px solid var(--border-color)"
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <div style={{
-              width: "40px",
-              height: "40px",
-              borderRadius: "10px",
-              background: "rgba(59, 130, 246, 0.15)",
-              color: "var(--accent-blue, #3b82f6)",
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <div className="rental-header-icon" style={{
+              width: "44px",
+              height: "44px",
+              borderRadius: "12px",
+              background: "rgba(139, 92, 246, 0.15)",
+              color: "var(--neon-indigo, #8b5cf6)",
               display: "flex",
               alignItems: "center",
-              justifyContent: "center"
+              justifyContent: "center",
+              border: "1px solid rgba(139, 92, 246, 0.25)"
             }}>
-              <Armchair size={22} />
+              <Armchair size={24} />
             </div>
             <div>
-              <h2 style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--text-main)", margin: 0 }}>
+              <h2 style={{ fontSize: "1.25rem", fontWeight: 800, color: "var(--text-main)", margin: 0 }}>
                 Facturación y Alquiler de Sillas
               </h2>
-              <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", margin: "2px 0 0" }}>
+              <p style={{ fontSize: "0.82rem", color: "var(--text-muted)", margin: "2px 0 0" }}>
                 Salida inmediata o apartados para fechas especiales (Diciembre)
               </p>
             </div>
           </div>
-          <button onClick={onClose} className="btn btn-outline" style={{ padding: "6px 10px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }} title="Cerrar modal">
-            <X size={16} />
+          <button onClick={onClose} className="btn-modal-close-circle" title="Cerrar modal">
+            <X size={18} />
           </button>
         </div>
 
         {/* Selector de Modo: Inmediato vs Apartar / Reserva */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "8px",
-          background: "rgba(255,255,255,0.03)",
-          padding: "5px",
-          borderRadius: "12px",
-          border: "1px solid var(--border-color)",
-          marginBottom: "18px"
-        }}>
+        <div className="rental-mode-selector">
           <button
             type="button"
             onClick={() => setTipoOperacion("inmediato")}
-            style={{
-              padding: "10px",
-              borderRadius: "9px",
-              fontWeight: 700,
-              fontSize: "0.88rem",
-              border: "none",
-              cursor: "pointer",
-              transition: "all 0.2s",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "8px",
-              background: tipoOperacion === "inmediato" ? "var(--accent-blue, #3b82f6)" : "transparent",
-              color: tipoOperacion === "inmediato" ? "#ffffff" : "var(--text-muted)"
-            }}
+            className={`rental-mode-btn ${tipoOperacion === "inmediato" ? "active-inmediato" : ""}`}
           >
             <Clock size={16} />
             <span>Alquiler Inmediato (Sale Hoy)</span>
@@ -355,21 +330,7 @@ export default function RentalOrderModal({
           <button
             type="button"
             onClick={() => setTipoOperacion("reserva")}
-            style={{
-              padding: "10px",
-              borderRadius: "9px",
-              fontWeight: 700,
-              fontSize: "0.88rem",
-              border: "none",
-              cursor: "pointer",
-              transition: "all 0.2s",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "8px",
-              background: tipoOperacion === "reserva" ? "linear-gradient(135deg, #10b981, #059669)" : "transparent",
-              color: tipoOperacion === "reserva" ? "#ffffff" : "var(--text-muted)"
-            }}
+            className={`rental-mode-btn ${tipoOperacion === "reserva" ? "active-reserva" : ""}`}
           >
             <CalendarDays size={16} />
             <span>Apartar / Fecha Especial</span>
@@ -458,12 +419,7 @@ export default function RentalOrderModal({
           )}
 
           {/* Información del Cliente */}
-          <div style={{
-            background: "rgba(255,255,255,0.02)",
-            border: "1px solid var(--border-color)",
-            padding: "14px",
-            borderRadius: "12px"
-          }}>
+          <div className="rental-section-card">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
               <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--text-main)" }}>
                 👤 Información del Cliente
@@ -472,7 +428,7 @@ export default function RentalOrderModal({
                 <select
                   value={selectedClientId}
                   onChange={(e) => handleClientSelect(e.target.value)}
-                  className="input-field"
+                  className="input-field rental-input-field"
                   style={{ width: "auto", padding: "3px 8px", fontSize: "0.75rem", height: "28px" }}
                 >
                   <option value="">-- Cargar cliente registrado --</option>
@@ -494,7 +450,7 @@ export default function RentalOrderModal({
                   type="text"
                   required
                   placeholder="Ej: Claudia Martínez"
-                  className="input-field"
+                  className="input-field rental-input-field"
                   value={clienteNombre}
                   onChange={(e) => setClienteNombre(e.target.value)}
                 />
@@ -507,7 +463,7 @@ export default function RentalOrderModal({
                   type="tel"
                   required
                   placeholder="Ej: 3124567890"
-                  className="input-field"
+                  className="input-field rental-input-field"
                   value={clienteTelefono}
                   onChange={(e) => setClienteTelefono(e.target.value)}
                 />
@@ -522,7 +478,7 @@ export default function RentalOrderModal({
                 type="text"
                 required
                 placeholder="Ej: Calle 10 #5-30, Barrio El Centro"
-                className="input-field"
+                className="input-field rental-input-field"
                 value={clienteDireccion}
                 onChange={(e) => setClienteDireccion(e.target.value)}
               />
@@ -530,36 +486,28 @@ export default function RentalOrderModal({
           </div>
 
           {/* Configuración de Sillas y Mesas */}
-          <div style={{
-            background: "rgba(255,255,255,0.02)",
-            border: "1px solid var(--border-color)",
-            padding: "14px",
-            borderRadius: "12px"
-          }}>
+          <div className="rental-section-card">
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px", flexWrap: "wrap", gap: "6px" }}>
               <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--text-main)" }}>
                 🪑 Elementos a Alquilar
               </span>
               <div style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
                 {tipoOperacion === "inmediato" ? "En tienda hoy: " : "Disponibles para reserva: "}
-                Sillas (<strong style={{ color: stockSillas > 0 ? "#34d399" : "#f87171" }}>{stockSillas}</strong> de {totalStockSillas}) · Mesas (<strong style={{ color: stockMesas > 0 ? "#34d399" : "#f87171" }}>{stockMesas}</strong> de {totalStockMesas})
+                Sillas (<strong style={{ color: stockSillas > 0 ? "#10b981" : "#ef4444" }}>{stockSillas}</strong> de {totalStockSillas}) · Mesas (<strong style={{ color: stockMesas > 0 ? "#10b981" : "#ef4444" }}>{stockMesas}</strong> de {totalStockMesas})
               </div>
             </div>
 
             {futureReservedChairs > 0 && tipoOperacion === "inmediato" && (
-              <div style={{
+              <div className="rental-alert-notice" style={{
                 marginBottom: "10px",
                 padding: "8px 10px",
-                borderRadius: "8px",
-                background: "rgba(59, 130, 246, 0.12)",
-                border: "1px solid rgba(59, 130, 246, 0.28)",
+                borderRadius: "10px",
                 fontSize: "0.76rem",
-                color: "#93c5fd",
                 display: "flex",
                 alignItems: "center",
                 gap: "8px"
               }}>
-                <Info size={16} style={{ flexShrink: 0, color: "#60a5fa" }} />
+                <Info size={16} style={{ flexShrink: 0, color: "#6366f1" }} />
                 <span>
                   <strong>Nota de Disponibilidad:</strong> Hay <strong>{futureReservedChairs} sillas apartadas</strong> para eventos posteriores{upcomingChairsReservation?.fechaEvento ? ` (Próximo: ${upcomingChairsReservation.fechaEvento})` : ""}. Puedes alquilarlas hoy siempre que la devolución se realice antes del evento.
                 </span>
@@ -572,7 +520,7 @@ export default function RentalOrderModal({
                   Tipo:
                 </label>
                 <select
-                  className="input-field"
+                  className="input-field rental-input-field"
                   value={tipoItem}
                   onChange={(e) => setTipoItem(e.target.value)}
                 >
@@ -590,7 +538,7 @@ export default function RentalOrderModal({
                   <input
                     type="number"
                     min="1"
-                    className="input-field"
+                    className="input-field rental-input-field"
                     value={cantidadSillas}
                     onChange={(e) => setCantidadSillas(parseInt(e.target.value) || 0)}
                   />
@@ -605,7 +553,7 @@ export default function RentalOrderModal({
                   <input
                     type="number"
                     min="1"
-                    className="input-field"
+                    className="input-field rental-input-field"
                     value={cantidadMesas}
                     onChange={(e) => setCantidadMesas(parseInt(e.target.value) || 0)}
                   />
@@ -615,28 +563,23 @@ export default function RentalOrderModal({
           </div>
 
           {/* Desglose Financiero: Total, Abono, Saldo y Depósito */}
-          <div style={{
-            background: "rgba(0,0,0,0.35)",
-            border: "1px solid var(--border-color)",
-            padding: "16px",
-            borderRadius: "14px"
-          }}>
+          <div className="rental-financial-card">
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "14px", marginBottom: "12px" }}>
               <div>
                 <label style={{ fontSize: "0.78rem", color: "var(--text-muted)", display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "4px" }}>
                   <span>🔒 Depósito en Garantía:</span>
-                  <span style={{ fontSize: "0.72rem", color: "var(--neon-emerald)", fontWeight: 700 }}>30.000 COP</span>
+                  <span style={{ fontSize: "0.74rem", color: "var(--neon-emerald, #10b981)", fontWeight: 700 }}>30.000 COP</span>
                 </label>
                 <MathPriceInput
                     value={deposito}
                     onChange={(val) => setDeposito(val)}
                     placeholder="30000"
-                    className="input-field"
+                    className="input-field rental-input-field"
                     style={{ flex: 1 }}
                     min={0}
                   />
                 <label style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "6px", fontSize: "0.74rem", cursor: "pointer",
-                  color: cobrarDepositoAhora ? "#34d399" : "var(--text-muted)" }}>
+                  color: cobrarDepositoAhora ? "#10b981" : "var(--text-muted)" }}>
                   <input
                     type="checkbox"
                     checked={cobrarDepositoAhora}
@@ -654,7 +597,7 @@ export default function RentalOrderModal({
                   Método de Pago:
                 </label>
                 <select
-                  className="input-field"
+                  className="input-field rental-input-field"
                   value={metodoPago}
                   onChange={(e) => setMetodoPago(e.target.value)}
                 >
@@ -668,17 +611,11 @@ export default function RentalOrderModal({
             </div>
 
             {/* Total Alquiler y Abono */}
-            <div style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              paddingBottom: "10px",
-              borderBottom: "1px solid rgba(255,255,255,0.08)"
-            }}>
+            <div className="rental-total-banner">
               <span style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--text-main)" }}>
                 Total Alquiler:
               </span>
-              <span style={{ fontSize: "1.25rem", fontWeight: 800, color: "#34d399" }}>
+              <span style={{ fontSize: "1.35rem", fontWeight: 900, color: "var(--neon-emerald, #10b981)" }}>
                 ${totalAlquiler.toLocaleString("es-CO")} COP
               </span>
             </div>
@@ -690,55 +627,36 @@ export default function RentalOrderModal({
               marginTop: "12px"
             }}>
               <div>
-                <label style={{ fontSize: "0.82rem", fontWeight: 700, color: "#93c5fd", display: "block", marginBottom: "4px" }}>
+                <label style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--text-main)", display: "block", marginBottom: "4px" }}>
                   💵 Dinero Cobrado Hoy (Abono):
                 </label>
                 <MathPriceInput
                     value={abono}
                     onChange={(val) => setAbono(val)}
                     placeholder="Ej: 1500*15 o 22500"
-                    className="input-field"
-                    style={{ fontWeight: 800, fontSize: "1.05rem", color: "var(--accent-blue, #3b82f6)" }}
+                    className="input-field rental-input-field"
+                    style={{ fontWeight: 800, fontSize: "1.05rem", color: "var(--accent-blue, #6366f1)" }}
                     min={0}
                     max={totalAlquiler}
                   />
               </div>
 
               <div>
-                <label style={{ fontSize: "0.82rem", fontWeight: 700, color: saldoPendiente > 0 ? "#f87171" : "var(--text-muted)", display: "block", marginBottom: "4px" }}>
+                <label style={{ fontSize: "0.82rem", fontWeight: 700, color: saldoPendiente > 0 ? "var(--neon-rose, #ef4444)" : "var(--text-muted)", display: "block", marginBottom: "4px" }}>
                   🔴 Saldo Pendiente:
                 </label>
-                <div style={{
-                  height: "38px",
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "0 12px",
-                  borderRadius: "var(--radius-sm)",
-                  background: saldoPendiente > 0 ? "rgba(239, 68, 68, 0.15)" : "rgba(255,255,255,0.05)",
-                  border: `1px solid ${saldoPendiente > 0 ? "rgba(239, 68, 68, 0.3)" : "var(--border-color)"}`,
-                  fontWeight: 800,
-                  fontSize: "1.05rem",
-                  color: saldoPendiente > 0 ? "#f87171" : "#10b981"
-                }}>
+                <div className={`rental-saldo-box ${saldoPendiente > 0 ? "has-debt" : "is-paid"}`}>
                   ${saldoPendiente.toLocaleString("es-CO")} COP
                 </div>
               </div>
             </div>
 
             {/* Accesos rápidos de Abono / Depósito */}
-            <div style={{ display: "flex", gap: "8px", marginTop: "10px", flexWrap: "wrap" }}>
+            <div style={{ display: "flex", gap: "8px", marginTop: "12px", flexWrap: "wrap" }}>
               <button
                 type="button"
                 onClick={() => setAbono(totalAlquiler)}
-                className="btn btn-outline"
-                style={{
-                  padding: "4px 10px",
-                  fontSize: "0.76rem",
-                  borderRadius: "8px",
-                  color: Number(abono) === totalAlquiler ? "#34d399" : "var(--text-muted)",
-                  borderColor: Number(abono) === totalAlquiler ? "rgba(16, 185, 129, 0.4)" : "rgba(255,255,255,0.1)",
-                  background: Number(abono) === totalAlquiler ? "rgba(16, 185, 129, 0.1)" : "transparent"
-                }}
+                className={`rental-quick-chip ${Number(abono) === totalAlquiler ? "active-paid" : ""}`}
               >
                 ⚡ Pagar Alquiler Completo (${totalAlquiler.toLocaleString("es-CO")})
               </button>
@@ -748,15 +666,7 @@ export default function RentalOrderModal({
                   setAbono(0);
                   setCobrarDepositoAhora(true);
                 }}
-                className="btn btn-outline"
-                style={{
-                  padding: "4px 10px",
-                  fontSize: "0.76rem",
-                  borderRadius: "8px",
-                  color: Number(abono) === 0 ? "#f59e0b" : "var(--text-muted)",
-                  borderColor: Number(abono) === 0 ? "rgba(245, 158, 11, 0.5)" : "rgba(255,255,255,0.1)",
-                  background: Number(abono) === 0 ? "rgba(245, 158, 11, 0.12)" : "transparent"
-                }}
+                className={`rental-quick-chip ${Number(abono) === 0 ? "active-dep" : ""}`}
               >
                 🔒 Solo Dejó Depósito (Abono = $0 · Debe ${totalAlquiler.toLocaleString("es-CO")})
               </button>
@@ -764,39 +674,32 @@ export default function RentalOrderModal({
 
             {/* Aviso visual cuando solo dejan depósito */}
             {Number(abono) === 0 && (
-              <div style={{
-                marginTop: "10px",
-                padding: "8px 12px",
-                borderRadius: "8px",
-                background: "rgba(245, 158, 11, 0.12)",
-                border: "1px solid rgba(245, 158, 11, 0.35)",
-                fontSize: "0.78rem",
-                color: "#fbbf24",
-                lineHeight: "1.35"
-              }}>
+              <div className="rental-warning-box">
                 ℹ️ <strong>Solo depósito recibido:</strong> El cliente paga ${Number(deposito || 0).toLocaleString("es-CO")} COP de garantía. Todo el alquiler (${totalAlquiler.toLocaleString("es-CO")} COP) quedará guardado con <strong>SALDO PENDIENTE</strong> y botón de cobro listo al devolver o entregar.
               </div>
             )}
           </div>
 
           {/* Comprobante de Transferencia / Pago */}
-          <PaymentEvidenceUploader
-            value={comprobanteUrl}
-            onChange={setComprobanteUrl}
-            label={
-              metodoPago === "Transferencia" || metodoPago === "Nequi" || metodoPago === "Daviplata"
-                ? `📸 Captura de ${metodoPago} (Alquiler y/o Depósito)`
-                : "📸 Adjuntar Comprobante de Transferencia (Opcional)"
-            }
-            helperText="Sube la captura de la transferencia del alquiler y/o depósito"
-          />
+          <div className="rental-section-card">
+            <PaymentEvidenceUploader
+              value={comprobanteUrl}
+              onChange={setComprobanteUrl}
+              label={
+                metodoPago === "Transferencia" || metodoPago === "Nequi" || metodoPago === "Daviplata"
+                  ? `📸 Captura de ${metodoPago} (Alquiler y/o Depósito)`
+                  : "📸 Adjuntar Comprobante de Transferencia (Opcional)"
+              }
+              helperText="Sube la captura de la transferencia del alquiler y/o depósito"
+            />
+          </div>
 
-          <div>
-            <label style={{ fontSize: "0.78rem", color: "var(--text-muted)", display: "block", marginBottom: "4px" }}>
-              Observaciones / Instrucciones especiales:
+          <div className="rental-section-card">
+            <label style={{ fontSize: "0.78rem", color: "var(--text-muted)", display: "block", marginBottom: "4px", fontWeight: 600 }}>
+              📝 Observaciones / Instrucciones especiales:
             </label>
             <textarea
-              className="input-field"
+              className="input-field rental-input-field"
               rows="2"
               placeholder="Ej: Entregar a las 4pm en segundo piso, pagar saldo al recibir..."
               value={observaciones}
@@ -809,24 +712,14 @@ export default function RentalOrderModal({
             <button
               type="button"
               onClick={onClose}
-              className="btn btn-outline"
-              style={{ flex: 1, padding: "11px" }}
+              className="btn btn-modal-cancel"
               disabled={isSubmitting}
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="btn btn-success"
-              style={{
-                flex: 2,
-                padding: "11px",
-                fontSize: "1rem",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "8px"
-              }}
+              className="btn btn-modal-confirm"
               disabled={isSubmitting}
             >
               <CheckCircle2 size={18} />

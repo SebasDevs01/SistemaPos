@@ -167,13 +167,12 @@ export default function PaymentEvidenceUploader({
     <div
       onPaste={handlePaste}
       tabIndex={0}
+      className={`payment-evidence-box ${isDragging ? "dragging" : ""}`}
       style={{
-        background: "rgba(255, 255, 255, 0.02)",
-        border: isDragging ? "2px dashed var(--accent-primary, #6366f1)" : "1px dashed var(--border-color)",
         borderRadius: "14px",
         padding: "12px 14px",
         outline: "none",
-        transition: "border-color 0.2s, background 0.2s"
+        transition: "all 0.2s ease"
       }}
       onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
       onDragLeave={(e) => { e.preventDefault(); setIsDragging(false); }}
@@ -203,14 +202,12 @@ export default function PaymentEvidenceUploader({
       </div>
 
       {value ? (
-        <div style={{
+        <div className="payment-evidence-preview-row" style={{
           display: "flex",
           alignItems: "center",
           gap: "12px",
-          background: "rgba(0,0,0,0.3)",
           padding: "8px 10px",
-          borderRadius: "10px",
-          border: "1px solid rgba(255,255,255,0.06)"
+          borderRadius: "10px"
         }}>
           {/* Miniatura clickeable para ver */}
           <div

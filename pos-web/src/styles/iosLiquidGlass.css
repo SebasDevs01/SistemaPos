@@ -2310,3 +2310,553 @@ button[title="Cerrar"]:hover,
   border-color: rgba(244, 63, 94, 0.45) !important;
   color: #9F1239 !important;
 }
+
+/* ==========================================================================
+   26. LIQUID GLASS SALES & RENTALS MODALS — (Like Control y Cierre de Caja)
+   ========================================================================== */
+
+/* Circular Close Button across ALL modals */
+.btn-modal-close-circle,
+.btn-close-modal,
+.modal-card button[title*="Cerrar"],
+.modal-content button[title*="Cerrar"] {
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  border: 1px solid rgba(216, 180, 254, 0.35) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #D8B4FE !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25) !important;
+  cursor: pointer !important;
+  transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.btn-modal-close-circle:hover,
+.btn-close-modal:hover,
+.modal-card button[title*="Cerrar"]:hover {
+  background: rgba(239, 68, 68, 0.22) !important;
+  border-color: rgba(239, 68, 68, 0.5) !important;
+  color: #FCA5A5 !important;
+  transform: rotate(90deg) scale(1.08) !important;
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.4) !important;
+}
+
+[data-theme="light"] .btn-modal-close-circle,
+[data-theme="light"] .btn-close-modal,
+[data-theme="light"] .modal-card button[title*="Cerrar"] {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.98) !important;
+  color: #7E22CE !important;
+  box-shadow: 0 4px 12px rgba(126, 34, 206, 0.12), inset 0 1px 1px #FFFFFF !important;
+}
+
+[data-theme="light"] .btn-modal-close-circle:hover,
+[data-theme="light"] .btn-close-modal:hover {
+  background: rgba(239, 68, 68, 0.14) !important;
+  border-color: rgba(239, 68, 68, 0.4) !important;
+  color: #DC2626 !important;
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.2) !important;
+}
+
+/* Modal Headers */
+.rental-modal-header,
+.modal-header {
+  border-bottom: 1px solid rgba(216, 180, 254, 0.2) !important;
+  padding-bottom: 14px !important;
+  margin-bottom: 16px !important;
+  background: transparent !important;
+}
+
+[data-theme="light"] .rental-modal-header,
+[data-theme="light"] .modal-header {
+  border-bottom: 1.5px solid rgba(226, 215, 250, 0.8) !important;
+}
+
+.rental-header-icon {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 12px !important;
+  background: rgba(139, 92, 246, 0.15) !important;
+  border: 1px solid rgba(168, 85, 247, 0.3) !important;
+  color: #C084FC !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 4px 14px rgba(168, 85, 247, 0.18) !important;
+}
+
+[data-theme="light"] .rental-header-icon {
+  background: linear-gradient(135deg, rgba(245, 243, 255, 0.9) 0%, rgba(237, 233, 254, 0.8) 100%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  color: #7E22CE !important;
+  box-shadow: 0 4px 14px rgba(126, 34, 206, 0.14), inset 0 1px 1px #FFFFFF !important;
+}
+
+/* Mode Selector (Inmediato vs Apartar) */
+.rental-mode-selector {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 8px !important;
+  padding: 6px !important;
+  border-radius: 14px !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(216, 180, 254, 0.2) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  margin-bottom: 18px !important;
+}
+
+[data-theme="light"] .rental-mode-selector {
+  background: rgba(255, 255, 255, 0.65) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 4px 16px rgba(126, 34, 206, 0.06), inset 0 1px 1px #FFFFFF !important;
+}
+
+.rental-mode-btn {
+  padding: 10px !important;
+  border-radius: 10px !important;
+  font-weight: 700 !important;
+  font-size: 0.88rem !important;
+  border: none !important;
+  cursor: pointer !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  background: transparent !important;
+  color: #C4B5FD !important;
+  transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+[data-theme="light"] .rental-mode-btn {
+  color: #6B21A8 !important;
+}
+
+.rental-mode-btn.active-inmediato {
+  background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 16px rgba(139, 92, 246, 0.45) !important;
+}
+
+.rental-mode-btn.active-reserva {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.45) !important;
+}
+
+/* Section Cards inside Rental & Sales Modals */
+.rental-section-card {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(216, 180, 254, 0.22) !important;
+  padding: 15px !important;
+  border-radius: 16px !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2) !important;
+}
+
+[data-theme="light"] .rental-section-card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.75) 0%, rgba(248, 244, 255, 0.65) 100%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 8px 24px rgba(126, 34, 206, 0.06), inset 0 1px 1px #FFFFFF !important;
+}
+
+/* FINANCIAL BREAKDOWN CARD — Replaces old dark/grey box */
+.rental-financial-card {
+  background: linear-gradient(145deg, rgba(32, 16, 60, 0.70) 0%, rgba(18, 10, 36, 0.80) 100%) !important;
+  border: 1.5px solid rgba(216, 180, 254, 0.35) !important;
+  padding: 18px !important;
+  border-radius: 18px !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  box-shadow: 
+    0 12px 32px rgba(0, 0, 0, 0.4),
+    0 0 24px rgba(168, 85, 247, 0.18),
+    inset 0 1px 2px rgba(255, 255, 255, 0.15) !important;
+}
+
+[data-theme="light"] .rental-financial-card {
+  background: linear-gradient(145deg, rgba(250, 245, 255, 0.92) 0%, rgba(243, 232, 255, 0.82) 100%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 
+    0 12px 32px rgba(126, 34, 206, 0.10),
+    0 0 24px rgba(192, 132, 252, 0.16),
+    inset 0 1.5px 2px #FFFFFF !important;
+}
+
+/* Total Banner */
+.rental-total-banner {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding-bottom: 12px !important;
+  margin-bottom: 12px !important;
+  border-bottom: 1px solid rgba(216, 180, 254, 0.22) !important;
+}
+
+[data-theme="light"] .rental-total-banner {
+  border-bottom: 1.5px solid rgba(216, 180, 254, 0.35) !important;
+}
+
+/* Saldo Pendiente indicator */
+.rental-saldo-box {
+  height: 42px !important;
+  display: flex !important;
+  align-items: center !important;
+  padding: 0 14px !important;
+  border-radius: 12px !important;
+  font-weight: 800 !important;
+  font-size: 1.05rem !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  transition: all 0.2s ease !important;
+}
+
+.rental-saldo-box.has-debt {
+  background: rgba(239, 68, 68, 0.16) !important;
+  border: 1px solid rgba(239, 68, 68, 0.45) !important;
+  color: #F87171 !important;
+}
+
+[data-theme="light"] .rental-saldo-box.has-debt {
+  background: rgba(254, 226, 226, 0.85) !important;
+  border: 1.5px solid rgba(239, 68, 68, 0.45) !important;
+  color: #DC2626 !important;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.12) !important;
+}
+
+.rental-saldo-box.is-paid {
+  background: rgba(16, 185, 129, 0.16) !important;
+  border: 1px solid rgba(16, 185, 129, 0.45) !important;
+  color: #34D399 !important;
+}
+
+[data-theme="light"] .rental-saldo-box.is-paid {
+  background: rgba(209, 250, 229, 0.85) !important;
+  border: 1.5px solid rgba(16, 185, 129, 0.45) !important;
+  color: #059669 !important;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.12) !important;
+}
+
+/* Quick Action Chips (Abono / Depósito) */
+.rental-quick-chip,
+.btn-cash-chip {
+  padding: 7px 14px !important;
+  font-size: 0.78rem !important;
+  font-weight: 700 !important;
+  border-radius: 10px !important;
+  border: 1px solid rgba(216, 180, 254, 0.28) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #D8B4FE !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  cursor: pointer !important;
+  transition: all 0.18s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.rental-quick-chip:hover,
+.btn-cash-chip:hover {
+  background: rgba(168, 85, 247, 0.18) !important;
+  border-color: rgba(168, 85, 247, 0.5) !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1px) !important;
+}
+
+[data-theme="light"] .rental-quick-chip,
+[data-theme="light"] .btn-cash-chip {
+  background: rgba(255, 255, 255, 0.8) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  color: #6B21A8 !important;
+  box-shadow: 0 2px 6px rgba(126, 34, 206, 0.06), inset 0 1px 1px #FFFFFF !important;
+}
+
+[data-theme="light"] .rental-quick-chip:hover,
+[data-theme="light"] .btn-cash-chip:hover {
+  background: linear-gradient(135deg, rgba(237, 233, 254, 0.9) 0%, rgba(221, 214, 254, 0.9) 100%) !important;
+  border-color: rgba(168, 85, 247, 0.6) !important;
+  color: #581C87 !important;
+  transform: translateY(-1px) !important;
+}
+
+.rental-quick-chip.active-paid {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+  border-color: rgba(16, 185, 129, 0.6) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4) !important;
+}
+
+.rental-quick-chip.active-dep {
+  background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%) !important;
+  border-color: rgba(245, 158, 11, 0.6) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.4) !important;
+}
+
+/* Warnings and Notices */
+.rental-warning-box {
+  margin-top: 12px !important;
+  padding: 10px 14px !important;
+  border-radius: 12px !important;
+  background: rgba(245, 158, 11, 0.15) !important;
+  border: 1px solid rgba(245, 158, 11, 0.4) !important;
+  font-size: 0.78rem !important;
+  color: #FCD34D !important;
+  line-height: 1.4 !important;
+}
+
+[data-theme="light"] .rental-warning-box {
+  background: rgba(254, 243, 199, 0.85) !important;
+  border: 1.5px solid rgba(245, 158, 11, 0.5) !important;
+  color: #92400E !important;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.1) !important;
+}
+
+.rental-alert-notice {
+  background: rgba(99, 102, 241, 0.15) !important;
+  border: 1px solid rgba(99, 102, 241, 0.35) !important;
+  color: #A5B4FC !important;
+}
+
+[data-theme="light"] .rental-alert-notice {
+  background: rgba(238, 242, 255, 0.85) !important;
+  border: 1.5px solid rgba(99, 102, 241, 0.35) !important;
+  color: #3730A3 !important;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.1) !important;
+}
+
+/* Modal Inputs & Selects */
+.rental-input-field,
+.modal-card input.input-field,
+.modal-card select.input-field {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(216, 180, 254, 0.28) !important;
+  border-radius: 12px !important;
+  color: #FFFFFF !important;
+  padding: 10px 14px !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  transition: all 0.2s ease !important;
+}
+
+.rental-input-field:focus,
+.modal-card input.input-field:focus,
+.modal-card select.input-field:focus {
+  background: rgba(255, 255, 255, 0.10) !important;
+  border-color: #A855F7 !important;
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.35) !important;
+  outline: none !important;
+}
+
+[data-theme="light"] .rental-input-field,
+[data-theme="light"] .modal-card input.input-field,
+[data-theme="light"] .modal-card select.input-field {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1.5px solid rgba(216, 180, 254, 0.45) !important;
+  color: #1E1035 !important;
+  box-shadow: 0 2px 8px rgba(126, 34, 206, 0.05), inset 0 1px 1px #FFFFFF !important;
+}
+
+[data-theme="light"] .rental-input-field:focus,
+[data-theme="light"] .modal-card input.input-field:focus,
+[data-theme="light"] .modal-card select.input-field:focus {
+  background: #FFFFFF !important;
+  border-color: #8B5CF6 !important;
+  box-shadow: 0 0 16px rgba(139, 92, 246, 0.25) !important;
+}
+
+/* Modal Buttons */
+.btn-modal-cancel,
+.btn-secondary-action {
+  padding: 12px 20px !important;
+  border-radius: 14px !important;
+  font-weight: 700 !important;
+  font-size: 0.95rem !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(216, 180, 254, 0.28) !important;
+  color: #D8B4FE !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  cursor: pointer !important;
+  transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.btn-modal-cancel:hover,
+.btn-secondary-action:hover {
+  background: rgba(255, 255, 255, 0.12) !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1px) !important;
+}
+
+[data-theme="light"] .btn-modal-cancel,
+[data-theme="light"] .btn-secondary-action {
+  background: rgba(255, 255, 255, 0.8) !important;
+  border: 1.5px solid rgba(216, 180, 254, 0.4) !important;
+  color: #6B21A8 !important;
+  box-shadow: 0 4px 12px rgba(126, 34, 206, 0.08), inset 0 1px 1px #FFFFFF !important;
+}
+
+[data-theme="light"] .btn-modal-cancel:hover,
+[data-theme="light"] .btn-secondary-action:hover {
+  background: #FFFFFF !important;
+  color: #4C1D95 !important;
+  box-shadow: 0 6px 16px rgba(126, 34, 206, 0.14) !important;
+}
+
+.btn-modal-confirm,
+.btn-primary-action {
+  padding: 12px 24px !important;
+  border-radius: 14px !important;
+  font-weight: 800 !important;
+  font-size: 1rem !important;
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4) !important;
+  cursor: pointer !important;
+  transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.btn-modal-confirm:hover,
+.btn-primary-action:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 26px rgba(16, 185, 129, 0.55) !important;
+}
+
+/* PAYMENT MODAL OVERRIDES */
+.payment-amount-box {
+  background: linear-gradient(145deg, rgba(32, 16, 60, 0.75) 0%, rgba(20, 10, 40, 0.85) 100%) !important;
+  border: 1.5px solid rgba(216, 180, 254, 0.35) !important;
+  border-radius: 18px !important;
+  padding: 18px !important;
+  text-align: center !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="light"] .payment-amount-box {
+  background: linear-gradient(145deg, rgba(250, 245, 255, 0.95) 0%, rgba(243, 232, 255, 0.85) 100%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 8px 24px rgba(126, 34, 206, 0.1), inset 0 1px 1px #FFFFFF !important;
+}
+
+.payment-amount-label {
+  color: #C084FC !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.06em !important;
+}
+
+[data-theme="light"] .payment-amount-label {
+  color: #7E22CE !important;
+}
+
+.payment-amount-val {
+  color: #34D399 !important;
+  font-weight: 900 !important;
+}
+
+[data-theme="light"] .payment-amount-val {
+  color: #059669 !important;
+}
+
+.btn-payment-method {
+  padding: 14px 8px !important;
+  border-radius: 14px !important;
+  border: 1px solid rgba(216, 180, 254, 0.28) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #D8B4FE !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.btn-payment-method.selected {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.35) 0%, rgba(126, 34, 206, 0.45) 100%) !important;
+  border: 1.5px solid #C084FC !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.4) !important;
+}
+
+[data-theme="light"] .btn-payment-method {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  color: #6B21A8 !important;
+  box-shadow: 0 2px 8px rgba(126, 34, 206, 0.05), inset 0 1px 1px #FFFFFF !important;
+}
+
+[data-theme="light"] .btn-payment-method.selected {
+  background: linear-gradient(135deg, rgba(237, 233, 254, 0.95) 0%, rgba(221, 214, 254, 0.9) 100%) !important;
+  border: 2px solid #8B5CF6 !important;
+  color: #4C1D95 !important;
+  box-shadow: 0 4px 16px rgba(139, 92, 246, 0.3) !important;
+}
+
+.change-due-box {
+  padding: 14px 18px !important;
+  border-radius: 14px !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+}
+
+.change-due-box.ready {
+  background: rgba(16, 185, 129, 0.16) !important;
+  border: 1.5px solid rgba(16, 185, 129, 0.45) !important;
+  color: #34D399 !important;
+}
+
+[data-theme="light"] .change-due-box.ready {
+  background: rgba(209, 250, 229, 0.9) !important;
+  border: 1.5px solid rgba(16, 185, 129, 0.5) !important;
+  color: #065F46 !important;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.15) !important;
+}
+
+/* Evidence Uploader Box */
+.payment-evidence-box {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1.5px dashed rgba(216, 180, 254, 0.35) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+}
+
+.payment-evidence-box.dragging {
+  border-color: #A855F7 !important;
+  background: rgba(168, 85, 247, 0.12) !important;
+}
+
+[data-theme="light"] .payment-evidence-box {
+  background: rgba(255, 255, 255, 0.7) !important;
+  border: 1.5px dashed rgba(168, 85, 247, 0.4) !important;
+  box-shadow: 0 2px 8px rgba(126, 34, 206, 0.04), inset 0 1px 1px #FFFFFF !important;
+}
+
+[data-theme="light"] .payment-evidence-box.dragging {
+  background: rgba(237, 233, 254, 0.9) !important;
+  border-color: #7E22CE !important;
+}
+
+.payment-evidence-preview-row {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(216, 180, 254, 0.25) !important;
+}
+
+[data-theme="light"] .payment-evidence-preview-row {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 2px 8px rgba(126, 34, 206, 0.06) !important;
+}
+
+/* COMPREHENSIVE OVERRIDE: Neutralize any inline rgba(0,0,0,...) in light mode */
+[data-theme="light"] .modal-card div[style*="rgba(0,0,0"],
+[data-theme="light"] .modal-content div[style*="rgba(0,0,0"] {
+  background: linear-gradient(145deg, rgba(250, 245, 255, 0.92) 0%, rgba(243, 232, 255, 0.82) 100%) !important;
+  border-color: rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 8px 24px rgba(126, 34, 206, 0.08), inset 0 1px 1px #FFFFFF !important;
+}
+

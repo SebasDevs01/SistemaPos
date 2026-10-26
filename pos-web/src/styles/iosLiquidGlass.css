@@ -1381,13 +1381,27 @@ tbody tr:hover {
    ========================================================================== */
 select,
 textarea {
-  background: rgba(255, 255, 255, 0.07) !important;
+  background-color: rgba(255, 255, 255, 0.07) !important;
   border: 1px solid rgba(216, 180, 254, 0.22) !important;
   border-radius: 12px !important;
   color: #FFFFFF !important;
   backdrop-filter: blur(12px) !important;
   -webkit-backdrop-filter: blur(12px) !important;
   transition: all 0.2s ease !important;
+}
+
+select,
+.form-select,
+.select-with-arrow {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23C084FC' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: calc(100% - 10px) center !important;
+  background-size: 16px 16px !important;
+  padding-right: 32px !important;
+  cursor: pointer !important;
 }
 
 select:focus,
@@ -1399,9 +1413,19 @@ textarea:focus {
 
 [data-theme="light"] select,
 [data-theme="light"] textarea {
-  background: rgba(255, 255, 255, 0.78) !important;
+  background-color: rgba(255, 255, 255, 0.78) !important;
   border: 1px solid rgba(192, 132, 252, 0.32) !important;
   color: #1E1035 !important;
+}
+
+[data-theme="light"] select,
+[data-theme="light"] .form-select,
+[data-theme="light"] .select-with-arrow {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%237E22CE' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: calc(100% - 10px) center !important;
+  background-size: 16px 16px !important;
+  padding-right: 32px !important;
 }
 
 [data-theme="light"] select:focus,
@@ -2708,7 +2732,7 @@ button[title="Cerrar"]:hover,
 .rental-input-field,
 .modal-card input.input-field,
 .modal-card select.input-field {
-  background: rgba(255, 255, 255, 0.06) !important;
+  background-color: rgba(255, 255, 255, 0.06) !important;
   border: 1px solid rgba(216, 180, 254, 0.28) !important;
   border-radius: 12px !important;
   color: #FFFFFF !important;
@@ -2721,7 +2745,7 @@ button[title="Cerrar"]:hover,
 .rental-input-field:focus,
 .modal-card input.input-field:focus,
 .modal-card select.input-field:focus {
-  background: rgba(255, 255, 255, 0.10) !important;
+  background-color: rgba(255, 255, 255, 0.10) !important;
   border-color: #A855F7 !important;
   box-shadow: 0 0 16px rgba(168, 85, 247, 0.35) !important;
   outline: none !important;
@@ -2730,7 +2754,7 @@ button[title="Cerrar"]:hover,
 [data-theme="light"] .rental-input-field,
 [data-theme="light"] .modal-card input.input-field,
 [data-theme="light"] .modal-card select.input-field {
-  background: rgba(255, 255, 255, 0.85) !important;
+  background-color: rgba(255, 255, 255, 0.85) !important;
   border: 1.5px solid rgba(216, 180, 254, 0.45) !important;
   color: #1E1035 !important;
   box-shadow: 0 2px 8px rgba(126, 34, 206, 0.05), inset 0 1px 1px #FFFFFF !important;
@@ -2739,7 +2763,7 @@ button[title="Cerrar"]:hover,
 [data-theme="light"] .rental-input-field:focus,
 [data-theme="light"] .modal-card input.input-field:focus,
 [data-theme="light"] .modal-card select.input-field:focus {
-  background: #FFFFFF !important;
+  background-color: #FFFFFF !important;
   border-color: #8B5CF6 !important;
   box-shadow: 0 0 16px rgba(139, 92, 246, 0.25) !important;
 }

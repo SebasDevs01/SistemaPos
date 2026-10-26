@@ -45,6 +45,22 @@ export default function InsurancesView({
   const [isExportConfirmOpen, setIsExportConfirmOpen] = useState(false);
   const [lastExportedIds, setLastExportedIds] = useState([]);
 
+  // Clave de localStorage para el libro Excel acumulado
+  const EXCEL_HISTORY_KEY = "insurances_excel_sheets_v1";
+  const MAX_POLIZAS = 152; // total de pólizas del contrato
+
+  // Mapa global: insurance.id → Nº de póliza (1 … 152) ordenado por fecha de registro
+  const globalSequenceMap = useMemo(() => {
+    const sorted = [...insurances].sort((a, b) => {
+      const da = a.fechaRegistro ? new Date(a.fechaRegistro).getTime() : 0;
+      const db = b.fechaRegistro ? new Date(b.fechaRegistro).getTime() : 0;
+      return da - db;
+    });
+    const map = {};
+    sorted.forEach((ins, idx) => { map[ins.id] = idx + 1; });
+    return map;
+  }, [insurances]);
+
   // Buscar producto de Seguro Escolar en catálogo para obtener precio y stock
   const insuranceProduct = useMemo(() => {
     return products.find(p => 
@@ -243,7 +259,7 @@ export default function InsurancesView({
     setFilterReported("pendientes");
   };
 
-  // EXPORTAR A EXCEL (SIN PRECIO)
+  // EXPORTAR A EXCEL — sistema acumulativo por pestañas semanales (mismo archivo)
   const handleExportExcel = () => {
     // Determinar qué registros se exportarán: los seleccionados o todos los visibles
     const targetItems = selectedIds.size > 0 
@@ -255,48 +271,89 @@ export default function InsurancesView({
       return;
     }
 
-    // Estructurar filas para Excel (ESTRICTAMENTE SIN PRECIOS)
-    const excelRows = targetItems.map((item, idx) => {
-      const dateObj = item.fechaRegistro ? new Date(item.fechaRegistro) : new Date();
-      const fechaFmt = dateObj.toLocaleDateString("es-CO", { 
-        year: "numeric", 
-        month: "2-digit", 
-        day: "2-digit" 
+    // Obtener historial de hojas previas del localStorage
+    let sheetsHistory = [];
+    try {
+      const saved = localStorage.getItem(EXCEL_HISTORY_KEY);
+      if (saved) sheetsHistory = JSON.parse(saved);
+      if (!Array.isArray(sheetsHistory)) sheetsHistory = [];
+    } catch (_) { sheetsHistory = []; }
+
+    // Calcular semana del reporte (ISO week label)
+    const now = new Date();
+    const startOfWeek = new Date(now);
+    startOfWeek.setDate(now.getDate() - now.getDay() + 1); // lunes
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6); // domingo
+    const fmt = (d) => d.toLocaleDateString("es-CO", { day: "2-digit", month: "2-digit" });
+    const weekLabel = `Sem_${fmt(startOfWeek)}-${fmt(endOfWeek)}`;
+    const reportYear = now.getFullYear();
+    const sheetName = `${weekLabel}_${reportYear}`.replace(/\//g, "-").slice(0, 31);
+
+    // Estructurar filas para la hoja de esta semana (con Nº de póliza global)
+    const newRows = targetItems
+      .sort((a, b) => (globalSequenceMap[a.id] || 0) - (globalSequenceMap[b.id] || 0))
+      .map((item) => {
+        const dateObj = item.fechaRegistro ? new Date(item.fechaRegistro) : new Date();
+        const fechaFmt = dateObj.toLocaleDateString("es-CO", { 
+          year: "numeric", month: "2-digit", day: "2-digit" 
+        });
+        const numPoliza = globalSequenceMap[item.id] || "";
+        return {
+          "Nº Póliza": numPoliza,
+          "Fecha": fechaFmt,
+          "Nombres y Apellidos del Estudiante": item.estudianteNombre || "",
+          "N° de Identificación": item.identificacion || "",
+          "Edad": item.edad || "",
+          "Grado": item.grado || "",
+          "Teléfono / WhatsApp Responsable": item.telefonoResponsable || ""
+        };
       });
 
+    // Eliminar hoja anterior con el mismo nombre si existe (reemplazo)
+    sheetsHistory = sheetsHistory.filter(s => s.name !== sheetName);
+    sheetsHistory.push({ name: sheetName, rows: newRows });
+    // Limitar a 52 hojas máximo (1 año de reportes semanales)
+    if (sheetsHistory.length > 52) sheetsHistory = sheetsHistory.slice(-52);
+
+    // Guardar historial actualizado
+    try { localStorage.setItem(EXCEL_HISTORY_KEY, JSON.stringify(sheetsHistory)); } catch (_) {}
+
+    // Crear workbook con TODAS las hojas históricas + hoja resumen global
+    const workbook = XLSX.utils.book_new();
+
+    // Hoja resumen: todos los seguros registrados, ordenados por Nº póliza
+    const allSorted = [...insurances].sort((a, b) => 
+      (globalSequenceMap[a.id] || 0) - (globalSequenceMap[b.id] || 0)
+    );
+    const summaryRows = allSorted.map((item) => {
+      const dateObj = item.fechaRegistro ? new Date(item.fechaRegistro) : new Date();
       return {
-        "N°": idx + 1,
-        "Fecha": fechaFmt,
-        "Nombres y Apellidos del Estudiante": item.estudianteNombre || "",
-        "N° de Identificación": item.identificacion || "",
+        "Nº Póliza": globalSequenceMap[item.id] || "",
+        "Fecha": dateObj.toLocaleDateString("es-CO", { year: "numeric", month: "2-digit", day: "2-digit" }),
+        "Estudiante": item.estudianteNombre || "",
+        "Identificación": item.identificacion || "",
         "Edad": item.edad || "",
         "Grado": item.grado || "",
-        "Teléfono / WhatsApp Responsable": item.telefonoResponsable || ""
+        "Tel / WhatsApp": item.telefonoResponsable || "",
+        "Estado": item.reportado ? "Reportado" : "Pendiente"
       };
     });
+    const summaryWs = XLSX.utils.json_to_sheet(summaryRows);
+    summaryWs["!cols"] = [{wch:10},{wch:13},{wch:34},{wch:18},{wch:7},{wch:12},{wch:22},{wch:11}];
+    XLSX.utils.book_append_sheet(workbook, summaryWs, "Histórico Total");
 
-    const worksheet = XLSX.utils.json_to_sheet(excelRows);
+    // Agregar cada hoja semanal histórica
+    for (const sheet of sheetsHistory) {
+      const ws = XLSX.utils.json_to_sheet(sheet.rows || []);
+      ws["!cols"] = [{wch:10},{wch:13},{wch:34},{wch:18},{wch:7},{wch:12},{wch:22}];
+      XLSX.utils.book_append_sheet(workbook, ws, sheet.name);
+    }
 
-    // Ajuste visual de anchos de columna para que el Excel quede perfecto
-    worksheet["!cols"] = [
-      { wch: 6 },  // N°
-      { wch: 13 }, // Fecha
-      { wch: 34 }, // Nombres y Apellidos
-      { wch: 18 }, // Identificación
-      { wch: 8 },  // Edad
-      { wch: 12 }, // Grado
-      { wch: 22 }  // Teléfono WhatsApp
-    ];
-
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Seguros Escolares");
-
-    const todayStr = new Date().toISOString().split("T")[0];
-    const fileName = `Reporte_Seguros_Escolares_${todayStr}.xlsx`;
-
+    const fileName = `Seguros_Escolares_LCG_${reportYear}.xlsx`;
     XLSX.writeFile(workbook, fileName);
 
-    // Guardar ids exportados y abrir modal de confirmación de marcar como reportados
+    // Guardar ids exportados y abrir modal de confirmación
     const exportedIds = targetItems.map(s => s.id);
     setLastExportedIds(exportedIds);
     setIsExportConfirmOpen(true);
@@ -501,6 +558,35 @@ export default function InsurancesView({
           </div>
           <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
             Precio estándar: ${defaultPrice.toLocaleString()}
+          </span>
+        </div>
+
+        {/* Progreso de pólizas 1-152 */}
+        <div style={{
+          background: "linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(109, 40, 217, 0.08) 100%)",
+          border: "1px solid rgba(139, 92, 246, 0.3)",
+          borderRadius: "16px",
+          padding: "16px 18px"
+        }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <span style={{ fontSize: "0.78rem", fontWeight: 700, color: "#a78bfa", textTransform: "uppercase" }}>
+              🔢 Progreso de Pólizas
+            </span>
+            <span style={{ fontSize: "0.72rem", color: "#a78bfa", fontWeight: 800, fontFamily: "var(--font-mono)" }}>
+              {totalVendidos}/{MAX_POLIZAS}
+            </span>
+          </div>
+          <div style={{ marginTop: "8px", height: "6px", background: "rgba(139, 92, 246, 0.15)", borderRadius: "99px", overflow: "hidden" }}>
+            <div style={{
+              height: "100%",
+              width: `${Math.min(100, (totalVendidos / MAX_POLIZAS) * 100).toFixed(1)}%`,
+              background: "linear-gradient(90deg, #8b5cf6, #a855f7)",
+              borderRadius: "99px",
+              transition: "width 0.5s ease"
+            }} />
+          </div>
+          <span style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginTop: "4px", display: "block" }}>
+            {MAX_POLIZAS - totalVendidos} pólizas disponibles (de {MAX_POLIZAS} totales)
           </span>
         </div>
       </div>
@@ -720,6 +806,7 @@ export default function InsurancesView({
                     style={{ cursor: "pointer" }}
                   />
                 </th>
+                <th style={{ padding: "12px 10px", width: "70px", textAlign: "center", color: "#a78bfa" }}>Nº Póliza</th>
                 <th style={{ padding: "12px 14px" }}>Estudiante</th>
                 <th style={{ padding: "12px 14px" }}>Documento</th>
                 <th style={{ padding: "12px 14px" }}>Edad</th>
@@ -733,7 +820,7 @@ export default function InsurancesView({
             <tbody>
               {filteredInsurances.length === 0 ? (
                 <tr>
-                  <td colSpan={9} style={{ padding: "48px 20px", textAlign: "center", color: "var(--text-muted)" }}>
+                  <td colSpan={10} style={{ padding: "48px 20px", textAlign: "center", color: "var(--text-muted)" }}>
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
                       <ShieldCheck size={36} opacity={0.4} />
                       <p style={{ margin: 0, fontWeight: 700, fontSize: "0.95rem" }}>
@@ -780,7 +867,26 @@ export default function InsurancesView({
                         />
                       </td>
 
-                      {/* Estudiante */}
+                      {/* Nº Póliza global */}
+                      <td style={{ padding: "10px 10px", textAlign: "center" }}>
+                        <span style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          width: "32px",
+                          height: "32px",
+                          borderRadius: "8px",
+                          background: "rgba(139, 92, 246, 0.15)",
+                          border: "1px solid rgba(139, 92, 246, 0.35)",
+                          color: "#a78bfa",
+                          fontWeight: 900,
+                          fontSize: "0.78rem",
+                          fontFamily: "var(--font-mono)"
+                        }}>
+                          {globalSequenceMap[ins.id] || "?"}
+                        </span>
+                      </td>
+
                       <td style={{ padding: "12px 14px" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                           <div style={{ 

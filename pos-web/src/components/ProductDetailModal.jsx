@@ -42,21 +42,19 @@ export default function ProductDetailModal({
         style={{
           maxWidth: '820px',
           width: '94%',
-          borderRadius: '24px',
-          background: 'var(--bg-secondary)',
-          border: '1px solid var(--border-strong)',
+          borderRadius: '28px',
           overflow: 'hidden',
-          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.7)'
+          boxShadow: '0 32px 80px -8px rgba(88, 28, 135, 0.55), 0 0 40px rgba(168, 85, 247, 0.18), inset 0 2px 1px rgba(255,255,255,0.35)'
         }}
       >
         {/* HEADER MODAL */}
         <div style={{
           padding: '16px 22px',
-          borderBottom: '1px solid var(--border-color)',
+          borderBottom: '1px solid rgba(216, 180, 254, 0.2)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          background: 'var(--bg-tertiary)'
+          background: 'transparent'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
             <div style={{
@@ -100,19 +98,10 @@ export default function ProductDetailModal({
           <button
             type="button"
             onClick={onClose}
+            className="btn-modal-close-circle"
             style={{
               width: '34px',
               height: '34px',
-              borderRadius: '50%',
-              background: 'rgba(255, 255, 255, 0.08)',
-              border: '1px solid var(--border-color)',
-              color: 'var(--text-main)',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '16px',
-              fontWeight: 700
             }}
           >
             ✕
@@ -135,9 +124,9 @@ export default function ProductDetailModal({
               borderRadius: '18px',
               overflow: 'hidden',
               height: '240px',
-              background: 'rgba(0, 0, 0, 0.3)',
-              border: '1px solid var(--border-color)',
-              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)'
+              background: 'linear-gradient(135deg, rgba(88, 28, 135, 0.35) 0%, rgba(14, 8, 30, 0.5) 100%)',
+              border: '1px solid rgba(216, 180, 254, 0.25)',
+              boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255,255,255,0.15)'
             }}>
               <img
                 src={currentImage}
@@ -357,8 +346,8 @@ export default function ProductDetailModal({
               marginTop: '4px'
             }}>
               <div style={{
-                background: 'rgba(255, 255, 255, 0.04)',
-                border: '1px solid var(--border-color)',
+                background: 'rgba(168, 85, 247, 0.06)',
+                border: '1px solid rgba(216, 180, 254, 0.18)',
                 borderRadius: '12px',
                 padding: '10px',
                 textAlign: 'center'
@@ -372,8 +361,8 @@ export default function ProductDetailModal({
               </div>
 
               <div style={{
-                background: 'rgba(255, 255, 255, 0.04)',
-                border: '1px solid var(--border-color)',
+                background: 'rgba(168, 85, 247, 0.06)',
+                border: '1px solid rgba(216, 180, 254, 0.18)',
                 borderRadius: '12px',
                 padding: '10px',
                 textAlign: 'center'
@@ -387,8 +376,8 @@ export default function ProductDetailModal({
               </div>
 
               <div style={{
-                background: 'rgba(255, 255, 255, 0.04)',
-                border: '1px solid var(--border-color)',
+                background: 'rgba(168, 85, 247, 0.06)',
+                border: '1px solid rgba(216, 180, 254, 0.18)',
                 borderRadius: '12px',
                 padding: '10px',
                 textAlign: 'center'
@@ -407,8 +396,8 @@ export default function ProductDetailModal({
         {/* FOOTER DEL MODAL */}
         <div style={{
           padding: '14px 22px',
-          borderTop: '1px solid var(--border-color)',
-          background: 'var(--bg-tertiary)',
+          borderTop: '1px solid rgba(216, 180, 254, 0.14)',
+          background: 'transparent',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',

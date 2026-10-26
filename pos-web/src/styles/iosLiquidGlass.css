@@ -795,3 +795,756 @@ tbody tr:hover {
     0 0 30px rgba(192, 132, 252, 0.25),
     inset 0 1.5px 2px #FFFFFF !important;
 }
+
+/* ==========================================================================
+   10. BANNERS DE ESTADO DE CAJA (PosView — Liquid Glass Alert Chips)
+   ========================================================================== */
+
+/* OVERRIDE DE BANNERS DE CAJA — Liquid Glass sobre inline-styles */
+/* Caja Cerrada: Amber → Violeta/Amber Liquid Glass */
+.pos-catalog-column > div[style*="rgba(245, 158, 11"],
+.pos-catalog-column > div[style*="rgba(239, 68, 68"] {
+  background: rgba(168, 85, 247, 0.10) !important;
+  backdrop-filter: blur(20px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(200%) !important;
+  border: 1px solid rgba(192, 132, 252, 0.38) !important;
+  border-radius: 16px !important;
+  box-shadow:
+    0 6px 20px -2px rgba(0, 0, 0, 0.35),
+    inset 0 1px 1px rgba(255, 255, 255, 0.20) !important;
+  color: #E9D5FF !important;
+  margin: 8px 12px !important;
+  padding: 10px 16px !important;
+}
+
+[data-theme="light"] .pos-catalog-column > div[style*="rgba(245, 158, 11"],
+[data-theme="light"] .pos-catalog-column > div[style*="rgba(239, 68, 68"] {
+  background: rgba(255, 255, 255, 0.70) !important;
+  backdrop-filter: blur(20px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(200%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow:
+    0 6px 18px -2px rgba(126, 34, 206, 0.10),
+    inset 0 1.5px 2px #FFFFFF !important;
+  color: #581C87 !important;
+}
+
+/* Texto strong dentro de banners */
+.pos-catalog-column > div[style*="rgba(245, 158, 11"] strong,
+.pos-catalog-column > div[style*="rgba(239, 68, 68"] strong {
+  color: #D8B4FE !important;
+}
+
+[data-theme="light"] .pos-catalog-column > div[style*="rgba(245, 158, 11"] strong,
+[data-theme="light"] .pos-catalog-column > div[style*="rgba(239, 68, 68"] strong {
+  color: #7E22CE !important;
+}
+
+/* Botones dentro de banners */
+.pos-catalog-column > div[style*="rgba(245, 158, 11"] .btn,
+.pos-catalog-column > div[style*="rgba(239, 68, 68"] .btn {
+  background: rgba(168, 85, 247, 0.25) !important;
+  border-color: rgba(216, 180, 254, 0.55) !important;
+  color: #E9D5FF !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+[data-theme="light"] .pos-catalog-column > div[style*="rgba(245, 158, 11"] .btn,
+[data-theme="light"] .pos-catalog-column > div[style*="rgba(239, 68, 68"] .btn {
+  background: rgba(168, 85, 247, 0.15) !important;
+  border-color: rgba(147, 51, 234, 0.45) !important;
+  color: #581C87 !important;
+}
+
+/* ==========================================================================
+   11. MODAL HEADER, BODY & FOOTER — Liquid Glass Refinement
+   ========================================================================== */
+.modal-header {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-bottom: 1px solid rgba(216, 180, 254, 0.20) !important;
+  color: #FFFFFF !important;
+}
+
+[data-theme="light"] .modal-header {
+  background: rgba(255, 255, 255, 0.65) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.90) !important;
+  color: #1E1035 !important;
+}
+
+.modal-title {
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .modal-title {
+  color: #1E1035 !important;
+}
+
+.modal-body {
+  background: rgba(10, 5, 25, 0.45) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  color: #FFFFFF !important;
+}
+
+[data-theme="light"] .modal-body {
+  background: rgba(248, 244, 255, 0.55) !important;
+  color: #1E1035 !important;
+}
+
+.modal-footer {
+  background: rgba(10, 5, 25, 0.50) !important;
+  border-top: 1px solid rgba(216, 180, 254, 0.18) !important;
+}
+
+[data-theme="light"] .modal-footer {
+  background: rgba(248, 244, 255, 0.70) !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.90) !important;
+}
+
+/* Botón Cerrar Modal */
+.btn-close-modal {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(216, 180, 254, 0.25) !important;
+  color: #D8B4FE !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+.btn-close-modal:hover {
+  background: rgba(244, 63, 94, 0.20) !important;
+  border-color: rgba(244, 63, 94, 0.50) !important;
+  color: #FCA5A5 !important;
+}
+
+[data-theme="light"] .btn-close-modal {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.95) !important;
+  color: #7E22CE !important;
+}
+
+/* Acciones de Modal */
+.btn-primary-action {
+  background: linear-gradient(135deg, #A855F7 0%, #7E22CE 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.30) !important;
+  border-radius: 14px !important;
+  color: #FFFFFF !important;
+  box-shadow:
+    0 6px 20px rgba(168, 85, 247, 0.45),
+    inset 0 1px 1px rgba(255, 255, 255, 0.40) !important;
+  transition: all 0.22s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.btn-primary-action:hover:not(:disabled) {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 28px rgba(168, 85, 247, 0.65), inset 0 1px 2px #FFFFFF !important;
+  filter: brightness(1.05) !important;
+}
+
+.btn-secondary-action {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 1px solid rgba(216, 180, 254, 0.28) !important;
+  color: #D8B4FE !important;
+  backdrop-filter: blur(12px) !important;
+  border-radius: 14px !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-secondary-action:hover {
+  background: rgba(168, 85, 247, 0.18) !important;
+  border-color: rgba(216, 180, 254, 0.50) !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1px) !important;
+}
+
+[data-theme="light"] .btn-secondary-action {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  color: #581C87 !important;
+}
+
+[data-theme="light"] .btn-secondary-action:hover {
+  background: rgba(255, 255, 255, 0.95) !important;
+  color: #1E1035 !important;
+  box-shadow: 0 4px 14px rgba(126, 34, 206, 0.14) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* ==========================================================================
+   12. TICKET TÉRMICO — Wrapper con Liquid Glass Container (TicketPreview)
+   ========================================================================== */
+.ticket-wrapper {
+  background: rgba(255, 255, 255, 0.96) !important;
+  color: #111111 !important;
+  border-radius: 16px !important;
+  border: 1px solid rgba(168, 85, 247, 0.20) !important;
+  box-shadow:
+    0 8px 28px rgba(0, 0, 0, 0.45),
+    0 0 12px rgba(168, 85, 247, 0.15) !important;
+}
+
+/* El modal-body del TicketPreview lleva fondo oscuro en dark, claro en light */
+.modal-body[style*="#0a0504"],
+.modal-body[style*="0a0504"] {
+  background: rgba(6, 3, 14, 0.60) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+}
+
+[data-theme="light"] .modal-body[style*="#0a0504"],
+[data-theme="light"] .modal-body[style*="0a0504"] {
+  background: rgba(248, 244, 255, 0.65) !important;
+}
+
+/* TicketPreview — Card principal */
+.modal-card[style*="maxWidth: '440px'"],
+.modal-card[style*="max-width: 440px"] {
+  background: linear-gradient(135deg, rgba(18, 10, 36, 0.75) 0%, rgba(10, 5, 22, 0.82) 100%) !important;
+  backdrop-filter: blur(44px) saturate(220%) !important;
+  -webkit-backdrop-filter: blur(44px) saturate(220%) !important;
+  border: 1.5px solid rgba(216, 180, 254, 0.40) !important;
+  box-shadow:
+    0 36px 90px -14px rgba(0, 0, 0, 0.85),
+    0 0 50px rgba(168, 85, 247, 0.42),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.40) !important;
+}
+
+[data-theme="light"] .modal-card[style*="maxWidth: '440px'"],
+[data-theme="light"] .modal-card[style*="max-width: 440px"] {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.80) 0%, rgba(248, 244, 255, 0.70) 100%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.98) !important;
+  box-shadow:
+    0 30px 80px -12px rgba(76, 29, 149, 0.22),
+    0 0 40px rgba(192, 132, 252, 0.28),
+    inset 0 2px 2px #FFFFFF !important;
+}
+
+/* ==========================================================================
+   13. CLOSING TICKET MODAL — Contenedor Liquid Glass con ticket térmico
+   ========================================================================== */
+.closing-ticket-modal-card {
+  background: linear-gradient(160deg, rgba(20, 10, 42, 0.78) 0%, rgba(12, 6, 28, 0.85) 100%) !important;
+  backdrop-filter: blur(42px) saturate(220%) contrast(108%) !important;
+  -webkit-backdrop-filter: blur(42px) saturate(220%) contrast(108%) !important;
+  border: 1.5px solid rgba(216, 180, 254, 0.40) !important;
+  box-shadow:
+    0 40px 100px -15px rgba(0, 0, 0, 0.90),
+    0 0 55px rgba(168, 85, 247, 0.45),
+    inset 0 2px 2px rgba(255, 255, 255, 0.42) !important;
+}
+
+[data-theme="light"] .closing-ticket-modal-card {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.80) 0%, rgba(248, 244, 255, 0.70) 100%) !important;
+  backdrop-filter: blur(42px) saturate(220%) contrast(102%) !important;
+  -webkit-backdrop-filter: blur(42px) saturate(220%) contrast(102%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.98) !important;
+  box-shadow:
+    0 32px 80px -12px rgba(76, 29, 149, 0.22),
+    0 0 44px rgba(192, 132, 252, 0.30),
+    inset 0 2px 2px #FFFFFF !important;
+}
+
+/* Ticket térmico dentro del ClosingTicketModal — mantiene blanco de papel */
+.closing-ticket-modal-card #printable-closing-ticket {
+  background: #FFFFFF !important;
+  color: #000000 !important;
+  border: 1px dashed rgba(168, 85, 247, 0.35) !important;
+  border-radius: 10px !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.20), 0 0 12px rgba(168, 85, 247, 0.12) !important;
+}
+
+[data-theme="light"] .closing-ticket-modal-card #printable-closing-ticket {
+  border: 1px dashed rgba(126, 34, 206, 0.35) !important;
+  box-shadow: 0 4px 16px rgba(126, 34, 206, 0.10) !important;
+}
+
+/* Encabezado sticky del ClosingTicketModal */
+.closing-ticket-modal-card > div[style*="sticky"] {
+  background: rgba(14, 8, 30, 0.75) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border-bottom: 1px solid rgba(216, 180, 254, 0.22) !important;
+}
+
+[data-theme="light"] .closing-ticket-modal-card > div[style*="sticky"] {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.95) !important;
+}
+
+/* ==========================================================================
+   14. MODAL DE PAGO (PaymentModal) — Liquid Glass 
+   ========================================================================== */
+.payment-amount-box {
+  background: rgba(244, 63, 94, 0.10) !important;
+  border: 1.5px solid rgba(244, 63, 94, 0.35) !important;
+  border-radius: 18px !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.20) !important;
+}
+
+[data-theme="light"] .payment-amount-box {
+  background: rgba(255, 255, 255, 0.80) !important;
+  border: 1.5px solid rgba(244, 63, 94, 0.30) !important;
+  box-shadow: 0 4px 16px rgba(244, 63, 94, 0.08), inset 0 1.5px 2px #FFFFFF !important;
+}
+
+.payment-amount-label {
+  color: #D8B4FE !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 0.08em !important;
+}
+
+[data-theme="light"] .payment-amount-label {
+  color: #7E22CE !important;
+}
+
+.payment-amount-val {
+  color: #FFFFFF !important;
+}
+
+[data-theme="light"] .payment-amount-val {
+  color: #1E1035 !important;
+}
+
+.btn-payment-method {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1.5px solid rgba(216, 180, 254, 0.22) !important;
+  border-radius: 16px !important;
+  color: #D8B4FE !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  transition: all 0.22s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.btn-payment-method:hover {
+  background: rgba(168, 85, 247, 0.18) !important;
+  border-color: rgba(192, 132, 252, 0.55) !important;
+  color: #FFFFFF !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 18px rgba(168, 85, 247, 0.35) !important;
+}
+
+.btn-payment-method.selected {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.30) 0%, rgba(126, 34, 206, 0.42) 100%) !important;
+  border: 1.5px solid rgba(216, 180, 254, 0.70) !important;
+  color: #FFFFFF !important;
+  box-shadow:
+    0 6px 20px rgba(168, 85, 247, 0.45),
+    inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+  transform: translateY(-1px) !important;
+}
+
+[data-theme="light"] .btn-payment-method {
+  background: rgba(255, 255, 255, 0.72) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  color: #581C87 !important;
+  box-shadow: 0 2px 8px rgba(126, 34, 206, 0.06) !important;
+}
+
+[data-theme="light"] .btn-payment-method:hover {
+  background: rgba(255, 255, 255, 0.95) !important;
+  color: #1E1035 !important;
+  box-shadow: 0 6px 18px rgba(126, 34, 206, 0.14) !important;
+  border-color: rgba(168, 85, 247, 0.50) !important;
+  transform: translateY(-2px) !important;
+}
+
+[data-theme="light"] .btn-payment-method.selected {
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.18) 0%, rgba(126, 34, 206, 0.25) 100%) !important;
+  border-color: rgba(168, 85, 247, 0.65) !important;
+  color: #1E1035 !important;
+  box-shadow:
+    0 6px 20px rgba(126, 34, 206, 0.22),
+    inset 0 1.5px 2px #FFFFFF !important;
+}
+
+/* Chips de efectivo rápido */
+.btn-cash-chip {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 1px solid rgba(216, 180, 254, 0.22) !important;
+  border-radius: 10px !important;
+  color: #D8B4FE !important;
+  backdrop-filter: blur(10px) !important;
+  transition: all 0.18s ease !important;
+}
+
+.btn-cash-chip:hover {
+  background: linear-gradient(135deg, #A855F7 0%, #7E22CE 100%) !important;
+  border-color: transparent !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 14px rgba(168, 85, 247, 0.45) !important;
+  transform: translateY(-1px) !important;
+}
+
+[data-theme="light"] .btn-cash-chip {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  color: #581C87 !important;
+}
+
+[data-theme="light"] .btn-cash-chip:hover {
+  background: linear-gradient(135deg, #A855F7 0%, #7E22CE 100%) !important;
+  color: #FFFFFF !important;
+  border-color: transparent !important;
+  box-shadow: 0 4px 14px rgba(126, 34, 206, 0.30) !important;
+}
+
+/* Caja de Cambio / Vuelto */
+.change-due-box.ready {
+  background: rgba(16, 185, 129, 0.12) !important;
+  border: 1.5px solid rgba(16, 185, 129, 0.45) !important;
+  border-radius: 16px !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  color: #6EE7B7 !important;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.15) !important;
+}
+
+.change-due-box.insufficient {
+  background: rgba(244, 63, 94, 0.12) !important;
+  border: 1.5px solid rgba(244, 63, 94, 0.45) !important;
+  border-radius: 16px !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  color: #FCA5A5 !important;
+  box-shadow: 0 4px 16px rgba(244, 63, 94, 0.20), inset 0 1px 1px rgba(255, 255, 255, 0.10) !important;
+}
+
+[data-theme="light"] .change-due-box.ready {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border: 1.5px solid rgba(16, 185, 129, 0.50) !important;
+  color: #065F46 !important;
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.15), inset 0 1.5px 2px #FFFFFF !important;
+}
+
+[data-theme="light"] .change-due-box.insufficient {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border: 1.5px solid rgba(244, 63, 94, 0.50) !important;
+  color: #9F1239 !important;
+  box-shadow: 0 4px 16px rgba(244, 63, 94, 0.12), inset 0 1.5px 2px #FFFFFF !important;
+}
+
+/* ==========================================================================
+   15. TOAST NOTIFICATIONS — Liquid Glass Notification Pills
+   ========================================================================== */
+.toast-item {
+  background: linear-gradient(135deg, rgba(22, 12, 42, 0.85) 0%, rgba(14, 8, 30, 0.90) 100%) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border: 1.5px solid rgba(216, 180, 254, 0.35) !important;
+  border-radius: 18px !important;
+  box-shadow:
+    0 16px 42px -4px rgba(0, 0, 0, 0.65),
+    0 0 20px rgba(168, 85, 247, 0.25),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.30) !important;
+  color: #FFFFFF !important;
+}
+
+.toast-item.success {
+  border-color: rgba(16, 185, 129, 0.55) !important;
+  box-shadow:
+    0 16px 42px -4px rgba(0, 0, 0, 0.65),
+    0 0 20px rgba(16, 185, 129, 0.30),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.25) !important;
+}
+
+.toast-item.info {
+  border-color: rgba(192, 132, 252, 0.55) !important;
+}
+
+[data-theme="light"] .toast-item {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.90) 0%, rgba(248, 244, 255, 0.85) 100%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.98) !important;
+  box-shadow:
+    0 12px 36px -4px rgba(76, 29, 149, 0.20),
+    0 0 20px rgba(192, 132, 252, 0.22),
+    inset 0 2px 2px #FFFFFF !important;
+  color: #1E1035 !important;
+}
+
+.toast-progress-bar {
+  background: linear-gradient(90deg, #A855F7, #C084FC) !important;
+  border-radius: 9999px !important;
+}
+
+/* ==========================================================================
+   16. SCROLLBAR GLOBAL ESTILIZADA (Dentro/Fuera de Modales)
+   ========================================================================== */
+::-webkit-scrollbar {
+  width: 6px !important;
+  height: 6px !important;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent !important;
+  margin-block: 6px !important;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(168, 85, 247, 0.30) !important;
+  border-radius: 9999px !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(168, 85, 247, 0.55) !important;
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: rgba(126, 34, 206, 0.22) !important;
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(126, 34, 206, 0.42) !important;
+}
+
+/* ==========================================================================
+   17. BADGES Y CHIPS DE ESTADO (Stock, Precio, Categoría)
+   ========================================================================== */
+.badge,
+.pill-badge,
+[class*="badge-"],
+[class*="-badge"] {
+  border-radius: 9999px !important;
+  font-weight: 700 !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+}
+
+/* Badge de alerta de stock */
+.badge-danger,
+.stock-low-badge {
+  background: rgba(244, 63, 94, 0.18) !important;
+  border: 1px solid rgba(244, 63, 94, 0.45) !important;
+  color: #FCA5A5 !important;
+}
+
+[data-theme="light"] .badge-danger,
+[data-theme="light"] .stock-low-badge {
+  background: rgba(255, 255, 255, 0.80) !important;
+  border: 1px solid rgba(244, 63, 94, 0.45) !important;
+  color: #9F1239 !important;
+}
+
+.badge-success,
+.stock-ok-badge {
+  background: rgba(16, 185, 129, 0.15) !important;
+  border: 1px solid rgba(16, 185, 129, 0.40) !important;
+  color: #6EE7B7 !important;
+}
+
+[data-theme="light"] .badge-success,
+[data-theme="light"] .stock-ok-badge {
+  background: rgba(255, 255, 255, 0.80) !important;
+  border: 1px solid rgba(16, 185, 129, 0.45) !important;
+  color: #065F46 !important;
+}
+
+.badge-primary,
+.badge-purple {
+  background: rgba(168, 85, 247, 0.18) !important;
+  border: 1px solid rgba(192, 132, 252, 0.40) !important;
+  color: #E9D5FF !important;
+}
+
+[data-theme="light"] .badge-primary,
+[data-theme="light"] .badge-purple {
+  background: rgba(168, 85, 247, 0.12) !important;
+  border: 1px solid rgba(147, 51, 234, 0.40) !important;
+  color: #581C87 !important;
+}
+
+/* ==========================================================================
+   18. INPUTS GLOBALES ADICIONALES (Selects, Textareas)
+   ========================================================================== */
+select,
+textarea {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 1px solid rgba(216, 180, 254, 0.22) !important;
+  border-radius: 12px !important;
+  color: #FFFFFF !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  transition: all 0.2s ease !important;
+}
+
+select:focus,
+textarea:focus {
+  border-color: #C084FC !important;
+  box-shadow: 0 0 0 3px rgba(192, 132, 252, 0.30), 0 0 16px rgba(168, 85, 247, 0.22) !important;
+  outline: none !important;
+}
+
+[data-theme="light"] select,
+[data-theme="light"] textarea {
+  background: rgba(255, 255, 255, 0.78) !important;
+  border: 1px solid rgba(192, 132, 252, 0.32) !important;
+  color: #1E1035 !important;
+}
+
+[data-theme="light"] select:focus,
+[data-theme="light"] textarea:focus {
+  border-color: #7E22CE !important;
+  box-shadow: 0 0 0 3px rgba(126, 34, 206, 0.18) !important;
+}
+
+/* Select options override */
+select option {
+  background: #1C1035 !important;
+  color: #E9D5FF !important;
+}
+
+[data-theme="light"] select option {
+  background: #F8F6FF !important;
+  color: #1E1035 !important;
+}
+
+/* ==========================================================================
+   19. GLASS PANEL UTILITY CLASS — Reutilizable en todos los componentes
+   ========================================================================== */
+.glass-panel {
+  background: rgba(22, 12, 42, 0.58) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border: 1px solid rgba(216, 180, 254, 0.22) !important;
+  border-radius: 20px !important;
+  box-shadow:
+    0 12px 32px -4px rgba(0, 0, 0, 0.45),
+    inset 0 1px 1px rgba(255, 255, 255, 0.22) !important;
+  position: relative !important;
+}
+
+[data-theme="light"] .glass-panel {
+  background: rgba(255, 255, 255, 0.68) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow:
+    0 10px 30px -4px rgba(126, 34, 206, 0.09),
+    inset 0 1.5px 2px #FFFFFF !important;
+}
+
+/* Bisel especular: línea blanca en la parte superior */
+.glass-panel::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 8% !important;
+  right: 8% !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.55), transparent) !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
+  border-radius: 9999px !important;
+}
+
+/* ==========================================================================
+   20. VISTA INVENTARIO / VENTAS / CLIENTES — Contenedores Principales
+   ========================================================================== */
+.view-container,
+.inventory-view,
+.sales-view,
+.clients-view,
+.dashboard-view,
+.user-management-view,
+.reports-view,
+.barcode-view,
+.rentals-view,
+.insurances-view {
+  background: transparent !important;
+  min-height: 100vh !important;
+}
+
+/* Tablas dentro de vistas */
+table {
+  border-collapse: separate !important;
+  border-spacing: 0 4px !important;
+}
+
+tbody tr {
+  background: rgba(255, 255, 255, 0.035) !important;
+  transition: background 0.18s ease !important;
+}
+
+[data-theme="light"] tbody tr {
+  background: rgba(255, 255, 255, 0.50) !important;
+}
+
+tbody tr:hover {
+  background: rgba(168, 85, 247, 0.12) !important;
+}
+
+[data-theme="light"] tbody tr:hover {
+  background: rgba(168, 85, 247, 0.08) !important;
+}
+
+/* ==========================================================================
+   21. BOTONES GENERALES RESTANTES (btn-danger, btn-warning, btn-success)
+   ========================================================================== */
+.btn-danger,
+.btn-red {
+  background: linear-gradient(135deg, #F43F5E 0%, #BE123C 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  color: #FFFFFF !important;
+  border-radius: 14px !important;
+  box-shadow: 0 6px 20px rgba(244, 63, 94, 0.40), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+  transition: all 0.22s ease !important;
+}
+
+.btn-danger:hover { filter: brightness(1.08) !important; transform: translateY(-1px) !important; }
+
+.btn-warning,
+.btn-amber {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.90) 0%, rgba(217, 119, 6, 0.95) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  color: #FFFFFF !important;
+  border-radius: 14px !important;
+  box-shadow: 0 6px 20px rgba(245, 158, 11, 0.38), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+  transition: all 0.22s ease !important;
+}
+
+.btn-warning:hover { filter: brightness(1.08) !important; transform: translateY(-1px) !important; }
+
+.btn-success,
+.btn-green {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.28) !important;
+  color: #FFFFFF !important;
+  border-radius: 14px !important;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.38), inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+  transition: all 0.22s ease !important;
+}
+
+.btn-success:hover { filter: brightness(1.08) !important; transform: translateY(-1px) !important; }
+
+/* ==========================================================================
+   22. ANIMACIONES DE ENTRADA LIQUID GLASS
+   ========================================================================== */
+@keyframes liquidGlassIn {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(12px);
+    backdrop-filter: blur(0px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    backdrop-filter: blur(42px);
+  }
+}
+
+.modal-card,
+.modal-content,
+.closing-ticket-modal-card {
+  animation: liquidGlassIn 0.30s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+/* Asegurar que el modal-overlay permita el scroll cuando el contenido es alto */
+.modal-overlay {
+  overflow-y: auto !important;
+  align-items: flex-start !important;
+  padding: 20px !important;
+}
+
+.modal-overlay > .modal-card,
+.modal-overlay > .modal-content,
+.modal-overlay > .modal-box {
+  margin: auto !important;
+}

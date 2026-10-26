@@ -1,0 +1,805 @@
+import os
+
+css_content = """/**
+ * iosLiquidGlass.css — Versión 6.0 MASTER LIQUID GLASS & MJ VIOLET IDENTITY
+ * Sistema de Diseño Ultra-Premium inspirado en Apple VisionOS, macOS Sequoia y el Logo Oficial MJ.
+ * Translucidez real, desenfoque de lente, biseles especulares, refracción caústica y paleta violeta/dusk.
+ */
+
+/* ==========================================================================
+   0. ATMÓSFERA Y FONDO CÓSMICO LIQUID GLASS (MJ DUSK & PEARL AURORA)
+   ========================================================================== */
+html, body {
+  min-height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "DM Sans", "Inter", system-ui, sans-serif !important;
+  -webkit-font-smoothing: antialiased !important;
+  -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* 🌙 DARK MODE: Océano Cósmico Obsidian con Auroras Violetas y Magentas */
+body {
+  background-color: #070410 !important;
+  background-image: 
+    radial-gradient(ellipse 75% 55% at 5% 5%, rgba(147, 51, 234, 0.32) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 50% at 95% 10%, rgba(236, 72, 153, 0.24) 0%, transparent 55%),
+    radial-gradient(ellipse 65% 50% at 50% 50%, rgba(124, 58, 237, 0.20) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 60% at 10% 90%, rgba(99, 102, 241, 0.22) 0%, transparent 55%),
+    radial-gradient(ellipse 85% 65% at 90% 92%, rgba(168, 85, 247, 0.28) 0%, transparent 55%) !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  color: #FFFFFF !important;
+}
+
+/* ☀️ LIGHT MODE: Atmósfera Cristalina Perlada con Auroras Lilas y Violetas del Logo MJ */
+[data-theme="light"] body {
+  background-color: #F8F6FF !important;
+  background-image: 
+    radial-gradient(ellipse 85% 65% at 5% 5%, rgba(216, 180, 254, 0.55) 0%, transparent 60%),
+    radial-gradient(ellipse 75% 55% at 95% 10%, rgba(244, 114, 182, 0.32) 0%, transparent 55%),
+    radial-gradient(ellipse 65% 50% at 50% 45%, rgba(196, 181, 253, 0.40) 0%, transparent 50%),
+    radial-gradient(ellipse 75% 60% at 10% 90%, rgba(233, 213, 255, 0.48) 0%, transparent 55%),
+    radial-gradient(ellipse 85% 65% at 90% 95%, rgba(192, 132, 252, 0.35) 0%, transparent 55%) !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  color: #1E1035 !important;
+}
+
+/* Permitir que la atmósfera brille a través de todos los contenedores padre */
+#root,
+.pos-layout,
+.app-fullscreen-pos,
+.pos-catalog-column,
+.pos-catalog-content,
+.main-content,
+.view-container,
+.product-grid-container {
+  background: transparent !important;
+  background-color: transparent !important;
+}
+
+/* ==========================================================================
+   1. HEADER FLOTANTE — Liquid Glass Navigation Bar (Apple Style)
+   ========================================================================== */
+.app-header,
+.header,
+.pos-header {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 200 !important;
+  background: rgba(14, 8, 28, 0.70) !important;
+  backdrop-filter: blur(32px) saturate(200%) contrast(108%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(200%) contrast(108%) !important;
+  border-bottom: 1px solid rgba(216, 180, 254, 0.22) !important;
+  box-shadow: 
+    0 1px 0 rgba(255, 255, 255, 0.15),
+    0 12px 36px -4px rgba(0, 0, 0, 0.50),
+    0 0 20px rgba(168, 85, 247, 0.15) !important;
+}
+
+[data-theme="light"] .app-header,
+[data-theme="light"] .header,
+[data-theme="light"] .pos-header {
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(32px) saturate(200%) contrast(105%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(200%) contrast(105%) !important;
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 
+    0 1px 0 #FFFFFF,
+    0 10px 30px -4px rgba(126, 34, 206, 0.08),
+    0 0 20px rgba(192, 132, 252, 0.15) !important;
+}
+
+/* Logo MJ con micro-interacción óptica */
+.logo-icon--liquid-glass,
+.header-logo .logo-icon {
+  background: transparent !important;
+  box-shadow: none !important;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+.logo-icon--liquid-glass:hover,
+.header-logo .logo-icon:hover {
+  transform: scale(1.10) rotate(-2deg) !important;
+}
+
+.logo-mj-img,
+.logo-icon--liquid-glass img {
+  filter: drop-shadow(0 6px 18px rgba(168, 85, 247, 0.6)) !important;
+  transition: filter 0.3s ease !important;
+}
+
+.logo-icon--liquid-glass:hover img {
+  filter: drop-shadow(0 8px 25px rgba(236, 72, 153, 0.75)) !important;
+}
+
+.logo-text h1 {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif !important;
+  font-size: 1.1rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.02em !important;
+  background: linear-gradient(135deg, #FFFFFF 0%, #E9D5FF 60%, #C084FC 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+[data-theme="light"] .logo-text h1 {
+  background: linear-gradient(135deg, #1E1035 0%, #581C87 60%, #9333EA 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* Cápsula de Navegación Segmentada (Header Nav) */
+.header-nav {
+  background: rgba(0, 0, 0, 0.30) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+  border: 1px solid rgba(216, 180, 254, 0.18) !important;
+  border-radius: 9999px !important;
+  padding: 4px !important;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="light"] .header-nav {
+  background: rgba(233, 213, 255, 0.35) !important;
+  border: 1px solid rgba(255, 255, 255, 0.85) !important;
+  box-shadow: inset 0 1px 2px rgba(126, 34, 206, 0.08) !important;
+}
+
+.nav-tab {
+  border-radius: 9999px !important;
+  font-size: 0.82rem !important;
+  font-weight: 600 !important;
+  padding: 6px 15px !important;
+  color: #D8B4FE !important;
+  transition: all 0.22s cubic-bezier(0.25, 1, 0.5, 1) !important;
+  border: 1px solid transparent !important;
+}
+
+[data-theme="light"] .nav-tab {
+  color: #581C87 !important;
+}
+
+.nav-tab:hover:not(.nav-tab--active) {
+  background: rgba(168, 85, 247, 0.18) !important;
+  color: #FFFFFF !important;
+  border-color: rgba(216, 180, 254, 0.3) !important;
+}
+
+[data-theme="light"] .nav-tab:hover:not(.nav-tab--active) {
+  background: rgba(255, 255, 255, 0.85) !important;
+  color: #1E1035 !important;
+  box-shadow: 0 2px 8px rgba(126, 34, 206, 0.1) !important;
+}
+
+/* Pestaña Activa: Cápsula Violeta Líquida Radiante */
+.nav-tab--active {
+  background: linear-gradient(135deg, #A855F7 0%, #7E22CE 100%) !important;
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+  border: 1px solid rgba(255, 255, 255, 0.45) !important;
+  box-shadow: 
+    0 4px 18px rgba(168, 85, 247, 0.55),
+    inset 0 1px 1px rgba(255, 255, 255, 0.6) !important;
+  position: relative !important;
+}
+
+.nav-tab--active::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 15% !important;
+  right: 15% !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, #FFFFFF, transparent) !important;
+}
+
+/* Chips del Header (Hora Colombia, Conexión, Caja) */
+.colombia-time-chip,
+.network-badge,
+.count-chip,
+.header-actions .btn-header-action {
+  background: rgba(255, 255, 255, 0.06) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1px solid rgba(216, 180, 254, 0.20) !important;
+  border-radius: 9999px !important;
+  transition: all 0.2s ease !important;
+}
+
+[data-theme="light"] .colombia-time-chip,
+[data-theme="light"] .network-badge,
+[data-theme="light"] .count-chip,
+[data-theme="light"] .header-actions .btn-header-action {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 2px 10px rgba(126, 34, 206, 0.08) !important;
+  color: #1E1035 !important;
+}
+
+/* ==========================================================================
+   2. CONTROLES DEL CATÁLOGO Y BUSCADOR (LIQUID GLASS PILL)
+   ========================================================================== */
+.pos-catalog-controls,
+.catalog-controls {
+  background: rgba(22, 14, 44, 0.58) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border: 1px solid rgba(216, 180, 254, 0.22) !important;
+  border-radius: 22px !important;
+  box-shadow: 
+    0 12px 32px -4px rgba(0, 0, 0, 0.45),
+    inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
+  margin: 12px 16px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+[data-theme="light"] .pos-catalog-controls,
+[data-theme="light"] .catalog-controls {
+  background: rgba(255, 255, 255, 0.68) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 
+    0 10px 30px -4px rgba(126, 34, 206, 0.08),
+    inset 0 1.5px 2px #FFFFFF !important;
+}
+
+/* Campo de Búsqueda de Código de Barras */
+.input-field,
+.search-input {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 1px solid rgba(216, 180, 254, 0.22) !important;
+  border-radius: 14px !important;
+  color: #FFFFFF !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25) !important;
+  transition: all 0.2s ease !important;
+}
+
+.input-field:focus,
+.search-input:focus {
+  border-color: #C084FC !important;
+  box-shadow: 0 0 0 3px rgba(192, 132, 252, 0.35), 0 0 18px rgba(168, 85, 247, 0.25) !important;
+  outline: none !important;
+}
+
+[data-theme="light"] .input-field,
+[data-theme="light"] .search-input {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border: 1px solid rgba(192, 132, 252, 0.35) !important;
+  color: #1E1035 !important;
+  box-shadow: inset 0 1px 2px rgba(126, 34, 206, 0.05) !important;
+}
+
+[data-theme="light"] .input-field:focus,
+[data-theme="light"] .search-input:focus {
+  border-color: #7E22CE !important;
+  box-shadow: 0 0 0 3px rgba(126, 34, 206, 0.2), 0 0 14px rgba(192, 132, 252, 0.2) !important;
+}
+
+/* Pastillas de Categorías */
+.category-tab,
+.category-tab-btn,
+.category-pill-filter,
+[class*="category-button"] {
+  border-radius: 9999px !important;
+  font-weight: 600 !important;
+  font-size: 0.82rem !important;
+  padding: 7px 15px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(216, 180, 254, 0.18) !important;
+  color: #D8B4FE !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  transition: all 0.2s ease !important;
+}
+
+.category-tab:hover,
+.category-tab-btn:hover,
+.category-pill-filter:hover {
+  background: rgba(168, 85, 247, 0.20) !important;
+  border-color: rgba(216, 180, 254, 0.45) !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1px) !important;
+}
+
+.category-tab.active,
+.category-tab-btn.active,
+.category-pill-active {
+  background: linear-gradient(135deg, #A855F7 0%, #7E22CE 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.45) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.45), inset 0 1px 1px #FFFFFF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .category-tab,
+[data-theme="light"] .category-tab-btn,
+[data-theme="light"] .category-pill-filter {
+  background: rgba(255, 255, 255, 0.70) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  color: #581C87 !important;
+  box-shadow: 0 2px 8px rgba(126, 34, 206, 0.06) !important;
+}
+
+[data-theme="light"] .category-tab:hover,
+[data-theme="light"] .category-tab-btn:hover,
+[data-theme="light"] .category-pill-filter:hover {
+  background: rgba(255, 255, 255, 0.95) !important;
+  color: #1E1035 !important;
+  box-shadow: 0 4px 12px rgba(126, 34, 206, 0.12) !important;
+}
+
+/* ==========================================================================
+   3. TARJETAS DE PRODUCTOS (LIQUID GLASS SLABS CON REFLEJO ÓPTICO)
+   ========================================================================== */
+.pos-product-card,
+.product-card {
+  background: linear-gradient(135deg, rgba(28, 16, 52, 0.58) 0%, rgba(14, 8, 30, 0.68) 100%) !important;
+  backdrop-filter: blur(24px) saturate(190%) contrast(106%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(190%) contrast(106%) !important;
+  border: 1px solid rgba(216, 180, 254, 0.22) !important;
+  border-radius: 20px !important;
+  box-shadow: 
+    0 12px 32px -4px rgba(0, 0, 0, 0.45),
+    0 0 16px rgba(168, 85, 247, 0.12),
+    inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
+  transition: 
+    transform 0.28s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.28s cubic-bezier(0.25, 1, 0.5, 1),
+    border-color 0.2s ease !important;
+  overflow: hidden !important;
+  position: relative !important;
+}
+
+.pos-product-card::before,
+.product-card::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 8% !important;
+  right: 8% !important;
+  top: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent) !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
+}
+
+.pos-product-card:hover,
+.product-card:hover {
+  transform: translateY(-5px) scale(1.02) !important;
+  border-color: rgba(192, 132, 252, 0.70) !important;
+  box-shadow: 
+    0 22px 50px -8px rgba(0, 0, 0, 0.65),
+    0 0 25px rgba(168, 85, 247, 0.35),
+    0 0 15px rgba(236, 72, 153, 0.20),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.45) !important;
+}
+
+[data-theme="light"] .pos-product-card,
+[data-theme="light"] .product-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.72) 0%, rgba(246, 241, 255, 0.58) 100%) !important;
+  backdrop-filter: blur(24px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 
+    0 8px 24px -2px rgba(126, 34, 206, 0.08),
+    0 0 16px rgba(192, 132, 252, 0.12),
+    inset 0 1.5px 2px #FFFFFF !important;
+}
+
+[data-theme="light"] .pos-product-card:hover,
+[data-theme="light"] .product-card:hover {
+  transform: translateY(-5px) scale(1.02) !important;
+  border-color: rgba(168, 85, 247, 0.60) !important;
+  box-shadow: 
+    0 18px 45px -6px rgba(126, 34, 206, 0.18),
+    0 0 25px rgba(192, 132, 252, 0.30),
+    inset 0 2px 2px #FFFFFF !important;
+}
+
+/* Botón Vender Unidad en Tarjetas */
+.btn-pos-add {
+  background: linear-gradient(135deg, #A855F7 0%, #7E22CE 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.30) !important;
+  border-radius: 12px !important;
+  color: #FFFFFF !important;
+  box-shadow: 
+    0 4px 16px rgba(168, 85, 247, 0.42),
+    inset 0 1px 1px rgba(255, 255, 255, 0.45) !important;
+  transition: all 0.2s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.btn-pos-add:hover:not(:disabled) {
+  filter: brightness(1.10) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(168, 85, 247, 0.60), inset 0 1px 2px #FFFFFF !important;
+}
+
+.btn-pos-add:active:not(:disabled) {
+  transform: scale(0.975) !important;
+}
+
+/* ==========================================================================
+   4. PANEL DERECHO DE CARRITO (LIQUID GLASS FLOATING SLAB)
+   ========================================================================== */
+.pos-cart-column,
+.cart-panel,
+.ticket-panel {
+  background: rgba(18, 10, 36, 0.62) !important;
+  backdrop-filter: blur(34px) saturate(210%) contrast(108%) !important;
+  -webkit-backdrop-filter: blur(34px) saturate(210%) contrast(108%) !important;
+  border: 1px solid rgba(216, 180, 254, 0.25) !important;
+  border-radius: 24px !important;
+  box-shadow: 
+    0 18px 48px -4px rgba(0, 0, 0, 0.55),
+    0 0 20px rgba(168, 85, 247, 0.15),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.30) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+[data-theme="light"] .pos-cart-column,
+[data-theme="light"] .cart-panel,
+[data-theme="light"] .ticket-panel {
+  background: rgba(255, 255, 255, 0.68) !important;
+  backdrop-filter: blur(34px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(34px) saturate(200%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 
+    0 14px 40px -4px rgba(126, 34, 206, 0.10),
+    0 0 20px rgba(192, 132, 252, 0.18),
+    inset 0 1.5px 2px #FFFFFF !important;
+}
+
+/* Ítems del carrito */
+.pos-cart-items-scroll > div {
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1px solid rgba(216, 180, 254, 0.18) !important;
+  border-radius: 14px !important;
+  margin-bottom: 8px !important;
+  transition: all 0.2s ease !important;
+}
+
+[data-theme="light"] .pos-cart-items-scroll > div {
+  background: rgba(255, 255, 255, 0.60) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.90) !important;
+  box-shadow: 0 2px 8px rgba(126, 34, 206, 0.05) !important;
+}
+
+/* Botón Venta Express en Carrito */
+button[title*="Venta Express"],
+button[title*="artículos express"] {
+  background: rgba(168, 85, 247, 0.12) !important;
+  border: 1px solid rgba(192, 132, 252, 0.45) !important;
+  color: #D8B4FE !important;
+  backdrop-filter: blur(12px) !important;
+  border-radius: 12px !important;
+  transition: all 0.2s ease !important;
+}
+
+[data-theme="light"] button[title*="Venta Express"],
+[data-theme="light"] button[title*="artículos express"] {
+  background: rgba(168, 85, 247, 0.10) !important;
+  color: #7E22CE !important;
+  border-color: rgba(168, 85, 247, 0.35) !important;
+}
+
+/* Botón de Cobro Final (F2) */
+.pos-checkout-btn,
+.btn-checkout,
+.pos-cart-footer .btn-success {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  border-radius: 16px !important;
+  box-shadow: 
+    0 8px 25px rgba(16, 185, 129, 0.45),
+    0 0 20px rgba(168, 85, 247, 0.25),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.50) !important;
+  transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.pos-checkout-btn:hover:not(:disabled),
+.btn-checkout:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.01) !important;
+  box-shadow: 
+    0 12px 32px rgba(16, 185, 129, 0.60),
+    0 0 30px rgba(168, 85, 247, 0.35),
+    inset 0 2px 2px #FFFFFF !important;
+}
+
+/* ==========================================================================
+   5. VENTANAS MODALES (APPLE VISIONOS / LIQUID GLASS WINDOWS)
+   ========================================================================== */
+.modal-overlay,
+.reports-modal-overlay,
+.price-audit-overlay,
+[class*="modal-overlay"] {
+  background: rgba(8, 4, 18, 0.65) !important;
+  backdrop-filter: blur(20px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+  overflow: hidden !important;
+}
+
+[data-theme="light"] .modal-overlay,
+[data-theme="light"] .reports-modal-overlay,
+[data-theme="light"] .price-audit-overlay,
+[data-theme="light"] [class*="modal-overlay"] {
+  background: rgba(30, 16, 53, 0.35) !important;
+  backdrop-filter: blur(20px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+}
+
+.modal-content,
+.modal-card,
+.modal-box,
+.reports-modal-container,
+.price-audit-modal,
+[class*="modal-card"],
+[class*="modal-container"] {
+  background: linear-gradient(135deg, rgba(22, 12, 42, 0.70) 0%, rgba(14, 8, 30, 0.78) 100%) !important;
+  backdrop-filter: blur(42px) saturate(220%) contrast(108%) !important;
+  -webkit-backdrop-filter: blur(42px) saturate(220%) contrast(108%) !important;
+  border: 1.5px solid rgba(216, 180, 254, 0.35) !important;
+  border-radius: 28px !important;
+  box-shadow: 
+    0 35px 90px -15px rgba(0, 0, 0, 0.85),
+    0 0 50px -10px rgba(168, 85, 247, 0.40),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.40) !important;
+  color: #FFFFFF !important;
+  position: relative !important;
+  max-height: min(92vh, 880px) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain !important;
+  scrollbar-gutter: stable !important;
+}
+
+[data-theme="light"] .modal-content,
+[data-theme="light"] .modal-card,
+[data-theme="light"] .modal-box,
+[data-theme="light"] .reports-modal-container,
+[data-theme="light"] .price-audit-modal,
+[data-theme="light"] [class*="modal-card"],
+[data-theme="light"] [class*="modal-container"] {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(248, 244, 255, 0.65) 100%) !important;
+  backdrop-filter: blur(42px) saturate(220%) contrast(102%) !important;
+  -webkit-backdrop-filter: blur(42px) saturate(220%) contrast(102%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 
+    0 30px 80px -12px rgba(76, 29, 149, 0.22),
+    0 0 40px rgba(192, 132, 252, 0.25),
+    inset 0 2px 2px #FFFFFF !important;
+  color: #1E1035 !important;
+}
+
+/* Tarjetas y Contenedores Interiores dentro de los Modales */
+.modal-content div[style*="border-radius"],
+.modal-card div[style*="border-radius"] {
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+}
+
+/* Scrollbar interno elegante */
+.modal-content::-webkit-scrollbar,
+.modal-card::-webkit-scrollbar,
+[class*="modal-card"]::-webkit-scrollbar {
+  width: 5px !important;
+}
+
+.modal-content::-webkit-scrollbar-track,
+.modal-card::-webkit-scrollbar-track,
+[class*="modal-card"]::-webkit-scrollbar-track {
+  background: transparent !important;
+  margin-block: 20px !important;
+}
+
+.modal-content::-webkit-scrollbar-thumb,
+.modal-card::-webkit-scrollbar-thumb,
+[class*="modal-card"]::-webkit-scrollbar-thumb {
+  background: rgba(216, 180, 254, 0.35) !important;
+  border-radius: 9999px !important;
+}
+
+[data-theme="light"] .modal-content::-webkit-scrollbar-thumb,
+[data-theme="light"] .modal-card::-webkit-scrollbar-thumb {
+  background: rgba(126, 34, 206, 0.25) !important;
+}
+
+/* ==========================================================================
+   6. CONTROL Y CIERRE DE CAJA — RECREACIÓN LIQUID GLASS
+   ========================================================================== */
+/* Banners informativos dentro del modal de caja */
+div[style*="background: rgba(99, 102, 241, 0.08)"],
+div[style*="background: rgba(99, 102, 241"] {
+  background: rgba(168, 85, 247, 0.12) !important;
+  border: 1px solid rgba(192, 132, 252, 0.4) !important;
+  color: #E9D5FF !important;
+}
+
+[data-theme="light"] div[style*="background: rgba(99, 102, 241"] {
+  background: rgba(168, 85, 247, 0.08) !important;
+  border: 1px solid rgba(147, 51, 234, 0.3) !important;
+  color: #581C87 !important;
+}
+
+/* Banner de Jornada Activa (Verde Cristal) */
+div[style*="rgba(16, 185, 129, 0.18)"],
+div[style*="rgba(16, 185, 129"] {
+  background: rgba(16, 185, 129, 0.12) !important;
+  border: 1px solid rgba(16, 185, 129, 0.40) !important;
+}
+
+/* Banner de Caja Cerrada (Rojo Cristal con Resplandor) */
+div[style*="rgba(239, 68, 68, 0.18)"],
+div[style*="rgba(239, 68, 68"] {
+  background: rgba(244, 63, 94, 0.12) !important;
+  border: 1px solid rgba(244, 63, 94, 0.40) !important;
+}
+
+/* Pestañas de Turno Actual vs Historial en Modal de Caja */
+button[style*="var(--accent-blue)"],
+button[style*="#3b82f6"] {
+  background: linear-gradient(135deg, #A855F7 0%, #7E22CE 100%) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.45) !important;
+}
+
+/* Botones de Montos Rápidos (0, 20000, 50000, etc.) */
+button[style*="Sin Base"],
+div[style*="display: flex; gap: 6px; margin-top: 8px"] button {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(216, 180, 254, 0.22) !important;
+  color: #D8B4FE !important;
+  border-radius: 10px !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+[data-theme="light"] div[style*="display: flex; gap: 6px; margin-top: 8px"] button {
+  background: rgba(255, 255, 255, 0.70) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  color: #581C87 !important;
+}
+
+/* ==========================================================================
+   7. BOTONES GLOBALES & ACCIONES
+   ========================================================================== */
+.btn-primary,
+.btn-indigo,
+.btn-save {
+  background: linear-gradient(135deg, #A855F7 0%, #7E22CE 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.30) !important;
+  border-radius: 14px !important;
+  color: #FFFFFF !important;
+  box-shadow: 
+    0 6px 20px rgba(168, 85, 247, 0.45),
+    inset 0 1px 1px rgba(255, 255, 255, 0.45) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.btn-primary:hover,
+.btn-indigo:hover,
+.btn-save:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 28px rgba(168, 85, 247, 0.65), inset 0 1px 2px #FFFFFF !important;
+}
+
+.btn-outline {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(216, 180, 254, 0.25) !important;
+  color: #D8B4FE !important;
+  backdrop-filter: blur(12px) !important;
+  border-radius: 12px !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-outline:hover {
+  background: rgba(168, 85, 247, 0.20) !important;
+  border-color: rgba(216, 180, 254, 0.50) !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1px) !important;
+}
+
+[data-theme="light"] .btn-outline {
+  background: rgba(255, 255, 255, 0.70) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  color: #581C87 !important;
+}
+
+[data-theme="light"] .btn-outline:hover {
+  background: rgba(255, 255, 255, 0.95) !important;
+  color: #1E1035 !important;
+  box-shadow: 0 4px 14px rgba(126, 34, 206, 0.12) !important;
+}
+
+/* ==========================================================================
+   8. TABLAS Y VISTAS DE REPORTES (INVENTARIO, VENTAS, CLIENTES)
+   ========================================================================== */
+.table-container,
+.inventory-table,
+.sales-table,
+.clients-table {
+  background: rgba(22, 14, 44, 0.58) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border: 1px solid rgba(216, 180, 254, 0.22) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 16px 42px -4px rgba(0, 0, 0, 0.45) !important;
+  overflow: hidden !important;
+}
+
+[data-theme="light"] .table-container,
+[data-theme="light"] .inventory-table,
+[data-theme="light"] .sales-table,
+[data-theme="light"] .clients-table {
+  background: rgba(255, 255, 255, 0.68) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 12px 32px -4px rgba(126, 34, 206, 0.08) !important;
+}
+
+thead th {
+  background: rgba(14, 8, 28, 0.65) !important;
+  border-bottom: 1px solid rgba(216, 180, 254, 0.25) !important;
+  color: #D8B4FE !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] thead th {
+  background: rgba(243, 238, 255, 0.75) !important;
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  color: #581C87 !important;
+}
+
+tbody tr:hover {
+  background: rgba(168, 85, 247, 0.10) !important;
+}
+
+/* ==========================================================================
+   9. ORION WIDGET — ASISTENTE IA EN VIDRIO LÍQUIDO
+   ========================================================================== */
+.orion-chat-bubble,
+.orion-window,
+[class*="orion-dialog"] {
+  background: linear-gradient(135deg, rgba(22, 12, 42, 0.75) 0%, rgba(14, 8, 30, 0.82) 100%) !important;
+  backdrop-filter: blur(36px) saturate(210%) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(210%) !important;
+  border: 1.5px solid rgba(216, 180, 254, 0.35) !important;
+  border-radius: 24px !important;
+  box-shadow: 
+    0 25px 65px -10px rgba(0, 0, 0, 0.8),
+    0 0 35px rgba(168, 85, 247, 0.35),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.35) !important;
+}
+
+[data-theme="light"] .orion-chat-bubble,
+[data-theme="light"] .orion-window,
+[data-theme="light"] [class*="orion-dialog"] {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.78) 0%, rgba(248, 244, 255, 0.68) 100%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 
+    0 20px 50px -10px rgba(76, 29, 149, 0.18),
+    0 0 30px rgba(192, 132, 252, 0.25),
+    inset 0 1.5px 2px #FFFFFF !important;
+}
+"""
+
+with open(r"d:\Sistema Pos - Miselanea\pos-web\src\styles\iosLiquidGlass.css", "w", encoding="utf-8") as f:
+    f.write(css_content)
+
+print(f"Generated iosLiquidGlass.css ({len(css_content)} chars)")

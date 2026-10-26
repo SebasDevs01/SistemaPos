@@ -588,6 +588,8 @@ export default function InventoryView({
             return (
               <button
                 key={cat}
+                type="button"
+                className={`category-pill-filter ${isSelected ? "category-pill-active" : ""}`}
                 onClick={() => setSelectedCategory(cat)}
                 style={{
                   padding: "6px 14px",
@@ -608,6 +610,7 @@ export default function InventoryView({
                 <span>{cat}</span>
                 {isSinStock && (
                   <span
+                    className="category-pill-count count-sin-stock"
                     style={{
                       fontSize: "0.72rem",
                       padding: "1px 7px",
@@ -622,6 +625,7 @@ export default function InventoryView({
                 )}
                 {isBajoStock && (
                   <span
+                    className="category-pill-count count-bajo-stock"
                     style={{
                       fontSize: "0.72rem",
                       padding: "1px 7px",

@@ -1,7 +1,10 @@
 /**
- * iosLiquidGlass.css — Versión 4.0 Definitiva
+ * iosLiquidGlass.css — Versión 5.0 Integral
  * Sistema de Diseño Apple Liquid Glass & Vibrancy
- * Inspirado en la guía editorial y física de materiales de Apple & UTS Power Zone
+ * Inspirado en la física de materiales de visionOS / macOS Sequoia / iOS 18 y la Guía UTS Power Zone
+ * 
+ * Totalmente desacoplado de la lógica: no altera funciones, estados ni flujos de venta.
+ * Garantiza armonía perfecta en MODO CLARO (vidrio cristalino perla) y MODO OSCURO (vidrio ahumado zafiro).
  */
 
 /* ==========================================================================
@@ -17,7 +20,7 @@ body {
   position: relative !important;
 }
 
-/* 🌙 DARK MODE: Orbes bioluminiscentes zafiro e índigo para que el vidrio oscuro AHUMADO refracte luz viva */
+/* 🌙 DARK MODE: Orbes bioluminiscentes zafiro, índigo y esmeralda que refractan luz a través del vidrio ahumado */
 body::before {
   content: "" !important;
   position: fixed !important;
@@ -32,7 +35,7 @@ body::before {
     radial-gradient(ellipse 70% 60% at 25% 85%, rgba(0, 199, 190, 0.10) 0%, transparent 55%) !important;
 }
 
-/* ☀️ LIGHT MODE: Atmósfera perlada con orbes celestes, lavanda y esmeralda */
+/* ☀️ LIGHT MODE: Atmósfera perlada con orbes celestes, lavanda y esmeralda suaves */
 [data-theme="light"] body {
   background: #EEF2F7 !important;
   color: #0F172A !important;
@@ -52,13 +55,13 @@ body::before {
 }
 
 /* ==========================================================================
-   1. HEADER FLOTANTE — Liquid Glass Navigation Bar
+   1. HEADER FLOTANTE — Liquid Glass Navigation Bar (Apple Style)
    ========================================================================== */
 .app-header {
   position: sticky !important;
   top: 0 !important;
   z-index: 200 !important;
-  background: rgba(11, 17, 27, 0.75) !important;
+  background: rgba(11, 17, 27, 0.78) !important;
   backdrop-filter: blur(34px) saturate(190%) contrast(105%) !important;
   -webkit-backdrop-filter: blur(34px) saturate(190%) contrast(105%) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
@@ -68,7 +71,7 @@ body::before {
 }
 
 [data-theme="light"] .app-header {
-  background: rgba(255, 255, 255, 0.82) !important;
+  background: rgba(255, 255, 255, 0.84) !important;
   backdrop-filter: blur(34px) saturate(190%) contrast(105%) !important;
   -webkit-backdrop-filter: blur(34px) saturate(190%) contrast(105%) !important;
   border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
@@ -134,10 +137,36 @@ body::before {
     inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
 }
 
+/* ── Badges y Chips en Header (Hora COL, Caja, Conexión) ── */
+.colombia-time-chip,
+.network-badge,
+.count-chip {
+  border-radius: 9999px !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  transition: all 0.2s ease !important;
+}
+
+.colombia-time-chip {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+[data-theme="light"] .colombia-time-chip {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04) !important;
+}
+
+[data-theme="light"] .colombia-time-chip span {
+  color: #0F172A !important;
+}
+
 /* ==========================================================================
    2. PRODUCT CARDS — Liquid Glass Surface con Borde Especular Apple
    ========================================================================== */
-.product-card {
+.product-card,
+.pos-product-card {
   background: linear-gradient(135deg, rgba(26, 36, 56, 0.72) 0%, rgba(14, 20, 32, 0.78) 100%) !important;
   backdrop-filter: blur(28px) saturate(190%) contrast(105%) !important;
   -webkit-backdrop-filter: blur(28px) saturate(190%) contrast(105%) !important;
@@ -155,7 +184,8 @@ body::before {
 }
 
 /* Brillo especular superior continuo (técnica maestra UTS Power Zone & Apple) */
-.product-card::before {
+.product-card::before,
+.pos-product-card::before {
   content: "" !important;
   position: absolute !important;
   left: 8% !important;
@@ -167,7 +197,8 @@ body::before {
   z-index: 2 !important;
 }
 
-.product-card:hover {
+.product-card:hover,
+.pos-product-card:hover {
   transform: translateY(-4px) scale(1.01) !important;
   box-shadow: 
     0 24px 54px -8px rgba(0, 0, 0, 0.65),
@@ -177,8 +208,9 @@ body::before {
 }
 
 /* ── MODO CLARO PRODUCT CARDS (Vidrio Cristalino con Resplandor) ── */
-[data-theme="light"] .product-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.82) 0%, rgba(246, 249, 253, 0.72) 100%) !important;
+[data-theme="light"] .product-card,
+[data-theme="light"] .pos-product-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(246, 249, 253, 0.74) 100%) !important;
   backdrop-filter: blur(28px) saturate(190%) contrast(102%) !important;
   -webkit-backdrop-filter: blur(28px) saturate(190%) contrast(102%) !important;
   border: 1px solid rgba(255, 255, 255, 0.98) !important;
@@ -188,11 +220,13 @@ body::before {
     inset 0 1px 1px rgba(255, 255, 255, 1) !important;
 }
 
-[data-theme="light"] .product-card::before {
+[data-theme="light"] .product-card::before,
+[data-theme="light"] .pos-product-card::before {
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 1), transparent) !important;
 }
 
-[data-theme="light"] .product-card:hover {
+[data-theme="light"] .product-card:hover,
+[data-theme="light"] .pos-product-card:hover {
   transform: translateY(-4px) scale(1.01) !important;
   box-shadow: 
     0 10px 24px -2px rgba(15, 23, 42, 0.08),
@@ -203,7 +237,7 @@ body::before {
 }
 
 /* ==========================================================================
-   3. ETIQUETAS Y BADGES DE PRODUCTO (ADAPTACIÓN MODO CLARO Y OSCURO)
+   3. ETIQUETAS, BADGES Y PASTILLAS (SISTEMA INTEGRAL APPLE LIQUID GLASS)
    ========================================================================== */
 /* Badge de Categoría sobre la foto */
 .product-card-category-badge {
@@ -222,7 +256,7 @@ body::before {
 
 /* En Modo Claro se transforma en una cápsula de cristal translúcida y nítida */
 [data-theme="light"] .product-card-category-badge {
-  background: rgba(255, 255, 255, 0.88) !important;
+  background: rgba(255, 255, 255, 0.90) !important;
   backdrop-filter: blur(16px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
   color: #0F172A !important;
@@ -263,6 +297,274 @@ body::before {
   box-shadow: 0 4px 14px rgba(244, 63, 94, 0.35) !important;
 }
 
+/* ── SISTEMA UNIVERSAL DE BADGES (Cápsulas Squircle Liquid Glass) ── */
+.badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  padding: 3px 9px !important;
+  border-radius: 9999px !important;
+  font-size: 0.72rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em !important;
+  backdrop-filter: blur(12px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(12px) saturate(160%) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
+  transition: all 0.15s ease !important;
+}
+
+/* Modo Oscuro Badges (Brillantes, saturados, contraste óptico) */
+.badge-blue {
+  background: rgba(0, 122, 255, 0.22) !important;
+  color: #93C5FD !important;
+  border: 1px solid rgba(0, 122, 255, 0.45) !important;
+}
+
+.badge-green {
+  background: rgba(16, 185, 129, 0.22) !important;
+  color: #6EE7B7 !important;
+  border: 1px solid rgba(16, 185, 129, 0.45) !important;
+}
+
+.badge-amber {
+  background: rgba(245, 158, 11, 0.22) !important;
+  color: #FCD34D !important;
+  border: 1px solid rgba(245, 158, 11, 0.45) !important;
+}
+
+.badge-red {
+  background: rgba(239, 68, 68, 0.22) !important;
+  color: #FCA5A5 !important;
+  border: 1px solid rgba(239, 68, 68, 0.45) !important;
+}
+
+.badge-purple {
+  background: rgba(168, 85, 247, 0.22) !important;
+  color: #D8B4FE !important;
+  border: 1px solid rgba(168, 85, 247, 0.45) !important;
+}
+
+.badge-pink {
+  background: rgba(236, 72, 153, 0.22) !important;
+  color: #F472B6 !important;
+  border: 1px solid rgba(236, 72, 153, 0.45) !important;
+}
+
+.badge-orange {
+  background: rgba(249, 115, 22, 0.22) !important;
+  color: #FDBA74 !important;
+  border: 1px solid rgba(249, 115, 22, 0.45) !important;
+}
+
+.badge-teal {
+  background: rgba(20, 184, 166, 0.22) !important;
+  color: #5EEAD4 !important;
+  border: 1px solid rgba(20, 184, 166, 0.45) !important;
+}
+
+.badge-cyan {
+  background: rgba(6, 182, 212, 0.22) !important;
+  color: #67E8F9 !important;
+  border: 1px solid rgba(6, 182, 212, 0.45) !important;
+}
+
+.badge-indigo {
+  background: rgba(99, 102, 241, 0.22) !important;
+  color: #C7D2FE !important;
+  border: 1px solid rgba(99, 102, 241, 0.45) !important;
+}
+
+.badge-gray {
+  background: rgba(148, 163, 184, 0.16) !important;
+  color: #CBD5E1 !important;
+  border: 1px solid rgba(148, 163, 184, 0.28) !important;
+}
+
+/* ── MODO CLARO BADGES (Máximo Contraste y Vidrio Nítido) ── */
+[data-theme="light"] .badge {
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
+  font-weight: 800 !important;
+}
+
+[data-theme="light"] .badge-blue {
+  background: rgba(0, 122, 255, 0.12) !important;
+  color: #0056B3 !important;
+  border: 1px solid rgba(0, 122, 255, 0.30) !important;
+}
+
+[data-theme="light"] .badge-green {
+  background: rgba(16, 185, 129, 0.14) !important;
+  color: #065F46 !important;
+  border: 1px solid rgba(16, 185, 129, 0.32) !important;
+}
+
+[data-theme="light"] .badge-amber {
+  background: rgba(245, 158, 11, 0.14) !important;
+  color: #92400E !important;
+  border: 1px solid rgba(245, 158, 11, 0.32) !important;
+}
+
+[data-theme="light"] .badge-red {
+  background: rgba(239, 68, 68, 0.14) !important;
+  color: #991B1B !important;
+  border: 1px solid rgba(239, 68, 68, 0.32) !important;
+}
+
+[data-theme="light"] .badge-purple {
+  background: rgba(168, 85, 247, 0.14) !important;
+  color: #581C87 !important;
+  border: 1px solid rgba(168, 85, 247, 0.32) !important;
+}
+
+[data-theme="light"] .badge-pink {
+  background: rgba(236, 72, 153, 0.14) !important;
+  color: #831843 !important;
+  border: 1px solid rgba(236, 72, 153, 0.32) !important;
+}
+
+[data-theme="light"] .badge-orange {
+  background: rgba(249, 115, 22, 0.14) !important;
+  color: #9A3412 !important;
+  border: 1px solid rgba(249, 115, 22, 0.32) !important;
+}
+
+[data-theme="light"] .badge-teal {
+  background: rgba(20, 184, 166, 0.14) !important;
+  color: #115E59 !important;
+  border: 1px solid rgba(20, 184, 166, 0.32) !important;
+}
+
+[data-theme="light"] .badge-cyan {
+  background: rgba(6, 182, 212, 0.14) !important;
+  color: #155E75 !important;
+  border: 1px solid rgba(6, 182, 212, 0.32) !important;
+}
+
+[data-theme="light"] .badge-indigo {
+  background: rgba(99, 102, 241, 0.14) !important;
+  color: #3730A3 !important;
+  border: 1px solid rgba(99, 102, 241, 0.32) !important;
+}
+
+[data-theme="light"] .badge-gray {
+  background: rgba(100, 116, 139, 0.12) !important;
+  color: #334155 !important;
+  border: 1px solid rgba(100, 116, 139, 0.25) !important;
+}
+
+/* ── PASTILLAS DE FILTRO DE CATEGORÍA (InventoryView) ── */
+.category-pill-filter {
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.20), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  transition: all 0.18s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.category-pill-filter:hover {
+  transform: translateY(-1px) !important;
+  filter: brightness(1.08) !important;
+}
+
+.category-pill-filter:active {
+  transform: scale(0.97) !important;
+}
+
+/* Modo Claro en Pastillas de Filtro de Categoría */
+[data-theme="light"] .category-pill-filter {
+  background: rgba(255, 255, 255, 0.90) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  color: #334155 !important;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05), inset 0 1px 0 #FFFFFF !important;
+}
+
+[data-theme="light"] .category-pill-filter.category-pill-active {
+  background: rgba(0, 122, 255, 0.12) !important;
+  border-color: rgba(0, 122, 255, 0.40) !important;
+  color: #0056B3 !important;
+  box-shadow: 0 2px 10px rgba(0, 122, 255, 0.18), inset 0 1px 0 #FFFFFF !important;
+}
+
+/* Contadores numéricos de las pastillas */
+.category-pill-count {
+  font-weight: 800 !important;
+  border-radius: 9999px !important;
+}
+
+[data-theme="light"] .category-pill-count.count-sin-stock {
+  background: rgba(239, 68, 68, 0.15) !important;
+  color: #991B1B !important;
+  border: 1px solid rgba(239, 68, 68, 0.30) !important;
+}
+
+[data-theme="light"] .category-pill-count.count-bajo-stock {
+  background: rgba(245, 158, 11, 0.15) !important;
+  color: #92400E !important;
+  border: 1px solid rgba(245, 158, 11, 0.30) !important;
+}
+
+[data-theme="light"] .category-pill-active .category-pill-count {
+  background: #007AFF !important;
+  color: #FFFFFF !important;
+  border-color: transparent !important;
+}
+
+/* ── CORRECCIÓN INTEGRAL DE ETIQUETAS Y TEXTOS INLINE MODO CLARO ── */
+[data-theme="light"] [style*="color: #34d399"],
+[data-theme="light"] [style*="color: #34D399"],
+[data-theme="light"] [style*="color: #6ee7b7"],
+[data-theme="light"] [style*="color: #6EE7B7"] {
+  color: #047857 !important;
+}
+
+[data-theme="light"] [style*="color: #fb923c"],
+[data-theme="light"] [style*="color: #FB923C"],
+[data-theme="light"] [style*="color: #fed7aa"],
+[data-theme="light"] [style*="color: #FED7AA"] {
+  color: #C2410C !important;
+}
+
+[data-theme="light"] [style*="color: #fbbf24"],
+[data-theme="light"] [style*="color: #FBBF24"],
+[data-theme="light"] [style*="color: #facc15"],
+[data-theme="light"] [style*="color: #FACC15"],
+[data-theme="light"] [style*="color: #fcd34d"],
+[data-theme="light"] [style*="color: #FCD34D"] {
+  color: #B45309 !important;
+}
+
+[data-theme="light"] [style*="color: #c084fc"],
+[data-theme="light"] [style*="color: #C084FC"],
+[data-theme="light"] [style*="color: #d8b4fe"],
+[data-theme="light"] [style*="color: #D8B4FE"] {
+  color: #7E22CE !important;
+}
+
+[data-theme="light"] [style*="color: #f472b6"],
+[data-theme="light"] [style*="color: #F472B6"] {
+  color: #BE185D !important;
+}
+
+[data-theme="light"] [style*="color: #f87171"],
+[data-theme="light"] [style*="color: #F87171"],
+[data-theme="light"] [style*="color: #fca5a5"],
+[data-theme="light"] [style*="color: #FCA5A5"] {
+  color: #B91C1C !important;
+}
+
+[data-theme="light"] [style*="color: #93c5fd"],
+[data-theme="light"] [style*="color: #93C5FD"],
+[data-theme="light"] [style*="color: #60a5fa"],
+[data-theme="light"] [style*="color: #60A5FA"] {
+  color: #0284C7 !important;
+}
+
+[data-theme="light"] [style*="color: #2dd4bf"],
+[data-theme="light"] [style*="color: #2DD4BF"],
+[data-theme="light"] [style*="color: #5eead4"],
+[data-theme="light"] [style*="color: #5EEAD4"] {
+  color: #0F766E !important;
+}
+
 /* Textos dentro de la tarjeta */
 .product-card-title {
   color: var(--text-main) !important;
@@ -291,40 +593,46 @@ body::before {
   color: #059669 !important;
 }
 
-/* Botones de acción rápida en tarjeta (ojito, lápiz, basurero) */
-.btn-card-icon {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
-  color: #CBD5E1 !important;
-  border-radius: 8px !important;
+/* Botones de acción rápida en tarjeta POS */
+.btn-pos-add {
+  background: linear-gradient(135deg, #007AFF 0%, #0051A8 100%) !important;
+  border: none !important;
+  border-radius: 12px !important;
+  color: #FFFFFF !important;
+  box-shadow: 
+    0 4px 14px rgba(0, 122, 255, 0.35),
+    inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
   transition: all 0.16s ease !important;
 }
 
-.btn-card-icon:hover {
-  background: rgba(255, 255, 255, 0.18) !important;
-  color: #FFFFFF !important;
+.btn-pos-add:hover:not(:disabled) {
+  filter: brightness(1.08) !important;
   transform: translateY(-1px) !important;
+  box-shadow: 0 6px 18px rgba(0, 122, 255, 0.48) !important;
 }
 
-[data-theme="light"] .btn-card-icon {
-  background: rgba(0, 0, 0, 0.04) !important;
-  border: 1px solid rgba(0, 0, 0, 0.08) !important;
-  color: #475569 !important;
+.btn-pos-add:active:not(:disabled) {
+  transform: scale(0.975) !important;
 }
 
-[data-theme="light"] .btn-card-icon:hover {
-  background: rgba(0, 0, 0, 0.08) !important;
-  color: #0F172A !important;
-  border-color: rgba(0, 0, 0, 0.16) !important;
+.btn-pos-package {
+  background: rgba(147, 51, 234, 0.15) !important;
+  border: 1px solid rgba(147, 51, 234, 0.35) !important;
+  border-radius: 12px !important;
+  color: #C084FC !important;
+  backdrop-filter: blur(8px) !important;
+  transition: all 0.16s ease !important;
 }
 
-/* Toggle disponibilidad */
-.card-avail-toggle {
-  color: var(--text-muted) !important;
+[data-theme="light"] .btn-pos-package {
+  background: rgba(147, 51, 234, 0.10) !important;
+  color: #7E22CE !important;
+  border-color: rgba(147, 51, 234, 0.25) !important;
 }
 
-[data-theme="light"] .card-avail-toggle {
-  color: #475569 !important;
+.btn-pos-package:hover:not(:disabled) {
+  background: rgba(147, 51, 234, 0.25) !important;
+  transform: translateY(-1px) !important;
 }
 
 /* ==========================================================================
@@ -409,7 +717,7 @@ body::before {
 .price-audit-modal,
 [class*="modal-card"],
 [class*="modal-container"] {
-  background: linear-gradient(135deg, rgba(22, 32, 50, 0.88) 0%, rgba(12, 18, 30, 0.92) 100%) !important;
+  background: linear-gradient(135deg, rgba(22, 32, 50, 0.90) 0%, rgba(12, 18, 30, 0.94) 100%) !important;
   backdrop-filter: blur(44px) saturate(200%) contrast(105%) !important;
   -webkit-backdrop-filter: blur(44px) saturate(200%) contrast(105%) !important;
   border: 1px solid rgba(255, 255, 255, 0.18) !important;
@@ -419,6 +727,21 @@ body::before {
     0 0 0 1px rgba(255, 255, 255, 0.08),
     inset 0 1px 1px rgba(255, 255, 255, 0.20) !important;
   color: #FFFFFF !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.modal-content::before,
+.modal-card::before,
+.reports-modal-container::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 10% !important;
+  right: 10% !important;
+  top: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent) !important;
+  pointer-events: none !important;
 }
 
 [data-theme="light"] .modal-content,
@@ -428,7 +751,7 @@ body::before {
 [data-theme="light"] .price-audit-modal,
 [data-theme="light"] [class*="modal-card"],
 [data-theme="light"] [class*="modal-container"] {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(246, 249, 253, 0.88) 100%) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0%, rgba(246, 249, 253, 0.90) 100%) !important;
   backdrop-filter: blur(44px) saturate(200%) !important;
   -webkit-backdrop-filter: blur(44px) saturate(200%) !important;
   border: 1px solid rgba(255, 255, 255, 1) !important;
@@ -437,6 +760,12 @@ body::before {
     0 4px 16px rgba(15, 23, 42, 0.06),
     inset 0 1px 1px #FFFFFF !important;
   color: #0F172A !important;
+}
+
+[data-theme="light"] .modal-content::before,
+[data-theme="light"] .modal-card::before,
+[data-theme="light"] .reports-modal-container::before {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 1), transparent) !important;
 }
 
 [data-theme="light"] .modal-header {
@@ -452,36 +781,120 @@ body::before {
 }
 
 /* ==========================================================================
-   6. PANEL DE TICKET Y CARRITO (Liquid Glass Sidebar)
+   6. PANEL DE TICKET Y CARRITO DE COMPRAS (Liquid Glass Sidebar)
    ========================================================================== */
 .ticket-panel,
 .sales-panel,
 .cart-panel,
+.pos-cart-column,
 [class*="ticket"],
 [class*="panel-right"] {
-  background: linear-gradient(135deg, rgba(20, 30, 48, 0.82) 0%, rgba(11, 17, 28, 0.85) 100%) !important;
-  backdrop-filter: blur(32px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(32px) saturate(180%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  background: linear-gradient(135deg, rgba(20, 30, 48, 0.85) 0%, rgba(11, 17, 28, 0.88) 100%) !important;
+  backdrop-filter: blur(34px) saturate(190%) contrast(105%) !important;
+  -webkit-backdrop-filter: blur(34px) saturate(190%) contrast(105%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
   border-radius: 24px !important;
   box-shadow: 
     0 16px 42px -4px rgba(0, 0, 0, 0.50),
-    inset 0 1px 1px rgba(255, 255, 255, 0.16) !important;
+    inset 0 1px 1px rgba(255, 255, 255, 0.18) !important;
+  position: relative !important;
+}
+
+.pos-cart-column::before,
+.cart-panel::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 8% !important;
+  right: 8% !important;
+  top: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.50), transparent) !important;
+  pointer-events: none !important;
 }
 
 [data-theme="light"] .ticket-panel,
 [data-theme="light"] .sales-panel,
 [data-theme="light"] .cart-panel,
+[data-theme="light"] .pos-cart-column,
 [data-theme="light"] [class*="ticket"],
 [data-theme="light"] [class*="panel-right"] {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(246, 249, 253, 0.76) 100%) !important;
-  backdrop-filter: blur(32px) saturate(190%) !important;
-  -webkit-backdrop-filter: blur(32px) saturate(190%) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(246, 249, 253, 0.80) 100%) !important;
+  backdrop-filter: blur(34px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(34px) saturate(190%) !important;
   border: 1px solid rgba(255, 255, 255, 1) !important;
   box-shadow: 
     0 8px 24px -2px rgba(15, 23, 42, 0.07),
     0 20px 48px -4px rgba(15, 23, 42, 0.09),
     inset 0 1px 1px #FFFFFF !important;
+}
+
+[data-theme="light"] .pos-cart-column::before,
+[data-theme="light"] .cart-panel::before {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 1), transparent) !important;
+}
+
+/* Ítems individuales dentro del carrito */
+.pos-cart-items-scroll > div {
+  background: rgba(255, 255, 255, 0.04) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 14px !important;
+  transition: all 0.16s ease !important;
+}
+
+[data-theme="light"] .pos-cart-items-scroll > div {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04) !important;
+}
+
+/* Footer del carrito y Botón Cobrar Venta (F2) Apple Emerald Highlight */
+.pos-cart-footer {
+  background: transparent !important;
+  border-top: 1px solid rgba(255, 255, 255, 0.10) !important;
+  padding-top: 12px !important;
+}
+
+[data-theme="light"] .pos-cart-footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+.pos-cart-footer .btn-success,
+.btn-checkout {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+  color: #FFFFFF !important;
+  border: none !important;
+  border-radius: 16px !important;
+  box-shadow: 
+    0 6px 20px rgba(16, 185, 129, 0.42),
+    inset 0 1px 1px rgba(255, 255, 255, 0.40) !important;
+  transition: all 0.18s cubic-bezier(0.25, 1, 0.5, 1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.pos-cart-footer .btn-success::before,
+.btn-checkout::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 12% !important;
+  right: 12% !important;
+  top: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.80), transparent) !important;
+}
+
+.pos-cart-footer .btn-success:hover:not(:disabled),
+.btn-checkout:hover:not(:disabled) {
+  filter: brightness(1.08) !important;
+  transform: translateY(-2px) scale(1.008) !important;
+  box-shadow: 0 10px 28px rgba(16, 185, 129, 0.55) !important;
+}
+
+.pos-cart-footer .btn-success:active:not(:disabled),
+.btn-checkout:active:not(:disabled) {
+  transform: scale(0.98) !important;
 }
 
 /* ==========================================================================
@@ -529,11 +942,11 @@ textarea:focus,
 }
 
 /* ==========================================================================
-   8. GLASS PANEL & STAT CARDS (Paneles de Datos)
+   8. GLASS PANEL & TABLAS DE DATOS (Inventario, Ventas, Clientes)
    ========================================================================== */
 .glass-panel,
 .stat-card {
-  background: linear-gradient(135deg, rgba(26, 36, 56, 0.70) 0%, rgba(14, 20, 32, 0.75) 100%) !important;
+  background: linear-gradient(135deg, rgba(26, 36, 56, 0.72) 0%, rgba(14, 20, 32, 0.76) 100%) !important;
   backdrop-filter: blur(28px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
   border: 1px solid rgba(255, 255, 255, 0.14) !important;
@@ -558,7 +971,7 @@ textarea:focus,
 
 [data-theme="light"] .glass-panel,
 [data-theme="light"] .stat-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(246, 249, 253, 0.75) 100%) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.86) 0%, rgba(246, 249, 253, 0.78) 100%) !important;
   backdrop-filter: blur(28px) saturate(190%) !important;
   -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
   border: 1px solid rgba(255, 255, 255, 1) !important;
@@ -571,6 +984,39 @@ textarea:focus,
 [data-theme="light"] .glass-panel::before,
 [data-theme="light"] .stat-card::before {
   background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 1), transparent) !important;
+}
+
+/* ── TABLAS LIQUID GLASS ── */
+table thead tr {
+  background: rgba(0, 0, 0, 0.25) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10) !important;
+}
+
+[data-theme="light"] table thead tr {
+  background: rgba(241, 245, 249, 0.85) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+[data-theme="light"] table th {
+  color: #475569 !important;
+}
+
+table tbody tr {
+  transition: background 0.16s ease !important;
+}
+
+table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+[data-theme="light"] table tbody tr:hover {
+  background: rgba(0, 122, 255, 0.04) !important;
+}
+
+[data-theme="light"] table td {
+  color: #0F172A !important;
 }
 
 /* ==========================================================================
@@ -590,12 +1036,32 @@ h1, h2, h3, h4, h5, h6 {
   color: #0F172A !important;
 }
 
+/* Labels y Etiquetas de Formulario (Alta Legibilidad y Nitidez Apple) */
+label {
+  color: #E2E8F0 !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+  font-family: -apple-system, BlinkMacSystemFont, "DM Sans", "Inter", sans-serif !important;
+}
+
 [data-theme="light"] label {
-  color: #475569 !important;
+  color: #0F172A !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] label span,
+[data-theme="light"] label strong,
+[data-theme="light"] label b {
+  color: inherit !important;
+}
+
+[data-theme="light"] .modal-card label {
+  color: #0F172A !important;
+  font-weight: 800 !important;
 }
 
 /* ==========================================================================
-   10. BOTONES Y CAPSULAS iOS
+   10. BOTONES Y CÁPSULAS iOS
    ========================================================================== */
 .btn {
   border-radius: 12px !important;
@@ -657,3 +1123,266 @@ h1, h2, h3, h4, h5, h6 {
 ::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.30); }
 [data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.16); }
 [data-theme="light"] ::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.28); }
+
+/* ==========================================================================
+   12. CORRECCIONES INTEGRALES MODO CLARO — Elementos con Estilos Inline
+   Sección que sobreescribe componentes sin clase CSS que usan variables oscuras
+   ========================================================================== */
+
+/* ── Modal Card (ProductEditModal, CashRegisterModal, modales POS) ── */
+[data-theme="light"] .modal-card,
+[data-theme="light"] [style*="background: var(--bg-secondary"] {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(246, 249, 253, 0.92) 100%) !important;
+  border-color: rgba(255, 255, 255, 1) !important;
+  color: #0F172A !important;
+}
+
+/* ── Cabeceras de modal (encabezado + footer con var(--bg-tertiary)) ── */
+[data-theme="light"] .modal-card > div:first-child,
+[data-theme="light"] .modal-card > form > div:last-child {
+  background: rgba(248, 250, 252, 0.92) !important;
+  border-color: rgba(0, 0, 0, 0.06) !important;
+}
+
+/* ── Body del formulario en modal de producto ── */
+[data-theme="light"] .modal-card > form > div:first-child + div,
+[data-theme="light"] .modal-card form > div[style*="overflow"] {
+  background: rgba(255, 255, 255, 0.60) !important;
+}
+
+/* ── Botones de categoría en ProductEditModal (sin clase CSS asignada) ── */
+[data-theme="light"] .modal-card button[style*="var(--bg-glass"],
+[data-theme="light"] .modal-card button[style*="rgba(255, 255, 255, 0.04)"],
+[data-theme="light"] .modal-card button[style*="rgba(255,255,255,0.04)"] {
+  background: rgba(255, 255, 255, 0.82) !important;
+  border-color: rgba(0, 0, 0, 0.10) !important;
+  color: #334155 !important;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04) !important;
+}
+
+/* ── Botones de categoría ACTIVOS en modo claro ── */
+[data-theme="light"] .modal-card button[style*="rgba(59, 130, 246, 0.22)"],
+[data-theme="light"] .modal-card button[style*="rgba(16, 185, 129, 0.22)"],
+[data-theme="light"] .modal-card button[style*="rgba(236, 72, 153, 0.22)"],
+[data-theme="light"] .modal-card button[style*="rgba(251, 146, 60, 0.22)"],
+[data-theme="light"] .modal-card button[style*="rgba(234, 179, 8, 0.22)"],
+[data-theme="light"] .modal-card button[style*="rgba(20, 184, 166, 0.25)"] {
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.80) !important;
+}
+
+/* ── Secciones especiales dentro del modal (Cintas, Ropa, Bolsas, Calculadora) ── */
+[data-theme="light"] .modal-card div[style*="rgba(16, 185, 129, 0.08)"],
+[data-theme="light"] .modal-card div[style*="rgba(245, 158, 11, 0.08)"],
+[data-theme="light"] .modal-card div[style*="rgba(139, 92, 246, 0.08)"],
+[data-theme="light"] .modal-card div[style*="rgba(37, 99, 235, 0.08)"],
+[data-theme="light"] .modal-card div[style*="rgba(239, 68, 68, 0.08)"] {
+  background: rgba(255, 255, 255, 0.70) !important;
+}
+
+/* ── Inputs de margen/porcentaje en modo claro ── */
+[data-theme="light"] .modal-card input[style*="rgba(255, 255, 255, 0.04)"],
+[data-theme="light"] .modal-card button[style*="rgba(255, 255, 255, 0.04)"],
+[data-theme="light"] .modal-card div[style*="rgba(255, 255, 255, 0.04)"],
+[data-theme="light"] .modal-card div[style*="rgba(0, 0, 0, 0.2)"] {
+  background: rgba(241, 245, 249, 0.90) !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  color: #0F172A !important;
+}
+
+/* ── Sección "Disponible para venta" (switch toggle) modo claro ── */
+[data-theme="light"] .modal-card div[style*="rgba(255, 255, 255, 0.04)"][style*="border"] {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* ── Sección de imágenes (bg-tertiary) ── */
+[data-theme="light"] .modal-card div[style*="var(--bg-tertiary)"] {
+  background: rgba(241, 245, 249, 0.80) !important;
+  border-color: rgba(0, 0, 0, 0.07) !important;
+}
+
+/* ── Texto explicativo en el modal en modo claro ── */
+[data-theme="light"] .modal-card span[style*="var(--text-muted)"],
+[data-theme="light"] .modal-card p[style*="var(--text-muted)"] {
+  color: #334155 !important;
+}
+
+/* ==========================================================================
+   13. TABLAS DE DATOS AVANZADAS (CashRegisterModal, SalesView, InventoryView)
+   ========================================================================== */
+
+/* Filas hover en tablas light */
+[data-theme="light"] table tr:hover td {
+  background: rgba(0, 122, 255, 0.03) !important;
+}
+
+/* Cabeceras de tabla en light */
+[data-theme="light"] table thead th {
+  color: #475569 !important;
+  font-weight: 700 !important;
+  background: rgba(241, 245, 249, 0.92) !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+/* Celdas de tabla en light */
+[data-theme="light"] table td {
+  color: #1E293B !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Valores monetarios en verde oscuro para modo claro */
+[data-theme="light"] .price-tag,
+[data-theme="light"] [style*="color: #10b981"],
+[data-theme="light"] [style*="color: var(--accent-blue)"] {
+  color: #059669 !important;
+}
+
+/* Valores de TOTAL en azul en modo claro */
+[data-theme="light"] [style*="color: var(--accent-blue)"][style*="font-size: \"1.35rem\""],
+[data-theme="light"] [style*="color: \"#60a5fa\""] {
+  color: #0057B7 !important;
+}
+
+/* ==========================================================================
+   14. STAT CARDS (InsurancesView, SalesView, SectionsView)
+   ========================================================================== */
+[data-theme="light"] .stat-card,
+[data-theme="light"] div[style*="background: \"rgba(245, 158, 11, 0.08)\""],
+[data-theme="light"] div[style*="background: rgba(245, 158, 11, 0.08)"],
+[data-theme="light"] div[style*="background: rgba(16, 185, 129, 0.08)"],
+[data-theme="light"] div[style*="background: rgba(0, 122, 255, 0.08)"],
+[data-theme="light"] div[style*="background: rgba(236, 72, 153, 0.08)"],
+[data-theme="light"] div[style*="background: rgba(139, 92, 246, 0.08)"] {
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.96) !important;
+  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.07), inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+}
+
+[data-theme="light"] .stat-card span,
+[data-theme="light"] .stat-card p,
+[data-theme="light"] .stat-card div {
+  color: inherit !important;
+}
+
+/* ==========================================================================
+   15. BADGES Y CHIPS DE ESTADO (VENTA, APERTURA, TURNO ABIERTO)
+   ========================================================================== */
+/* Badge TURNO ABIERTO en modo claro */
+[data-theme="light"] [style*="background: rgba(16, 185, 129, 0.16)"],
+[data-theme="light"] [style*="background: rgba(16,185,129,0.16)"] {
+  background: rgba(16, 185, 129, 0.14) !important;
+  color: #065F46 !important;
+  border-color: rgba(16, 185, 129, 0.30) !important;
+}
+
+/* Badge VENTA azul en modo claro */
+[data-theme="light"] [style*="background: rgba(59, 130, 246, 0.2)"],
+[data-theme="light"] [style*="background: rgba(59,130,246,0.2)"] {
+  background: rgba(0, 122, 255, 0.12) !important;
+  color: #1D4ED8 !important;
+  border-color: rgba(0, 122, 255, 0.25) !important;
+}
+
+/* ==========================================================================
+   16. POS CATALOG CONTROLS Y GRID DE PRODUCTOS (barra de búsqueda POS)
+   ========================================================================== */
+[data-theme="light"] .pos-catalog-controls {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(246, 249, 253, 0.86) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 1) !important;
+}
+
+/* ── Botones de categoría dentro del POS Catalog en modo claro ── */
+[data-theme="light"] .pos-catalog-controls button[style*="var(--bg-glass)"],
+[data-theme="light"] .pos-catalog-column button[style*="var(--bg-glass)"] {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border-color: rgba(0, 0, 0, 0.09) !important;
+  color: #334155 !important;
+}
+
+/* ── Ticket en espera (parked carts) en modo claro ── */
+[data-theme="light"] div[style*="background: \"rgba(17, 24, 39, 0.95)\""],
+[data-theme="light"] div[style*="background: rgba(17, 24, 39, 0.95)"] {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border-color: rgba(245, 158, 11, 0.40) !important;
+  color: #92400E !important;
+}
+
+/* ── Ítems del carrito en modo claro ── */
+[data-theme="light"] .pos-cart-items-scroll > div,
+[data-theme="light"] div[style*="background: rgba(0, 0, 0, 0.2)"][style*="border-radius"] {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border-color: rgba(0, 0, 0, 0.07) !important;
+}
+
+/* ==========================================================================
+   17. ALERTA TOPBAR, NETWORK BADGE Y CHIPS DEL HEADER
+   ========================================================================== */
+[data-theme="light"] .alert-topbar {
+  background: rgba(245, 158, 11, 0.15) !important;
+  color: #92400E !important;
+  border-bottom: 1px solid rgba(245, 158, 11, 0.30) !important;
+}
+
+[data-theme="light"] .network-badge--online {
+  background: rgba(16, 185, 129, 0.12) !important;
+  color: #065F46 !important;
+  border: 1px solid rgba(16, 185, 129, 0.28) !important;
+}
+
+[data-theme="light"] .network-badge--offline {
+  background: rgba(239, 68, 68, 0.12) !important;
+  color: #991B1B !important;
+  border: 1px solid rgba(239, 68, 68, 0.28) !important;
+}
+
+[data-theme="light"] .network-badge--syncing {
+  background: rgba(245, 158, 11, 0.12) !important;
+  color: #92400E !important;
+  border: 1px solid rgba(245, 158, 11, 0.28) !important;
+}
+
+/* ==========================================================================
+   18. MICROINTERACCIONES GLOBALES (Apple Spring Physics)
+   ========================================================================== */
+button:not(:disabled):active {
+  transform: scale(0.97) !important;
+  transition: transform 0.08s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.product-card,
+.pos-product-card,
+.glass-panel,
+.stat-card,
+.modal-card {
+  will-change: transform !important;
+}
+
+/* Animación de entrada para modales */
+@keyframes liquidGlassModalIn {
+  from {
+    transform: scale(0.94) translateY(12px);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-card {
+  animation: liquidGlassModalIn 0.28s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+/* Animación de tarjetas al aparecer */
+@keyframes glassCardReveal {
+  from {
+    opacity: 0;
+    transform: translateY(6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}

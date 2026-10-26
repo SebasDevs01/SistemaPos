@@ -1234,6 +1234,8 @@ export default function PosView({
                   return (
                     <button
                       key={cat}
+                      type="button"
+                      className={`category-pill-filter ${isSelected ? "category-pill-active" : ""}`}
                       onClick={() => setSelectedCategory(cat)}
                       style={{
                         padding: "6px 14px",
@@ -1268,6 +1270,7 @@ export default function PosView({
                       <span>{cat}</span>
                       {isSinStock && sinStockCount > 0 && (
                         <span
+                          className="category-pill-count count-sin-stock"
                           style={{
                             fontSize: "0.7rem",
                             padding: "1px 6px",
@@ -1282,6 +1285,7 @@ export default function PosView({
                       )}
                       {isBajoStock && bajoStockCount > 0 && (
                         <span
+                          className="category-pill-count count-bajo-stock"
                           style={{
                             fontSize: "0.7rem",
                             padding: "1px 6px",
@@ -1975,7 +1979,7 @@ export default function PosView({
           <button
             onClick={() => setIsCheckoutOpen(true)}
             disabled={cart.length === 0}
-            className="btn btn-success"
+            className={`btn btn-success pos-checkout-btn ${cart.length === 0 ? "btn-checkout-empty" : "btn-checkout-ready"}`}
             style={{
               padding: "12px",
               fontSize: "1.05rem",

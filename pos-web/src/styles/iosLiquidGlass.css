@@ -8,10 +8,19 @@
  */
 
 /* ==========================================================================
-   0. ATMÓSFERA Y FONDO — Profundidad Óptica & Refracción de Luz
+   0. ATMÓSFERA Y FONDO APPLE — Profundidad Óptica & Refracción de Luz
    ========================================================================== */
 body {
-  background: var(--bg-base, #0B111B) !important;
+  background-color: #07090E !important;
+  background-image: 
+    radial-gradient(ellipse 80% 60% at 5% 5%, rgba(0, 122, 255, 0.22) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 50% at 95% 15%, rgba(139, 92, 246, 0.20) 0%, transparent 55%),
+    radial-gradient(ellipse 60% 50% at 50% 50%, rgba(16, 185, 129, 0.10) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 60% at 15% 90%, rgba(249, 115, 22, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 80% 65% at 90% 95%, rgba(0, 122, 255, 0.16) 0%, transparent 55%) !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
   color: var(--text-main) !important;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "DM Sans", "Inter", system-ui, sans-serif !important;
   -webkit-font-smoothing: antialiased !important;
@@ -20,38 +29,24 @@ body {
   position: relative !important;
 }
 
-/* 🌙 DARK MODE: Orbes bioluminiscentes zafiro, índigo y esmeralda que refractan luz a través del vidrio ahumado */
-body::before {
-  content: "" !important;
-  position: fixed !important;
-  inset: 0 !important;
-  pointer-events: none !important;
-  z-index: -1 !important;
-  background:
-    radial-gradient(ellipse 75% 65% at 10% 8%, rgba(0, 122, 255, 0.22) 0%, transparent 60%),
-    radial-gradient(ellipse 65% 55% at 90% 85%, rgba(88, 86, 214, 0.20) 0%, transparent 55%),
-    radial-gradient(ellipse 55% 45% at 50% 40%, rgba(175, 82, 222, 0.12) 0%, transparent 45%),
-    radial-gradient(ellipse 60% 50% at 80% 15%, rgba(52, 199, 89, 0.10) 0%, transparent 50%),
-    radial-gradient(ellipse 70% 60% at 25% 85%, rgba(0, 199, 190, 0.10) 0%, transparent 55%) !important;
-}
-
-/* ☀️ LIGHT MODE: Atmósfera perlada con orbes celestes, lavanda y esmeralda suaves */
+/* ☀️ LIGHT MODE: Atmósfera cristalina perlada con orbes celestes, lavanda, esmeralda y ámbar */
 [data-theme="light"] body {
-  background: #EEF2F7 !important;
+  background-color: #EDF1F7 !important;
+  background-image: 
+    radial-gradient(ellipse 85% 65% at 5% 5%, rgba(0, 122, 255, 0.16) 0%, transparent 60%),
+    radial-gradient(ellipse 75% 55% at 95% 12%, rgba(168, 85, 247, 0.14) 0%, transparent 55%),
+    radial-gradient(ellipse 65% 50% at 50% 45%, rgba(52, 199, 89, 0.10) 0%, transparent 50%),
+    radial-gradient(ellipse 75% 60% at 12% 90%, rgba(255, 149, 0, 0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 85% 65% at 88% 95%, rgba(0, 122, 255, 0.14) 0%, transparent 55%) !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
   color: #0F172A !important;
 }
 
-[data-theme="light"] body::before {
-  content: "" !important;
-  position: fixed !important;
-  inset: 0 !important;
-  pointer-events: none !important;
-  z-index: -1 !important;
-  background:
-    radial-gradient(ellipse 75% 65% at 8% 6%, rgba(0, 122, 255, 0.14) 0%, transparent 60%),
-    radial-gradient(ellipse 65% 55% at 92% 88%, rgba(175, 82, 222, 0.11) 0%, transparent 55%),
-    radial-gradient(ellipse 55% 45% at 75% 20%, rgba(52, 199, 89, 0.09) 0%, transparent 50%),
-    radial-gradient(ellipse 65% 55% at 20% 90%, rgba(255, 149, 0, 0.09) 0%, transparent 50%) !important;
+#root {
+  min-height: 100vh !important;
+  background: transparent !important;
 }
 
 /* ==========================================================================
@@ -717,7 +712,7 @@ body::before {
 .price-audit-modal,
 [class*="modal-card"],
 [class*="modal-container"] {
-  background: linear-gradient(135deg, rgba(22, 32, 50, 0.90) 0%, rgba(12, 18, 30, 0.94) 100%) !important;
+  background: linear-gradient(135deg, rgba(22, 32, 50, 0.92) 0%, rgba(12, 18, 30, 0.95) 100%) !important;
   backdrop-filter: blur(44px) saturate(200%) contrast(105%) !important;
   -webkit-backdrop-filter: blur(44px) saturate(200%) contrast(105%) !important;
   border: 1px solid rgba(255, 255, 255, 0.18) !important;
@@ -728,7 +723,34 @@ body::before {
     inset 0 1px 1px rgba(255, 255, 255, 0.20) !important;
   color: #FFFFFF !important;
   position: relative !important;
-  overflow: hidden !important;
+  max-height: min(92vh, 880px) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* Scrollbar ultrafino estilo iOS para modales */
+.modal-content::-webkit-scrollbar,
+.modal-card::-webkit-scrollbar,
+.reports-modal-container::-webkit-scrollbar,
+.price-audit-modal::-webkit-scrollbar,
+[class*="modal-card"]::-webkit-scrollbar,
+[class*="modal-container"]::-webkit-scrollbar {
+  width: 6px !important;
+}
+
+.modal-content::-webkit-scrollbar-track,
+.modal-card::-webkit-scrollbar-track,
+[class*="modal-card"]::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.modal-content::-webkit-scrollbar-thumb,
+.modal-card::-webkit-scrollbar-thumb,
+[class*="modal-card"]::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.24) !important;
+  border-radius: 9999px !important;
 }
 
 .modal-content::before,
@@ -751,7 +773,7 @@ body::before {
 [data-theme="light"] .price-audit-modal,
 [data-theme="light"] [class*="modal-card"],
 [data-theme="light"] [class*="modal-container"] {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0%, rgba(246, 249, 253, 0.90) 100%) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(246, 249, 253, 0.92) 100%) !important;
   backdrop-filter: blur(44px) saturate(200%) !important;
   -webkit-backdrop-filter: blur(44px) saturate(200%) !important;
   border: 1px solid rgba(255, 255, 255, 1) !important;
@@ -760,6 +782,16 @@ body::before {
     0 4px 16px rgba(15, 23, 42, 0.06),
     inset 0 1px 1px #FFFFFF !important;
   color: #0F172A !important;
+  max-height: min(92vh, 880px) !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain !important;
+}
+
+[data-theme="light"] .modal-content::-webkit-scrollbar-thumb,
+[data-theme="light"] .modal-card::-webkit-scrollbar-thumb,
+[data-theme="light"] [class*="modal-card"]::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.20) !important;
 }
 
 [data-theme="light"] .modal-content::before,
@@ -1385,4 +1417,269 @@ button:not(:disabled):active {
     opacity: 1;
     transform: translateY(0) scale(1);
   }
+}
+
+/* ==========================================================================
+   19. HISTORIAL DE CIERRES Y ARQUEO APPLE LIQUID GLASS (CashRegisterModal)
+   ========================================================================== */
+.cash-closing-card {
+  background: linear-gradient(135deg, rgba(24, 34, 54, 0.65) 0%, rgba(14, 20, 32, 0.70) 100%) !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 18px !important;
+  box-shadow: 
+    0 8px 24px -4px rgba(0, 0, 0, 0.45),
+    inset 0 1px 1px rgba(255, 255, 255, 0.18) !important;
+  transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.cash-closing-card:hover {
+  transform: translateY(-2px) !important;
+  border-color: rgba(0, 122, 255, 0.35) !important;
+  box-shadow: 0 12px 32px -4px rgba(0, 122, 255, 0.20), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
+}
+
+[data-theme="light"] .cash-closing-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(246, 249, 253, 0.72) 100%) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.98) !important;
+  border-radius: 18px !important;
+  box-shadow: 
+    0 6px 20px -2px rgba(15, 23, 42, 0.06),
+    inset 0 1px 1px #FFFFFF !important;
+}
+
+[data-theme="light"] .cash-closing-card:hover {
+  transform: translateY(-2px) !important;
+  border-color: rgba(0, 122, 255, 0.30) !important;
+  box-shadow: 0 10px 28px -4px rgba(0, 122, 255, 0.14), inset 0 1px 1px #FFFFFF !important;
+}
+
+/* ==========================================================================
+   20. BOTÓN COBRAR VENTA Y FOOTER DE CARRITO (Estados Empty y Ready)
+   ========================================================================== */
+.pos-checkout-btn.btn-checkout-empty,
+.btn-checkout:disabled,
+.btn:disabled {
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+[data-theme="light"] .pos-checkout-btn.btn-checkout-empty,
+[data-theme="light"] .btn-checkout:disabled,
+[data-theme="light"] .btn:disabled {
+  background: rgba(0, 0, 0, 0.05) !important;
+  color: #64748B !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  opacity: 1 !important;
+  box-shadow: none !important;
+}
+
+.pos-checkout-btn.btn-checkout-empty,
+.btn-checkout:disabled {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #64748B !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  opacity: 1 !important;
+  box-shadow: none !important;
+}
+
+/* Botón Listo para Cobrar (Activo, vibrante y pulsante) */
+.pos-checkout-btn.btn-checkout-ready,
+.btn-checkout:not(:disabled) {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+  color: #FFFFFF !important;
+  font-weight: 800 !important;
+  border: none !important;
+  border-radius: 16px !important;
+  box-shadow: 
+    0 8px 26px rgba(16, 185, 129, 0.45),
+    inset 0 1px 1.5px rgba(255, 255, 255, 0.50) !important;
+  animation: appleCheckoutPulse 2.4s infinite ease-in-out !important;
+}
+
+@keyframes appleCheckoutPulse {
+  0%, 100% {
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.40), inset 0 1px 1.5px rgba(255, 255, 255, 0.50);
+  }
+  50% {
+    box-shadow: 0 10px 32px rgba(16, 185, 129, 0.65), inset 0 1px 1.5px rgba(255, 255, 255, 0.70);
+  }
+}
+
+/* ==========================================================================
+   21. PANTALLA DE LOGIN APPLE LIQUID GLASS (Inspiración visionOS & iOS)
+   ========================================================================== */
+.login-overlay {
+  background: transparent !important;
+  backdrop-filter: blur(28px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
+}
+
+/* Tarjeta Principal de Login */
+.login-card {
+  background: linear-gradient(135deg, rgba(22, 32, 52, 0.75) 0%, rgba(12, 18, 30, 0.80) 100%) !important;
+  backdrop-filter: blur(48px) saturate(200%) contrast(105%) !important;
+  -webkit-backdrop-filter: blur(48px) saturate(200%) contrast(105%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 28px !important;
+  box-shadow: 
+    0 35px 90px -15px rgba(0, 0, 0, 0.80),
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.25) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.login-card::before {
+  content: "" !important;
+  position: absolute !important;
+  left: 10% !important;
+  right: 10% !important;
+  top: 0 !important;
+  height: 1.5px !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.80), transparent) !important;
+  pointer-events: none !important;
+}
+
+/* Login Card en Modo Claro */
+[data-theme="light"] .login-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(246, 249, 253, 0.65) 100%) !important;
+  backdrop-filter: blur(48px) saturate(210%) contrast(102%) !important;
+  -webkit-backdrop-filter: blur(48px) saturate(210%) contrast(102%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.98) !important;
+  border-radius: 28px !important;
+  box-shadow: 
+    0 28px 75px -12px rgba(15, 23, 42, 0.15),
+    0 4px 16px rgba(15, 23, 42, 0.05),
+    inset 0 1.5px 1.5px #FFFFFF !important;
+}
+
+[data-theme="light"] .login-card::before {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 1), transparent) !important;
+}
+
+/* Botones de usuario en Login */
+.login-user-btn {
+  background: rgba(255, 255, 255, 0.06) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
+  transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.login-user-btn:hover {
+  transform: translateY(-2px) scale(1.01) !important;
+  background: rgba(0, 122, 255, 0.18) !important;
+  border-color: rgba(0, 122, 255, 0.40) !important;
+  box-shadow: 0 8px 24px rgba(0, 122, 255, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+[data-theme="light"] .login-user-btn {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05), inset 0 1px 0 #FFFFFF !important;
+}
+
+[data-theme="light"] .login-user-btn:hover {
+  background: rgba(0, 122, 255, 0.12) !important;
+  border-color: rgba(0, 122, 255, 0.35) !important;
+  box-shadow: 0 6px 20px rgba(0, 122, 255, 0.15), inset 0 1px 0 #FFFFFF !important;
+}
+
+/* Numpad de PIN táctil estilo iOS Passcode */
+.login-numpad-key {
+  width: 68px !important;
+  height: 68px !important;
+  border-radius: 50% !important;
+  font-size: 1.45rem !important;
+  font-weight: 600 !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  transition: all 0.14s ease !important;
+}
+
+.login-numpad-key:hover {
+  background: rgba(255, 255, 255, 0.18) !important;
+  transform: scale(1.05) !important;
+}
+
+.login-numpad-key:active {
+  transform: scale(0.92) !important;
+  background: rgba(0, 122, 255, 0.40) !important;
+}
+
+[data-theme="light"] .login-numpad-key {
+  background: rgba(255, 255, 255, 0.90) !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  color: #0F172A !important;
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06), inset 0 1px 0 #FFFFFF !important;
+}
+
+[data-theme="light"] .login-numpad-key:hover {
+  background: rgba(0, 122, 255, 0.10) !important;
+  border-color: rgba(0, 122, 255, 0.30) !important;
+}
+
+[data-theme="light"] .login-numpad-key:active {
+  background: rgba(0, 122, 255, 0.25) !important;
+}
+
+/* Casillas de PIN estilo Apple */
+.login-pin-box {
+  width: 52px !important;
+  height: 58px !important;
+  border-radius: 14px !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.18) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(16px) !important;
+}
+
+.login-pin-box--filled {
+  border-color: #007AFF !important;
+  background: rgba(0, 122, 255, 0.15) !important;
+  box-shadow: 0 0 16px rgba(0, 122, 255, 0.40) !important;
+}
+
+[data-theme="light"] .login-pin-box {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="light"] .login-pin-box--filled {
+  border-color: #007AFF !important;
+  background: rgba(0, 122, 255, 0.10) !important;
+  box-shadow: 0 0 14px rgba(0, 122, 255, 0.25) !important;
+}
+
+/* ==========================================================================
+   22. REFRACCIÓN CRISTALINA GLOBAL EN PANELES Y BUSCADOR
+   ========================================================================== */
+.pos-catalog-controls input.input-field,
+.input-field:focus {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: #007AFF !important;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.25) !important;
+}
+
+[data-theme="light"] .pos-catalog-controls input.input-field,
+[data-theme="light"] .input-field:focus {
+  background: #FFFFFF !important;
+  border-color: #007AFF !important;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.20) !important;
+}
+
+/* Ticket Oficial de Cierre en Modal */
+.closing-ticket-modal-card #printable-closing-ticket {
+  border-radius: 12px !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15) !important;
 }

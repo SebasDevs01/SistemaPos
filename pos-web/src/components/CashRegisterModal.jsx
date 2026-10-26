@@ -823,6 +823,7 @@ export default function CashRegisterModal({
                     return (
                       <div
                         key={c.id}
+                        className="cash-closing-card"
                         style={{
                           background: "rgba(255, 255, 255, 0.02)",
                           border: "1px solid var(--border-color)",

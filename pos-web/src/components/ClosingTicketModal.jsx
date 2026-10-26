@@ -257,24 +257,39 @@ export default function ClosingTicketModal({ closing, onClose, storeConfig = {} 
   const salidas = movimientos.filter(m => m.tipo === "egreso");
 
   return (
-    <div className="modal-overlay" onClick={onClose} style={{ zIndex: 1200 }}>
+    <div className="modal-overlay" onClick={onClose} style={{ zIndex: 1200, padding: "16px" }}>
       <div
-        className="modal-content modal-card"
+        className="modal-content modal-card closing-ticket-modal-card"
         style={{
-          maxWidth: "480px",
-          width: "95%",
-          maxHeight: "90vh",
+          maxWidth: "490px",
+          width: "100%",
+          maxHeight: "92vh",
           overflowY: "auto",
+          overscrollBehavior: "contain",
           padding: "20px",
-          background: "var(--bg-secondary, #111827)",
-          border: "1px solid var(--border-strong)",
-          borderRadius: "20px",
-          boxShadow: "0 25px 70px rgba(0,0,0,0.85)"
+          borderRadius: "24px",
+          display: "flex",
+          flexDirection: "column",
+          position: "relative"
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Cabecera */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
+        {/* Cabecera Sticky */}
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "14px",
+          position: "sticky",
+          top: "-20px",
+          paddingTop: "4px",
+          paddingBottom: "10px",
+          background: "inherit",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+          zIndex: 10,
+          borderBottom: "1px solid var(--border-color)"
+        }}>
           <div>
             <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-main)", margin: 0 }}>
               Ticket Oficial de Cierre de Caja
@@ -283,7 +298,7 @@ export default function ClosingTicketModal({ closing, onClose, storeConfig = {} 
               {closing.id || "Cierre de Turno"}
             </span>
           </div>
-          <button onClick={onClose} className="btn btn-outline" style={{ padding: "6px", borderRadius: "50%" }}>
+          <button onClick={onClose} className="btn btn-outline" style={{ padding: "6px 8px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }} title="Cerrar modal">
             <X size={16} />
           </button>
         </div>

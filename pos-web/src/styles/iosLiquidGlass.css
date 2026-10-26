@@ -2145,17 +2145,35 @@ tbody tr:hover {
     inset 0 2px 2px #FFFFFF !important;
 }
 
-/* Encabezado del ProductEditModal */
-.modal-card[style*="680px"] > div[style*="var(--bg-tertiary"],
-.modal-card[style*="680px"] > div:first-child {
+/* Encabezado del ProductEditModal (específico, sin afectar otros modales) */
+.product-edit-modal-card > div[style*="var(--bg-tertiary"],
+.product-edit-modal-card > div:first-child,
+.modal-card:not(.rental-order-modal-card):not(.ticket-modal-card) > div[style*="var(--bg-tertiary"] {
   background: rgba(14, 8, 28, 0.70) !important;
   border-bottom: 1px solid rgba(216, 180, 254, 0.22) !important;
 }
 
-[data-theme="light"] .modal-card[style*="680px"] > div[style*="var(--bg-tertiary"],
-[data-theme="light"] .modal-card[style*="680px"] > div:first-child {
+[data-theme="light"] .product-edit-modal-card > div[style*="var(--bg-tertiary"],
+[data-theme="light"] .product-edit-modal-card > div:first-child,
+[data-theme="light"] .modal-card:not(.rental-order-modal-card):not(.ticket-modal-card) > div[style*="var(--bg-tertiary"] {
   background: rgba(255, 255, 255, 0.85) !important;
   border-bottom: 1px solid rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Encabezados de modal siempre transparentes con Liquid Glass */
+.rental-order-modal-card .ticket-modal-header,
+.rental-order-modal-card .rental-modal-header,
+.rental-order-modal-card > div:first-child,
+.rental-modal-header,
+.ticket-modal-header,
+[data-theme="light"] .rental-order-modal-card .ticket-modal-header,
+[data-theme="light"] .rental-order-modal-card .rental-modal-header,
+[data-theme="light"] .rental-order-modal-card > div:first-child,
+[data-theme="light"] .rental-modal-header,
+[data-theme="light"] .ticket-modal-header {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
 }
 
 /* Área de variantes/tallas dentro del ProductEditModal (beige/crema) */
@@ -2948,15 +2966,17 @@ button[title="Cerrar"]:hover,
 }
 
 .ticket-scroll-viewport {
-  padding: 14px 16px !important;
+  padding: 16px !important;
   overflow-y: auto !important;
   overscroll-behavior: contain !important;
-  max-height: calc(90vh - 160px) !important;
+  max-height: calc(90vh - 150px) !important;
   min-height: 200px !important;
   flex: 1 1 auto !important;
   background: rgba(0, 0, 0, 0.18) !important;
   display: flex !important;
-  justify-content: center !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
 }
 
 [data-theme="light"] .ticket-scroll-viewport {
@@ -2968,19 +2988,24 @@ button[title="Cerrar"]:hover,
   color: #000000 !important;
   width: 100% !important;
   max-width: 400px !important;
-  padding: 18px 16px !important;
-  border-radius: 12px !important;
+  padding: 22px 18px 40px 18px !important;
+  border-radius: 14px !important;
   border: 1px dashed #cbd5e1 !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.35) !important;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif !important;
   font-size: 11.5px !important;
   font-weight: 600 !important;
   line-height: 1.35 !important;
+  height: auto !important;
+  min-height: min-content !important;
+  flex-shrink: 0 !important;
+  box-sizing: border-box !important;
+  margin: 0 auto !important;
 }
 
 [data-theme="light"] .ticket-thermal-paper {
   border: 1px dashed rgba(168, 85, 247, 0.35) !important;
-  box-shadow: 0 12px 32px rgba(126, 34, 206, 0.12), 0 2px 8px rgba(0,0,0,0.06) !important;
+  box-shadow: 0 12px 32px rgba(126, 34, 206, 0.14), 0 2px 8px rgba(0,0,0,0.06) !important;
 }
 
 .ticket-modal-footer {

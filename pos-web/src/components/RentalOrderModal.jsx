@@ -257,64 +257,59 @@ export default function RentalOrderModal({
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose} style={{ zIndex: 1200 }}>
+    <div className="modal-overlay" onClick={onClose} style={{ zIndex: 1200, padding: "16px" }}>
       <div
         className="modal-content modal-card rental-order-modal-card"
         style={{
           maxWidth: "680px",
           width: "96%",
-          maxHeight: "min(92vh, 880px)",
-          overflowY: "auto",
-          overflowX: "hidden",
-          overscrollBehavior: "contain",
-          padding: "24px",
-          borderRadius: "24px",
+          maxHeight: "92vh",
+          borderRadius: "28px",
+          overflow: "hidden",
           display: "flex",
           flexDirection: "column",
           position: "relative"
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Cabecera Sticky */}
-        <div className="rental-modal-header" style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "16px",
-          position: "sticky",
-          top: "-24px",
-          paddingTop: "6px",
-          paddingBottom: "12px",
-          zIndex: 10,
-          borderBottom: "1px solid var(--border-color)"
-        }}>
+        {/* Cabecera Liquid Glass unificada tipo Nuevo Usuario */}
+        <div className="ticket-modal-header" style={{ flexShrink: 0, background: "transparent" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <div className="rental-header-icon" style={{
-              width: "44px",
-              height: "44px",
-              borderRadius: "12px",
-              background: "rgba(139, 92, 246, 0.15)",
-              color: "var(--neon-indigo, #8b5cf6)",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              border: "1px solid rgba(139, 92, 246, 0.25)"
-            }}>
-              <Armchair size={24} />
+            <div
+              className="ticket-icon-box"
+              style={{
+                background: "rgba(168, 85, 247, 0.16)",
+                border: "1px solid rgba(168, 85, 247, 0.3)",
+                color: "#C084FC"
+              }}
+            >
+              <Armchair size={22} />
             </div>
             <div>
-              <h2 style={{ fontSize: "1.25rem", fontWeight: 800, color: "var(--text-main)", margin: 0 }}>
+              <h3 style={{ fontSize: "1.18rem", fontWeight: 800, color: "var(--text-main)", margin: 0 }}>
                 Facturación y Alquiler de Sillas
-              </h2>
-              <p style={{ fontSize: "0.82rem", color: "var(--text-muted)", margin: "2px 0 0" }}>
+              </h3>
+              <span style={{ fontSize: "0.76rem", color: "var(--text-muted)" }}>
                 Salida inmediata o apartados para fechas especiales (Diciembre)
-              </p>
+              </span>
             </div>
           </div>
           <button onClick={onClose} className="btn-modal-close-circle" title="Cerrar modal">
-            <X size={18} />
+            <X size={16} />
           </button>
         </div>
+
+        {/* Body con Scroll dedicado idéntico al estándar de Nuevo Usuario */}
+        <div
+          style={{
+            padding: "20px 24px",
+            overflowY: "auto",
+            flex: "1 1 auto",
+            display: "flex",
+            flexDirection: "column",
+            gap: "16px"
+          }}
+        >
 
         {/* Selector de Modo: Inmediato vs Apartar / Reserva */}
         <div className="rental-mode-selector">
@@ -733,6 +728,7 @@ export default function RentalOrderModal({
             </button>
           </div>
         </form>
+        </div>
       </div>
     </div>
   );

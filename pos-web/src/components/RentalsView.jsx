@@ -1799,36 +1799,32 @@ export default function RentalsView({
             style={{
               maxWidth: "680px",
               width: "95%",
-              background: "var(--bg-secondary, #111827)",
-              border: "1px solid var(--border-strong)",
-              borderRadius: "18px",
-              padding: "26px",
-              boxShadow: "0 24px 60px rgba(0,0,0,0.85)",
-              maxHeight: "90vh",
-              overflowY: "auto"
+              borderRadius: "28px",
+              maxHeight: "92vh",
+              overflow: "hidden",
+              display: "flex",
+              flexDirection: "column"
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Cabecera del Modal */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "20px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <div style={{
-                  width: "42px",
-                  height: "42px",
-                  borderRadius: "12px",
-                  background: "rgba(99, 102, 241, 0.15)",
-                  color: "var(--neon-indigo, #6366f1)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center"
-                }}>
+            {/* Cabecera del Modal Liquid Glass */}
+            <div className="ticket-modal-header" style={{ flexShrink: 0, background: "transparent" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <div
+                  className="ticket-icon-box"
+                  style={{
+                    background: "rgba(168, 85, 247, 0.16)",
+                    border: "1px solid rgba(168, 85, 247, 0.3)",
+                    color: "#C084FC"
+                  }}
+                >
                   <Edit3 size={22} />
                 </div>
                 <div>
-                  <h3 style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--text-main)", margin: 0 }}>
+                  <h3 style={{ fontSize: "1.18rem", fontWeight: 800, color: "var(--text-main)", margin: 0 }}>
                     Editar Registro de Alquiler
                   </h3>
-                  <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", margin: "2px 0 0" }}>
+                  <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", margin: "2px 0 0" }}>
                     ID: <span className="font-mono">{editingRental.id}</span> · Modifica y actualiza los datos en tiempo real
                   </p>
                 </div>
@@ -1836,13 +1832,15 @@ export default function RentalsView({
               <button
                 type="button"
                 onClick={() => { setEditingRental(null); setEditFormData(null); }}
-                className="btn btn-outline"
-                style={{ padding: "6px", borderRadius: "50%" }}
+                className="btn-modal-close-circle"
+                title="Cerrar modal"
               >
-                <X size={18} />
+                <X size={16} />
               </button>
             </div>
 
+            {/* Body con Scroll dedicado */}
+            <div style={{ padding: "20px 24px", overflowY: "auto", flex: "1 1 auto" }}>
             {/* Formulario de Edición */}
             <form onSubmit={handleSaveEdit}>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", gap: "16px", marginBottom: "18px" }}>
@@ -2059,6 +2057,7 @@ export default function RentalsView({
                 </button>
               </div>
             </form>
+            </div>
           </div>
         </div>
       )}

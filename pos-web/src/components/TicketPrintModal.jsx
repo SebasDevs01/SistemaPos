@@ -138,6 +138,7 @@ ${ticketHTML}
           <div 
             id="printable-ticket"
             className="ticket-thermal-paper"
+            style={{ width: "100%", maxWidth: "400px", height: "auto", minHeight: "fit-content", flexShrink: 0 }}
           >
             {/* Encabezado */}
             <div style={{ textAlign: "center", marginBottom: "8px" }}>

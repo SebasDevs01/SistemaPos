@@ -73,12 +73,31 @@ export default function InsurancesView({
   const defaultPrice = insuranceProduct ? Number(insuranceProduct.precio || 0) : 15000;
   const stockPolizas = insuranceProduct ? Number(insuranceProduct.stock || 0) : 0;
 
-  // Formulario de Seguro
+  // Utilidad para desglosar nombres en caso de registros anteriores
+  const parseNombreCompleto = (nombreCompleto = "") => {
+    const parts = (nombreCompleto || "").trim().split(/\s+/).filter(Boolean);
+    if (parts.length === 0) return { a1: "", a2: "", n1: "", n2: "" };
+    if (parts.length === 1) return { a1: parts[0], a2: "", n1: "", n2: "" };
+    if (parts.length === 2) return { a1: parts[0], a2: "", n1: parts[1], n2: "" };
+    if (parts.length === 3) return { a1: parts[0], a2: parts[1], n1: parts[2], n2: "" };
+    return { a1: parts[0], a2: parts[1], n1: parts[2], n2: parts.slice(3).join(" ") };
+  };
+
+  // Formulario de Seguro con todos los campos oficiales del FORMATO LUIS CARLOS GALAN 2027
   const [formData, setFormData] = useState({
-    estudianteNombre: "",
-    identificacion: "",
-    edad: "",
-    grado: "",
+    apellido1: "",
+    apellido2: "",
+    nombre1: "",
+    nombre2: "",
+    sexo: "M", // M / F
+    tipoDocumento: "TI", // RC, TI, CC, PPT, NES
+    numeroDocumento: "",
+    fechaNacimiento: "",
+    curso: "0", // 0 a 11
+    responsableVenta: currentUser?.nombre || "Caja Mostrador",
+    fechaVenta: new Date().toISOString().split("T")[0],
+    responsableVerificacion: "",
+    inclusion: "NO", // NO / SÍ
     telefonoResponsable: "",
     precio: defaultPrice,
     cobrarEnCaja: true,
@@ -90,10 +109,19 @@ export default function InsurancesView({
   const handleOpenNewModal = () => {
     setEditingInsurance(null);
     setFormData({
-      estudianteNombre: "",
-      identificacion: "",
-      edad: "",
-      grado: "",
+      apellido1: "",
+      apellido2: "",
+      nombre1: "",
+      nombre2: "",
+      sexo: "M",
+      tipoDocumento: "TI",
+      numeroDocumento: "",
+      fechaNacimiento: "",
+      curso: "0",
+      responsableVenta: currentUser?.nombre || "Caja Mostrador",
+      fechaVenta: new Date().toISOString().split("T")[0],
+      responsableVerificacion: "",
+      inclusion: "NO",
       telefonoResponsable: "",
       precio: insuranceProduct ? Number(insuranceProduct.precio || 0) : defaultPrice,
       cobrarEnCaja: true,
@@ -106,11 +134,26 @@ export default function InsurancesView({
   // Abrir modal de edición
   const handleOpenEditModal = (ins) => {
     setEditingInsurance(ins);
+    const parsed = parseNombreCompleto(ins.estudianteNombre || "");
+    const defaultFechaVenta = ins.fechaVenta || (ins.fechaRegistro ? ins.fechaRegistro.split("T")[0] : new Date().toISOString().split("T")[0]);
+    const rawCurso = ins.curso !== undefined && ins.curso !== null && ins.curso !== ""
+      ? String(ins.curso)
+      : (ins.grado !== undefined ? String(ins.grado).replace(/\D/g, "") || "0" : "0");
+
     setFormData({
-      estudianteNombre: ins.estudianteNombre || "",
-      identificacion: ins.identificacion || "",
-      edad: ins.edad || "",
-      grado: ins.grado || "",
+      apellido1: ins.apellido1 || parsed.a1 || "",
+      apellido2: ins.apellido2 || parsed.a2 || "",
+      nombre1: ins.nombre1 || parsed.n1 || "",
+      nombre2: ins.nombre2 || parsed.n2 || "",
+      sexo: ins.sexo || "M",
+      tipoDocumento: ins.tipoDocumento || "TI",
+      numeroDocumento: ins.numeroDocumento || ins.identificacion || "",
+      fechaNacimiento: ins.fechaNacimiento || "",
+      curso: rawCurso,
+      responsableVenta: ins.responsableVenta || ins.vendedor || currentUser?.nombre || "Caja Mostrador",
+      fechaVenta: defaultFechaVenta,
+      responsableVerificacion: ins.responsableVerificacion || "",
+      inclusion: ins.inclusion || "NO",
       telefonoResponsable: ins.telefonoResponsable || "",
       precio: ins.precio || defaultPrice,
       cobrarEnCaja: false,
@@ -123,30 +166,53 @@ export default function InsurancesView({
   // Guardar seguro (nuevo o editado)
   const handleSaveSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.estudianteNombre.trim()) {
-      alert("Por favor ingresa el nombre y apellidos completos del estudiante.");
+    if (!formData.apellido1.trim()) {
+      alert("Por favor ingresa el Primer Apellido del estudiante (requerido por la aseguradora).");
       return;
     }
-    if (!formData.identificacion.trim()) {
-      alert("Por favor ingresa el número de documento de identificación.");
+    if (!formData.nombre1.trim()) {
+      alert("Por favor ingresa el Primer Nombre del estudiante (requerido por la aseguradora).");
       return;
     }
-    if (!formData.grado.trim()) {
-      alert("Por favor ingresa el grado escolar del estudiante.");
+    if (!formData.numeroDocumento.trim()) {
+      alert("Por favor ingresa el Número de Documento de identificación.");
       return;
     }
 
+    const a1 = formData.apellido1.trim().toUpperCase();
+    const a2 = formData.apellido2.trim().toUpperCase();
+    const n1 = formData.nombre1.trim().toUpperCase();
+    const n2 = formData.nombre2.trim().toUpperCase();
+    const fullName = [a1, a2, n1, n2].filter(Boolean).join(" ");
+    const numDoc = formData.numeroDocumento.trim();
+    const cursoFmt = formData.curso === "0" ? "0 (Transición)" : `${formData.curso}°`;
+
     const payload = {
       ...(editingInsurance || {}),
-      estudianteNombre: formData.estudianteNombre.trim(),
-      identificacion: formData.identificacion.trim(),
-      edad: formData.edad ? String(formData.edad).trim() : "",
-      grado: formData.grado.trim(),
+      // Campos oficiales del formato institucional:
+      apellido1: a1,
+      apellido2: a2,
+      nombre1: n1,
+      nombre2: n2,
+      sexo: formData.sexo || "M",
+      tipoDocumento: formData.tipoDocumento || "TI",
+      numeroDocumento: numDoc,
+      identificacion: numDoc, // compatibilidad con vistas POS
+      fechaNacimiento: formData.fechaNacimiento || "",
+      curso: formData.curso,
+      grado: cursoFmt, // compatibilidad con vistas POS
+      responsableVenta: formData.responsableVenta.trim() || (currentUser?.nombre || "Cajero"),
+      vendedor: formData.responsableVenta.trim() || (currentUser?.nombre || "Cajero"), // compatibilidad
+      fechaVenta: formData.fechaVenta || new Date().toISOString().split("T")[0],
+      responsableVerificacion: formData.responsableVerificacion.trim(),
+      inclusion: formData.inclusion || "NO",
+      observaciones: formData.observaciones.trim(),
+
+      // Campos operativos POS:
+      estudianteNombre: fullName,
       telefonoResponsable: formData.telefonoResponsable ? String(formData.telefonoResponsable).trim() : "",
       precio: Number(formData.precio) || 0,
       metodoPago: formData.metodoPago,
-      observaciones: formData.observaciones || "",
-      vendedor: editingInsurance ? editingInsurance.vendedor : (currentUser?.nombre || "Cajero"),
       fechaRegistro: editingInsurance ? editingInsurance.fechaRegistro : new Date().toISOString(),
       reportado: editingInsurance ? Boolean(editingInsurance.reportado) : false,
       shiftId: editingInsurance ? editingInsurance.shiftId : (activeShift?.id || null)
@@ -162,15 +228,15 @@ export default function InsurancesView({
         tipoVenta: "seguro",
         shiftId: activeShift?.id || null,
         cliente: {
-          nombre: formData.estudianteNombre.trim(),
+          nombre: fullName,
           telefono: formData.telefonoResponsable || "",
-          dni: formData.identificacion.trim()
+          dni: numDoc
         },
         items: [{
           cartItemId: `seguro-dir-${Date.now()}`,
           productId: insuranceProduct?.id || insuranceProduct?.codigo || "PROD-SEGURO",
           codigo: insuranceProduct?.codigo || "SEG-001",
-          nombre: `Seguro Escolar: ${formData.estudianteNombre.trim()} (${formData.grado.trim()})`,
+          nombre: `Seguro Escolar: ${fullName} (${cursoFmt})`,
           categoria: "Seguros",
           presentacion: "póliza",
           cantidad: 1,
@@ -184,7 +250,7 @@ export default function InsurancesView({
         efectivoRecibido: Number(formData.precio),
         cambio: 0,
         fecha: new Date().toISOString(),
-        vendedor: currentUser?.nombre || "Caja Mostrador"
+        vendedor: formData.responsableVenta.trim() || currentUser?.nombre || "Caja Mostrador"
       };
       await onRecordSale(saleRecord);
     }
@@ -216,14 +282,29 @@ export default function InsurancesView({
         }
       }
 
-      // Buscador
+      // Buscador enriquecido
       if (searchTerm.trim()) {
         const q = searchTerm.toLowerCase().trim();
         const nom = (ins.estudianteNombre || "").toLowerCase();
-        const doc = (ins.identificacion || "").toLowerCase();
-        const gra = (ins.grado || "").toLowerCase();
+        const a1 = (ins.apellido1 || "").toLowerCase();
+        const a2 = (ins.apellido2 || "").toLowerCase();
+        const n1 = (ins.nombre1 || "").toLowerCase();
+        const n2 = (ins.nombre2 || "").toLowerCase();
+        const doc = (ins.identificacion || ins.numeroDocumento || "").toLowerCase();
+        const gra = (ins.grado || ins.curso || "").toString().toLowerCase();
         const tel = (ins.telefonoResponsable || "").toLowerCase();
-        return nom.includes(q) || doc.includes(q) || gra.includes(q) || tel.includes(q);
+        const ven = (ins.responsableVenta || ins.vendedor || "").toLowerCase();
+        return (
+          nom.includes(q) ||
+          a1.includes(q) ||
+          a2.includes(q) ||
+          n1.includes(q) ||
+          n2.includes(q) ||
+          doc.includes(q) ||
+          gra.includes(q) ||
+          tel.includes(q) ||
+          ven.includes(q)
+        );
       }
 
       return true;
@@ -259,9 +340,132 @@ export default function InsurancesView({
     setFilterReported("pendientes");
   };
 
-  // EXPORTAR A EXCEL — sistema acumulativo por pestañas semanales (mismo archivo)
+  // Constantes de diseño para la plantilla oficial FORMATO LUIS CARLOS GALAN 2027
+  const galanMerges = [
+    { s: { c: 0, r: 0 }, e: { c: 3, r: 0 } },
+    { s: { c: 4, r: 0 }, e: { c: 9, r: 0 } },
+    { s: { c: 0, r: 1 }, e: { c: 9, r: 1 } },
+    { s: { c: 0, r: 2 }, e: { c: 2, r: 2 } },
+    { s: { c: 4, r: 2 }, e: { c: 6, r: 2 } },
+    { s: { c: 7, r: 2 }, e: { c: 9, r: 3 } },
+    { s: { c: 0, r: 3 }, e: { c: 2, r: 3 } },
+    { s: { c: 3, r: 3 }, e: { c: 6, r: 3 } }
+  ];
+
+  const galanCols = [
+    { wch: 8 },  // ITEM
+    { wch: 18 }, // APELLIDO 1
+    { wch: 18 }, // APELLIDO 2
+    { wch: 18 }, // NOMBRE 1
+    { wch: 18 }, // NOMBRE 2
+    { wch: 8 },  // SEXO
+    { wch: 20 }, // TIPO DE DOCUMENTO (RC,TI,PPT,NES)
+    { wch: 18 }, // NUMERO DE DOCUMENTO
+    { wch: 20 }, // FECHA DE NACIMIENTO (DIA/MES/AÑO)
+    { wch: 14 }, // CURSO (0 A 11)
+    { wch: 22 }, // RESPONSABLE DE VENTA
+    { wch: 14 }, // FECHA
+    { wch: 22 }, // RESPONSABLE VERIFICACION
+    { wch: 12 }, // INCLUSION
+    { wch: 30 }  // OBSERVACIONES
+  ];
+
+  // Función constructora de hoja con el formato oficial del colegio
+  const buildGalanWorksheet = (items, reportDateStr, sellerName) => {
+    const headerRows = [
+      ["POLIZA DE ACCIDENTES ESCOLARES  SOLIDARIA", null, null, null, "N° POLIZA: 994000001142"],
+      ["INSTITUCION EDUCATIVA LUIS CARLOS GALAN SARMIENTO NIT 900.020.605-6"],
+      ["VIGENCIA: 02/12/2026 HAST 02/12/2027", null, null, null, `FECHA: ${reportDateStr}`, null, null, "ALCASEGUROS CONSULTORES LTDA AGENCIA DE SEGUROS"],
+      [`CANTIDAD: ${items.length}`, null, null, `RESPONSABLE: ${sellerName || "Caja Mostrador"}`],
+      [
+        "ITEM",
+        "APELLIDO 1 ",
+        "APELLIDO 2",
+        "NOMBRE 1",
+        "NOMBRE 2",
+        "SEXO",
+        "TIPO DE DOCUMENTO     (RC,TI,PPT,NES)",
+        "NUMERO DE DOCUMENTO",
+        "FECHA DE NACIMIENTO (DIA/MES/AÑO)",
+        "CURSO  (0 A 11)",
+        "RESPONSABLE DE VENTA ",
+        "FECHA ",
+        "RESPONSABLE VERIFICACION ",
+        "INCLUSION",
+        "OBSERVACIONES "
+      ]
+    ];
+
+    const dataRows = items.map(item => {
+      const numItem = globalSequenceMap[item.id] || "";
+      let a1 = item.apellido1 || "";
+      let a2 = item.apellido2 || "";
+      let n1 = item.nombre1 || "";
+      let n2 = item.nombre2 || "";
+
+      if (!a1 && item.estudianteNombre) {
+        const p = parseNombreCompleto(item.estudianteNombre);
+        a1 = p.a1;
+        a2 = p.a2;
+        n1 = p.n1;
+        n2 = p.n2;
+      }
+
+      // Fecha nacimiento en DIA/MES/AÑO
+      let fnac = item.fechaNacimiento || "";
+      if (fnac && fnac.includes("-")) {
+        const parts = fnac.split("-");
+        if (parts.length === 3) fnac = `${parts[2]}/${parts[1]}/${parts[0]}`;
+      }
+
+      // Fecha venta en DIA/MES/AÑO
+      let fvta = item.fechaVenta || "";
+      if (!fvta && item.fechaRegistro) {
+        fvta = item.fechaRegistro.split("T")[0];
+      }
+      if (fvta && fvta.includes("-")) {
+        const parts = fvta.split("-");
+        if (parts.length === 3) fvta = `${parts[2]}/${parts[1]}/${parts[0]}`;
+      }
+
+      // Curso 0 a 11
+      let cso = item.curso !== undefined && item.curso !== null && item.curso !== ""
+        ? String(item.curso)
+        : (item.grado !== undefined ? String(item.grado).replace(/\D/g, "") || "0" : "0");
+
+      const obsExtra = [
+        item.observaciones || "",
+        item.telefonoResponsable ? `Tel: ${item.telefonoResponsable}` : ""
+      ].filter(Boolean).join(" | ");
+
+      return [
+        numItem,
+        (a1 || "").toUpperCase(),
+        (a2 || "").toUpperCase(),
+        (n1 || "").toUpperCase(),
+        (n2 || "").toUpperCase(),
+        (item.sexo || "M").toUpperCase(),
+        (item.tipoDocumento || "TI").toUpperCase(),
+        item.numeroDocumento || item.identificacion || "",
+        fnac,
+        cso,
+        item.responsableVenta || item.vendedor || sellerName || "",
+        fvta,
+        item.responsableVerificacion || "",
+        (item.inclusion || "NO").toUpperCase(),
+        obsExtra
+      ];
+    });
+
+    const aoa = [...headerRows, ...dataRows];
+    const ws = XLSX.utils.aoa_to_sheet(aoa);
+    ws["!merges"] = galanMerges;
+    ws["!cols"] = galanCols;
+    return ws;
+  };
+
+  // EXPORTAR A EXCEL — sistema acumulativo por pestañas semanales (mismo archivo base oficial)
   const handleExportExcel = () => {
-    // Determinar qué registros se exportarán: los seleccionados o todos los visibles
     const targetItems = selectedIds.size > 0 
       ? insurances.filter(s => selectedIds.has(s.id))
       : filteredInsurances;
@@ -289,68 +493,43 @@ export default function InsurancesView({
     const weekLabel = `Sem_${fmt(startOfWeek)}-${fmt(endOfWeek)}`;
     const reportYear = now.getFullYear();
     const sheetName = `${weekLabel}_${reportYear}`.replace(/\//g, "-").slice(0, 31);
+    const reportDateStr = now.toLocaleDateString("es-CO", { day: "2-digit", month: "2-digit", year: "numeric" });
+    const currentSeller = currentUser?.nombre || "Caja Mostrador";
 
-    // Estructurar filas para la hoja de esta semana (con Nº de póliza global)
-    const newRows = targetItems
-      .sort((a, b) => (globalSequenceMap[a.id] || 0) - (globalSequenceMap[b.id] || 0))
-      .map((item) => {
-        const dateObj = item.fechaRegistro ? new Date(item.fechaRegistro) : new Date();
-        const fechaFmt = dateObj.toLocaleDateString("es-CO", { 
-          year: "numeric", month: "2-digit", day: "2-digit" 
-        });
-        const numPoliza = globalSequenceMap[item.id] || "";
-        return {
-          "Nº Póliza": numPoliza,
-          "Fecha": fechaFmt,
-          "Nombres y Apellidos del Estudiante": item.estudianteNombre || "",
-          "N° de Identificación": item.identificacion || "",
-          "Edad": item.edad || "",
-          "Grado": item.grado || "",
-          "Teléfono / WhatsApp Responsable": item.telefonoResponsable || ""
-        };
-      });
+    // Ordenar los registros de esta semana por Nº Póliza global
+    const sortedTargetItems = [...targetItems].sort((a, b) => 
+      (globalSequenceMap[a.id] || 0) - (globalSequenceMap[b.id] || 0)
+    );
 
-    // Eliminar hoja anterior con el mismo nombre si existe (reemplazo)
+    // Guardar en el historial la lista de registros de esta semana
     sheetsHistory = sheetsHistory.filter(s => s.name !== sheetName);
-    sheetsHistory.push({ name: sheetName, rows: newRows });
-    // Limitar a 52 hojas máximo (1 año de reportes semanales)
+    sheetsHistory.push({
+      name: sheetName,
+      items: sortedTargetItems,
+      date: reportDateStr,
+      seller: currentSeller
+    });
     if (sheetsHistory.length > 52) sheetsHistory = sheetsHistory.slice(-52);
 
-    // Guardar historial actualizado
     try { localStorage.setItem(EXCEL_HISTORY_KEY, JSON.stringify(sheetsHistory)); } catch (_) {}
 
-    // Crear workbook con TODAS las hojas históricas + hoja resumen global
+    // Crear libro Excel con el formato oficial del Galán
     const workbook = XLSX.utils.book_new();
 
-    // Hoja resumen: todos los seguros registrados, ordenados por Nº póliza
+    // 1. Pestaña principal: "Histórico Total" (todos los seguros con formato oficial)
     const allSorted = [...insurances].sort((a, b) => 
       (globalSequenceMap[a.id] || 0) - (globalSequenceMap[b.id] || 0)
     );
-    const summaryRows = allSorted.map((item) => {
-      const dateObj = item.fechaRegistro ? new Date(item.fechaRegistro) : new Date();
-      return {
-        "Nº Póliza": globalSequenceMap[item.id] || "",
-        "Fecha": dateObj.toLocaleDateString("es-CO", { year: "numeric", month: "2-digit", day: "2-digit" }),
-        "Estudiante": item.estudianteNombre || "",
-        "Identificación": item.identificacion || "",
-        "Edad": item.edad || "",
-        "Grado": item.grado || "",
-        "Tel / WhatsApp": item.telefonoResponsable || "",
-        "Estado": item.reportado ? "Reportado" : "Pendiente"
-      };
-    });
-    const summaryWs = XLSX.utils.json_to_sheet(summaryRows);
-    summaryWs["!cols"] = [{wch:10},{wch:13},{wch:34},{wch:18},{wch:7},{wch:12},{wch:22},{wch:11}];
+    const summaryWs = buildGalanWorksheet(allSorted, reportDateStr, currentSeller);
     XLSX.utils.book_append_sheet(workbook, summaryWs, "Histórico Total");
 
-    // Agregar cada hoja semanal histórica
+    // 2. Pestaña de la semana actual y semanas históricas previas
     for (const sheet of sheetsHistory) {
-      const ws = XLSX.utils.json_to_sheet(sheet.rows || []);
-      ws["!cols"] = [{wch:10},{wch:13},{wch:34},{wch:18},{wch:7},{wch:12},{wch:22}];
-      XLSX.utils.book_append_sheet(workbook, ws, sheet.name);
+      const sheetWs = buildGalanWorksheet(sheet.items || [], sheet.date || reportDateStr, sheet.seller || currentSeller);
+      XLSX.utils.book_append_sheet(workbook, sheetWs, sheet.name);
     }
 
-    const fileName = `Seguros_Escolares_LCG_${reportYear}.xlsx`;
+    const fileName = `FORMATO_LUIS_CARLOS_GALAN_${reportYear}.xlsx`;
     XLSX.writeFile(workbook, fileName);
 
     // Guardar ids exportados y abrir modal de confirmación
@@ -807,12 +986,12 @@ export default function InsurancesView({
                   />
                 </th>
                 <th style={{ padding: "12px 10px", width: "70px", textAlign: "center", color: "#a78bfa" }}>Nº Póliza</th>
-                <th style={{ padding: "12px 14px" }}>Estudiante</th>
-                <th style={{ padding: "12px 14px" }}>Documento</th>
-                <th style={{ padding: "12px 14px" }}>Edad</th>
-                <th style={{ padding: "12px 14px" }}>Grado</th>
+                <th style={{ padding: "12px 14px" }}>Estudiante & Sexo</th>
+                <th style={{ padding: "12px 14px" }}>Tipo & Documento</th>
+                <th style={{ padding: "12px 14px" }}>Nacimiento</th>
+                <th style={{ padding: "12px 14px" }}>Curso (0-11)</th>
                 <th style={{ padding: "12px 14px" }}>WhatsApp / Acudiente</th>
-                <th style={{ padding: "12px 14px" }}>Fecha Registro</th>
+                <th style={{ padding: "12px 14px" }}>Fecha Venta</th>
                 <th style={{ padding: "12px 14px" }}>Estado Reporte</th>
                 <th style={{ padding: "12px 14px", textAlign: "right" }}>Acciones</th>
               </tr>
@@ -844,9 +1023,26 @@ export default function InsurancesView({
                 filteredInsurances.map((ins, index) => {
                   const isSelected = selectedIds.has(ins.id);
                   const isReported = Boolean(ins.reportado);
-                  const dateStr = ins.fechaRegistro 
-                    ? new Date(ins.fechaRegistro).toLocaleDateString("es-CO", { day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit" })
-                    : "—";
+                  const dateStr = ins.fechaVenta 
+                    ? ins.fechaVenta
+                    : (ins.fechaRegistro 
+                        ? new Date(ins.fechaRegistro).toLocaleDateString("es-CO", { day: "2-digit", month: "short", year: "numeric" })
+                        : "—");
+
+                  const tipoDoc = ins.tipoDocumento || "TI";
+                  const numDoc = ins.numeroDocumento || ins.identificacion || "—";
+                  const cursoStr = ins.curso !== undefined && ins.curso !== null && ins.curso !== ""
+                    ? (ins.curso === "0" ? "0 (Transición)" : `${ins.curso}°`)
+                    : (ins.grado || "General");
+
+                  let nacFmt = ins.fechaNacimiento || "";
+                  if (nacFmt && nacFmt.includes("-")) {
+                    const p = nacFmt.split("-");
+                    if (p.length === 3) nacFmt = `${p[2]}/${p[1]}/${p[0]}`;
+                  }
+                  if (!nacFmt && ins.edad) {
+                    nacFmt = `${ins.edad} años`;
+                  }
 
                   return (
                     <tr
@@ -887,14 +1083,15 @@ export default function InsurancesView({
                         </span>
                       </td>
 
+                      {/* Estudiante & Sexo */}
                       <td style={{ padding: "12px 14px" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                           <div style={{ 
                             width: "32px", 
                             height: "32px", 
                             borderRadius: "50%", 
-                            background: "rgba(13, 148, 136, 0.18)", 
-                            color: "#2dd4bf",
+                            background: ins.sexo === "F" ? "rgba(236, 72, 153, 0.18)" : "rgba(13, 148, 136, 0.18)", 
+                            color: ins.sexo === "F" ? "#f472b6" : "#2dd4bf",
                             display: "flex", 
                             alignItems: "center", 
                             justifyContent: "center",
@@ -902,32 +1099,60 @@ export default function InsurancesView({
                             fontWeight: 800,
                             flexShrink: 0
                           }}>
-                            {ins.estudianteNombre ? ins.estudianteNombre.charAt(0).toUpperCase() : "E"}
+                            {ins.sexo === "F" ? "F" : "M"}
                           </div>
                           <div>
-                            <div style={{ fontWeight: 800, color: "var(--text-main)" }}>
+                            <div style={{ fontWeight: 800, color: "var(--text-main)", textTransform: "uppercase" }}>
                               {ins.estudianteNombre}
                             </div>
-                            {ins.observaciones && (
-                              <div style={{ fontSize: "0.72rem", color: "var(--text-dim)" }}>
-                                {ins.observaciones}
-                              </div>
-                            )}
+                            <div style={{ display: "flex", alignItems: "center", gap: "6px", marginTop: "2px" }}>
+                              {ins.inclusion === "SÍ" && (
+                                <span style={{
+                                  fontSize: "0.65rem",
+                                  fontWeight: 800,
+                                  background: "rgba(245, 158, 11, 0.2)",
+                                  color: "#fbbf24",
+                                  padding: "1px 5px",
+                                  borderRadius: "4px"
+                                }}>
+                                  INCLUSIÓN
+                                </span>
+                              )}
+                              {ins.observaciones && (
+                                <span style={{ fontSize: "0.72rem", color: "var(--text-dim)" }}>
+                                  {ins.observaciones}
+                                </span>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </td>
 
-                      {/* Documento */}
-                      <td style={{ padding: "12px 14px", fontFamily: "var(--font-mono)", fontWeight: 700 }}>
-                        {ins.identificacion || "—"}
-                      </td>
-
-                      {/* Edad */}
+                      {/* Tipo & Documento */}
                       <td style={{ padding: "12px 14px" }}>
-                        {ins.edad ? `${ins.edad} años` : "—"}
+                        <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                          <span style={{
+                            fontSize: "0.7rem",
+                            fontWeight: 800,
+                            padding: "2px 5px",
+                            borderRadius: "4px",
+                            background: "rgba(255, 255, 255, 0.08)",
+                            color: "var(--text-muted)"
+                          }}>
+                            {tipoDoc}
+                          </span>
+                          <span style={{ fontFamily: "var(--font-mono)", fontWeight: 700, color: "var(--text-main)" }}>
+                            {numDoc}
+                          </span>
+                        </div>
                       </td>
 
-                      {/* Grado */}
+                      {/* Nacimiento */}
+                      <td style={{ padding: "12px 14px", fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                        {nacFmt || "—"}
+                      </td>
+
+                      {/* Curso */}
                       <td style={{ padding: "12px 14px" }}>
                         <span style={{
                           padding: "3px 8px",
@@ -937,7 +1162,7 @@ export default function InsurancesView({
                           fontWeight: 700,
                           fontSize: "0.76rem"
                         }}>
-                          {ins.grado || "General"}
+                          {cursoStr}
                         </span>
                       </td>
 
@@ -1036,22 +1261,25 @@ export default function InsurancesView({
         </div>
       </div>
 
-      {/* ── MODAL: REGISTRAR / EDITAR SEGURO ── */}
+      {/* ── MODAL: REGISTRAR / EDITAR SEGURO (FORMATO OFICIAL LUIS CARLOS GALÁN 2027) ── */}
       {isNewModalOpen && (
         <div className="modal-overlay" onClick={() => setIsNewModalOpen(false)} style={{ zIndex: 1200, padding: "16px" }}>
           <div 
             className="modal-card" 
             onClick={(e) => e.stopPropagation()} 
             style={{ 
-              maxWidth: "520px", 
-              width: "94%", 
+              maxWidth: "680px", 
+              width: "96%", 
+              maxHeight: "92vh",
+              display: "flex",
+              flexDirection: "column",
               borderRadius: "24px",
               overflow: "hidden"
             }}
           >
-            {/* Header Liquid Glass */}
+            {/* Header Liquid Glass con detalles oficiales */}
             <div style={{ 
-              padding: "16px 20px", 
+              padding: "16px 22px", 
               borderBottom: "1px solid var(--border-color)", 
               display: "flex", 
               justifyContent: "space-between", 
@@ -1062,22 +1290,37 @@ export default function InsurancesView({
                 <div style={{
                   width: "44px",
                   height: "44px",
-                  borderRadius: "12px",
-                  background: "rgba(13, 148, 136, 0.16)",
-                  border: "1px solid rgba(13, 148, 136, 0.3)",
-                  color: "#2dd4bf",
+                  borderRadius: "14px",
+                  background: "linear-gradient(135deg, rgba(139, 92, 246, 0.25), rgba(168, 85, 247, 0.15))",
+                  border: "1px solid rgba(168, 85, 247, 0.4)",
+                  color: "#a78bfa",
                   display: "flex",
                   alignItems: "center",
-                  justifyContent: "center"
+                  justifyContent: "center",
+                  boxShadow: "0 4px 14px rgba(139, 92, 246, 0.3)"
                 }}>
                   <ShieldCheck size={24} />
                 </div>
                 <div>
-                  <h3 style={{ margin: 0, fontSize: "1.18rem", fontWeight: 800, color: "var(--text-main)" }}>
-                    {editingInsurance ? "Editar Seguro Escolar" : "Registrar Seguro Escolar"}
-                  </h3>
-                  <span style={{ fontSize: "0.76rem", color: "var(--text-muted)" }}>
-                    Póliza estudiantil para cobertura médica y accidentes
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    <h3 style={{ margin: 0, fontSize: "1.15rem", fontWeight: 800, color: "var(--text-main)" }}>
+                      {editingInsurance ? "Editar Seguro Escolar" : "Registrar Seguro Escolar"}
+                    </h3>
+                    <span style={{
+                      padding: "2px 8px",
+                      borderRadius: "6px",
+                      fontSize: "0.7rem",
+                      fontWeight: 800,
+                      background: "rgba(139, 92, 246, 0.18)",
+                      color: "#c4b5fd",
+                      border: "1px solid rgba(139, 92, 246, 0.35)",
+                      fontFamily: "var(--font-mono)"
+                    }}>
+                      Póliza #{editingInsurance ? (globalSequenceMap[editingInsurance.id] || "—") : (totalVendidos + 1)} de {MAX_POLIZAS}
+                    </span>
+                  </div>
+                  <span style={{ fontSize: "0.74rem", color: "var(--text-muted)", display: "block", marginTop: "2px" }}>
+                    I.E. Luis Carlos Galán Sarmiento • Póliza Solidaria N° 994000001142
                   </span>
                 </div>
               </div>
@@ -1091,201 +1334,498 @@ export default function InsurancesView({
               </button>
             </div>
 
-            {/* Form */}
-            <form onSubmit={handleSaveSubmit} style={{ padding: "20px" }}>
-              <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-                {/* Nombre Estudiante */}
-                <div>
-                  <label style={{ display: "block", fontSize: "0.76rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "4px" }}>
-                    Nombres y Apellidos Completos *:
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Ej: Juan Camilo Pérez Rodríguez"
-                    value={formData.estudianteNombre}
-                    onChange={(e) => setFormData({ ...formData, estudianteNombre: e.target.value })}
-                    style={{
-                      width: "100%",
-                      padding: "9px 12px",
-                      borderRadius: "10px",
-                      border: "1px solid var(--border-color)",
-                      background: "var(--bg-tertiary)",
-                      color: "var(--text-main)",
-                      fontSize: "0.85rem"
-                    }}
-                  />
-                </div>
-
-                {/* Documento y Edad */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
-                  <div>
-                    <label style={{ display: "block", fontSize: "0.76rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "4px" }}>
-                      N° Identificación / TI *:
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Ej: 1098765432"
-                      value={formData.identificacion}
-                      onChange={(e) => setFormData({ ...formData, identificacion: e.target.value })}
-                      style={{
-                        width: "100%",
-                        padding: "9px 12px",
-                        borderRadius: "10px",
-                        border: "1px solid var(--border-color)",
-                        background: "var(--bg-tertiary)",
-                        color: "var(--text-main)",
-                        fontSize: "0.85rem",
-                        fontFamily: "var(--font-mono)"
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ display: "block", fontSize: "0.76rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "4px" }}>
-                      Edad (Años):
-                    </label>
-                    <input
-                      type="number"
-                      placeholder="Ej: 12"
-                      value={formData.edad}
-                      onChange={(e) => setFormData({ ...formData, edad: e.target.value })}
-                      style={{
-                        width: "100%",
-                        padding: "9px 12px",
-                        borderRadius: "10px",
-                        border: "1px solid var(--border-color)",
-                        background: "var(--bg-tertiary)",
-                        color: "var(--text-main)",
-                        fontSize: "0.85rem"
-                      }}
-                    />
-                  </div>
-                </div>
-
-                {/* Grado y Teléfono WhatsApp */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1.2fr", gap: "10px" }}>
-                  <div>
-                    <label style={{ display: "block", fontSize: "0.76rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "4px" }}>
-                      Grado Escolar *:
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Ej: 6°, 7-2, Jardín"
-                      value={formData.grado}
-                      onChange={(e) => setFormData({ ...formData, grado: e.target.value })}
-                      style={{
-                        width: "100%",
-                        padding: "9px 12px",
-                        borderRadius: "10px",
-                        border: "1px solid var(--border-color)",
-                        background: "var(--bg-tertiary)",
-                        color: "var(--text-main)",
-                        fontSize: "0.85rem"
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label style={{ display: "block", fontSize: "0.76rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "4px" }}>
-                      WhatsApp Responsable:
-                    </label>
-                    <input
-                      type="tel"
-                      placeholder="Ej: 3101234567"
-                      value={formData.telefonoResponsable}
-                      onChange={(e) => setFormData({ ...formData, telefonoResponsable: e.target.value })}
-                      style={{
-                        width: "100%",
-                        padding: "9px 12px",
-                        borderRadius: "10px",
-                        border: "1px solid var(--border-color)",
-                        background: "var(--bg-tertiary)",
-                        color: "var(--text-main)",
-                        fontSize: "0.85rem"
-                      }}
-                    />
-                  </div>
-                </div>
-
-                {/* Precio y Opción de Cobro en Caja */}
-                <div style={{ 
-                  background: "rgba(13, 148, 136, 0.08)", 
-                  border: "1px solid rgba(13, 148, 136, 0.25)", 
-                  padding: "12px", 
-                  borderRadius: "12px" 
+            {/* Formulario con scroll independiente */}
+            <form onSubmit={handleSaveSubmit} style={{ padding: "20px 22px", overflowY: "auto", flex: 1 }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+                
+                {/* ── SECCIÓN 1: DATOS DEL ESTUDIANTE (REQUERIDOS POR LA ASEGURADORA) ── */}
+                <div style={{
+                  background: "rgba(139, 92, 246, 0.05)",
+                  border: "1px solid rgba(139, 92, 246, 0.2)",
+                  borderRadius: "16px",
+                  padding: "16px"
                 }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "8px" }}>
-                    <label style={{ fontSize: "0.76rem", fontWeight: 700, color: "#2dd4bf" }}>
-                      Precio del Seguro (COP):
-                    </label>
-                    <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
-                      Predeterminado del inventario
+                  <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "12px" }}>
+                    <GraduationCap size={16} color="#a78bfa" />
+                    <span style={{ fontSize: "0.82rem", fontWeight: 800, color: "#a78bfa", textTransform: "uppercase", letterSpacing: "0.03em" }}>
+                      1. Datos del Estudiante (Formato Base Excel)
                     </span>
                   </div>
-                  <input
-                    type="number"
-                    value={formData.precio}
-                    onChange={(e) => setFormData({ ...formData, precio: e.target.value })}
-                    style={{
-                      width: "100%",
-                      padding: "9px 12px",
-                      borderRadius: "10px",
-                      border: "1px solid var(--border-color)",
-                      background: "var(--bg-secondary)",
-                      color: "var(--text-main)",
-                      fontSize: "1rem",
-                      fontWeight: 800,
-                      fontFamily: "var(--font-mono)"
-                    }}
-                  />
 
-                  {!editingInsurance && (
-                    <div style={{ marginTop: "10px", display: "flex", alignItems: "center", gap: "8px" }}>
-                      <input
-                        type="checkbox"
-                        id="cobrarCajaCheck"
-                        checked={formData.cobrarEnCaja}
-                        onChange={(e) => setFormData({ ...formData, cobrarEnCaja: e.target.checked })}
-                        style={{ cursor: "pointer" }}
-                      />
-                      <label htmlFor="cobrarCajaCheck" style={{ fontSize: "0.78rem", color: "var(--text-main)", cursor: "pointer", fontWeight: 600 }}>
-                        Registrar venta en Caja POS (Entra al arqueo de caja actual)
+                  {/* Fila Apellidos */}
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginBottom: "10px" }}>
+                    <div>
+                      <label style={{ display: "block", fontSize: "0.74rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "4px" }}>
+                        Primer Apellido *:
                       </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Ej: PÉREZ"
+                        value={formData.apellido1}
+                        onChange={(e) => setFormData({ ...formData, apellido1: e.target.value })}
+                        style={{
+                          width: "100%",
+                          padding: "9px 12px",
+                          borderRadius: "10px",
+                          border: "1px solid var(--border-color)",
+                          background: "var(--bg-tertiary)",
+                          color: "var(--text-main)",
+                          fontSize: "0.85rem",
+                          textTransform: "uppercase"
+                        }}
+                      />
                     </div>
-                  )}
+                    <div>
+                      <label style={{ display: "block", fontSize: "0.74rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "4px" }}>
+                        Segundo Apellido:
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Ej: RODRÍGUEZ"
+                        value={formData.apellido2}
+                        onChange={(e) => setFormData({ ...formData, apellido2: e.target.value })}
+                        style={{
+                          width: "100%",
+                          padding: "9px 12px",
+                          borderRadius: "10px",
+                          border: "1px solid var(--border-color)",
+                          background: "var(--bg-tertiary)",
+                          color: "var(--text-main)",
+                          fontSize: "0.85rem",
+                          textTransform: "uppercase"
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Fila Nombres */}
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginBottom: "10px" }}>
+                    <div>
+                      <label style={{ display: "block", fontSize: "0.74rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "4px" }}>
+                        Primer Nombre *:
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Ej: JUAN"
+                        value={formData.nombre1}
+                        onChange={(e) => setFormData({ ...formData, nombre1: e.target.value })}
+                        style={{
+                          width: "100%",
+                          padding: "9px 12px",
+                          borderRadius: "10px",
+                          border: "1px solid var(--border-color)",
+                          background: "var(--bg-tertiary)",
+                          color: "var(--text-main)",
+                          fontSize: "0.85rem",
+                          textTransform: "uppercase"
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: "block", fontSize: "0.74rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "4px" }}>
+                        Segundo Nombre:
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Ej: CAMILO"
+                        value={formData.nombre2}
+                        onChange={(e) => setFormData({ ...formData, nombre2: e.target.value })}
+                        style={{
+                          width: "100%",
+                          padding: "9px 12px",
+                          borderRadius: "10px",
+                          border: "1px solid var(--border-color)",
+                          background: "var(--bg-tertiary)",
+                          color: "var(--text-main)",
+                          fontSize: "0.85rem",
+                          textTransform: "uppercase"
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Fila Sexo, Tipo de Documento y Número */}
+                  <div style={{ display: "grid", gridTemplateColumns: "110px 140px 1fr", gap: "10px", marginBottom: "10px" }}>
+                    <div>
+                      <label style={{ display: "block", fontSize: "0.74rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "4px" }}>
+                        Sexo *:
+                      </label>
+                      <select
+                        value={formData.sexo}
+                        onChange={(e) => setFormData({ ...formData, sexo: e.target.value })}
+                        style={{
+                          width: "100%",
+                          padding: "9px 8px",
+                          borderRadius: "10px",
+                          border: "1px solid var(--border-color)",
+                          background: "var(--bg-tertiary)",
+                          color: "var(--text-main)",
+                          fontSize: "0.84rem"
+                        }}
+                      >
+                        <option value="M">M - Masc</option>
+                        <option value="F">F - Fem</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label style={{ display: "block", fontSize: "0.74rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "4px" }}>
+                        Tipo Documento *:
+                      </label>
+                      <select
+                        value={formData.tipoDocumento}
+                        onChange={(e) => setFormData({ ...formData, tipoDocumento: e.target.value })}
+                        style={{
+                          width: "100%",
+                          padding: "9px 8px",
+                          borderRadius: "10px",
+                          border: "1px solid var(--border-color)",
+                          background: "var(--bg-tertiary)",
+                          color: "var(--text-main)",
+                          fontSize: "0.84rem"
+                        }}
+                      >
+                        <option value="TI">TI (Tarjeta Identidad)</option>
+                        <option value="RC">RC (Registro Civil)</option>
+                        <option value="CC">CC (Cédula)</option>
+                        <option value="PPT">PPT (Permiso Protecc)</option>
+                        <option value="NES">NES (Número Secretar)</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label style={{ display: "block", fontSize: "0.74rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "4px" }}>
+                        Número de Documento *:
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Ej: 1098765432"
+                        value={formData.numeroDocumento}
+                        onChange={(e) => setFormData({ ...formData, numeroDocumento: e.target.value })}
+                        style={{
+                          width: "100%",
+                          padding: "9px 12px",
+                          borderRadius: "10px",
+                          border: "1px solid var(--border-color)",
+                          background: "var(--bg-tertiary)",
+                          color: "var(--text-main)",
+                          fontSize: "0.85rem",
+                          fontFamily: "var(--font-mono)"
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Fila Nacimiento y Curso */}
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+                    <div>
+                      <label style={{ display: "block", fontSize: "0.74rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "4px" }}>
+                        Fecha de Nacimiento (Día/Mes/Año):
+                      </label>
+                      <input
+                        type="date"
+                        value={formData.fechaNacimiento}
+                        onChange={(e) => setFormData({ ...formData, fechaNacimiento: e.target.value })}
+                        style={{
+                          width: "100%",
+                          padding: "8px 12px",
+                          borderRadius: "10px",
+                          border: "1px solid var(--border-color)",
+                          background: "var(--bg-tertiary)",
+                          color: "var(--text-main)",
+                          fontSize: "0.84rem"
+                        }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ display: "block", fontSize: "0.74rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "4px" }}>
+                        Curso Escolar (0 a 11) *:
+                      </label>
+                      <select
+                        value={formData.curso}
+                        onChange={(e) => setFormData({ ...formData, curso: e.target.value })}
+                        style={{
+                          width: "100%",
+                          padding: "8px 10px",
+                          borderRadius: "10px",
+                          border: "1px solid var(--border-color)",
+                          background: "var(--bg-tertiary)",
+                          color: "var(--text-main)",
+                          fontSize: "0.84rem",
+                          fontWeight: 700
+                        }}
+                      >
+                        <option value="0">0 — Transición / Preescolar</option>
+                        <option value="1">1 — Primero (1°)</option>
+                        <option value="2">2 — Segundo (2°)</option>
+                        <option value="3">3 — Tercero (3°)</option>
+                        <option value="4">4 — Cuarto (4°)</option>
+                        <option value="5">5 — Quinto (5°)</option>
+                        <option value="6">6 — Sexto (6°)</option>
+                        <option value="7">7 — Séptimo (7°)</option>
+                        <option value="8">8 — Octavo (8°)</option>
+                        <option value="9">9 — Noveno (9°)</option>
+                        <option value="10">10 — Décimo (10°)</option>
+                        <option value="11">11 — Once (11°)</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
 
-                {/* Observaciones */}
-                <div>
-                  <label style={{ display: "block", fontSize: "0.76rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "4px" }}>
-                    Observaciones adicionales (Opcional):
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="Ej: Colegio San Pedro Claver, Sede B"
-                    value={formData.observaciones}
-                    onChange={(e) => setFormData({ ...formData, observaciones: e.target.value })}
-                    style={{
-                      width: "100%",
-                      padding: "8px 12px",
-                      borderRadius: "10px",
-                      border: "1px solid var(--border-color)",
-                      background: "var(--bg-tertiary)",
-                      color: "var(--text-main)",
-                      fontSize: "0.82rem"
-                    }}
-                  />
+                {/* ── SECCIÓN 2: CONTROL DE VENTA & VERIFICACIÓN (COLUMNAS EXCEL) ── */}
+                <div style={{
+                  background: "rgba(59, 130, 246, 0.05)",
+                  border: "1px solid rgba(59, 130, 246, 0.2)",
+                  borderRadius: "16px",
+                  padding: "16px"
+                }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "12px" }}>
+                    <FileText size={16} color="#60a5fa" />
+                    <span style={{ fontSize: "0.82rem", fontWeight: 800, color: "#60a5fa", textTransform: "uppercase", letterSpacing: "0.03em" }}>
+                      2. Control de Venta & Verificación
+                    </span>
+                  </div>
+
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginBottom: "10px" }}>
+                    <div>
+                      <label style={{ display: "block", fontSize: "0.74rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "4px" }}>
+                        Responsable de Venta *:
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={formData.responsableVenta}
+                        onChange={(e) => setFormData({ ...formData, responsableVenta: e.target.value })}
+                        style={{
+                          width: "100%",
+                          padding: "8px 12px",
+                          borderRadius: "10px",
+                          border: "1px solid var(--border-color)",
+                          background: "var(--bg-tertiary)",
+                          color: "var(--text-main)",
+                          fontSize: "0.84rem"
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: "block", fontSize: "0.74rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "4px" }}>
+                        Fecha de la Venta *:
+                      </label>
+                      <input
+                        type="date"
+                        required
+                        value={formData.fechaVenta}
+                        onChange={(e) => setFormData({ ...formData, fechaVenta: e.target.value })}
+                        style={{
+                          width: "100%",
+                          padding: "8px 12px",
+                          borderRadius: "10px",
+                          border: "1px solid var(--border-color)",
+                          background: "var(--bg-tertiary)",
+                          color: "var(--text-main)",
+                          fontSize: "0.84rem"
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 140px", gap: "10px" }}>
+                    <div>
+                      <label style={{ display: "block", fontSize: "0.74rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "4px" }}>
+                        Responsable de Verificación:
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Ej: Sebastián / Revisión Oficina"
+                        value={formData.responsableVerificacion}
+                        onChange={(e) => setFormData({ ...formData, responsableVerificacion: e.target.value })}
+                        style={{
+                          width: "100%",
+                          padding: "8px 12px",
+                          borderRadius: "10px",
+                          border: "1px solid var(--border-color)",
+                          background: "var(--bg-tertiary)",
+                          color: "var(--text-main)",
+                          fontSize: "0.84rem"
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <label style={{ display: "block", fontSize: "0.74rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "4px" }}>
+                        Inclusión:
+                      </label>
+                      <select
+                        value={formData.inclusion}
+                        onChange={(e) => setFormData({ ...formData, inclusion: e.target.value })}
+                        style={{
+                          width: "100%",
+                          padding: "8px 10px",
+                          borderRadius: "10px",
+                          border: "1px solid var(--border-color)",
+                          background: "var(--bg-tertiary)",
+                          color: "var(--text-main)",
+                          fontSize: "0.84rem"
+                        }}
+                      >
+                        <option value="NO">NO (Normal)</option>
+                        <option value="SÍ">SÍ (Inclusión)</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
+
+                {/* ── SECCIÓN 3: CONTACTO ACUDIENTE & CAJA POS ── */}
+                <div style={{
+                  background: "rgba(16, 185, 129, 0.05)",
+                  border: "1px solid rgba(16, 185, 129, 0.2)",
+                  borderRadius: "16px",
+                  padding: "16px"
+                }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "12px" }}>
+                    <Phone size={16} color="#34d399" />
+                    <span style={{ fontSize: "0.82rem", fontWeight: 800, color: "#34d399", textTransform: "uppercase", letterSpacing: "0.03em" }}>
+                      3. Contacto Acudiente & Caja POS
+                    </span>
+                  </div>
+
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginBottom: "10px" }}>
+                    <div>
+                      <label style={{ display: "block", fontSize: "0.74rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "4px" }}>
+                        WhatsApp / Teléfono Acudiente:
+                      </label>
+                      <input
+                        type="tel"
+                        placeholder="Ej: 3101234567"
+                        value={formData.telefonoResponsable}
+                        onChange={(e) => setFormData({ ...formData, telefonoResponsable: e.target.value })}
+                        style={{
+                          width: "100%",
+                          padding: "8px 12px",
+                          borderRadius: "10px",
+                          border: "1px solid var(--border-color)",
+                          background: "var(--bg-tertiary)",
+                          color: "var(--text-main)",
+                          fontSize: "0.84rem"
+                        }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ display: "block", fontSize: "0.74rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "4px" }}>
+                        Precio Póliza (COP):
+                      </label>
+                      <input
+                        type="number"
+                        value={formData.precio}
+                        onChange={(e) => setFormData({ ...formData, precio: e.target.value })}
+                        style={{
+                          width: "100%",
+                          padding: "8px 12px",
+                          borderRadius: "10px",
+                          border: "1px solid var(--border-color)",
+                          background: "var(--bg-tertiary)",
+                          color: "var(--text-main)",
+                          fontSize: "0.95rem",
+                          fontWeight: 800,
+                          fontFamily: "var(--font-mono)"
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", alignItems: "center" }}>
+                    <div>
+                      <label style={{ display: "block", fontSize: "0.74rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "4px" }}>
+                        Método de Pago:
+                      </label>
+                      <select
+                        value={formData.metodoPago}
+                        onChange={(e) => setFormData({ ...formData, metodoPago: e.target.value })}
+                        style={{
+                          width: "100%",
+                          padding: "8px 10px",
+                          borderRadius: "10px",
+                          border: "1px solid var(--border-color)",
+                          background: "var(--bg-tertiary)",
+                          color: "var(--text-main)",
+                          fontSize: "0.84rem"
+                        }}
+                      >
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Nequi">Nequi</option>
+                        <option value="Daviplata">Daviplata</option>
+                        <option value="Transferencia">Transferencia</option>
+                      </select>
+                    </div>
+
+                    {!editingInsurance && (
+                      <div style={{
+                        marginTop: "14px",
+                        padding: "8px 12px",
+                        borderRadius: "10px",
+                        background: "rgba(16, 185, 129, 0.12)",
+                        border: "1px solid rgba(16, 185, 129, 0.3)",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "8px"
+                      }}>
+                        <input
+                          type="checkbox"
+                          id="cobrarCajaCheckModal"
+                          checked={formData.cobrarEnCaja}
+                          onChange={(e) => setFormData({ ...formData, cobrarEnCaja: e.target.checked })}
+                          style={{ cursor: "pointer", width: "16px", height: "16px" }}
+                        />
+                        <label htmlFor="cobrarCajaCheckModal" style={{ fontSize: "0.76rem", color: "var(--text-main)", cursor: "pointer", fontWeight: 700 }}>
+                          Registrar cobro en Caja POS (arqueo)
+                        </label>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Observaciones */}
+                  <div style={{ marginTop: "10px" }}>
+                    <label style={{ display: "block", fontSize: "0.74rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "4px" }}>
+                      Observaciones adicionales:
+                    </label>
+                    <input
+                      type="text"
+                      placeholder="Ej: Sede Principal, Jornada Mañana"
+                      value={formData.observaciones}
+                      onChange={(e) => setFormData({ ...formData, observaciones: e.target.value })}
+                      style={{
+                        width: "100%",
+                        padding: "8px 12px",
+                        borderRadius: "10px",
+                        border: "1px solid var(--border-color)",
+                        background: "var(--bg-tertiary)",
+                        color: "var(--text-main)",
+                        fontSize: "0.82rem"
+                      }}
+                    />
+                  </div>
+                </div>
+
               </div>
 
-              {/* Botones Liquid Glass */}
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px", marginTop: "22px" }}>
+              {/* Botones de acción Liquid Glass */}
+              <div style={{ 
+                display: "flex", 
+                justifyContent: "flex-end", 
+                gap: "10px", 
+                marginTop: "20px", 
+                paddingTop: "14px", 
+                borderTop: "1px solid var(--border-color)" 
+              }}>
                 <button
                   type="button"
                   onClick={() => setIsNewModalOpen(false)}
                   className="btn btn-modal-cancel"
-                  style={{ padding: "10px 20px", borderRadius: "12px" }}
+                  style={{ padding: "9px 20px", borderRadius: "12px", fontSize: "0.85rem" }}
                 >
                   Cancelar
                 </button>
@@ -1293,14 +1833,15 @@ export default function InsurancesView({
                   type="submit"
                   className="btn btn-primary btn-primary-action"
                   style={{
-                    background: "linear-gradient(135deg, #0d9488 0%, #0f766e 100%)",
+                    background: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)",
                     fontWeight: 800,
-                    padding: "10px 24px",
+                    padding: "9px 24px",
                     borderRadius: "12px",
-                    boxShadow: "0 4px 16px rgba(13, 148, 136, 0.4)"
+                    boxShadow: "0 4px 16px rgba(139, 92, 246, 0.4)",
+                    fontSize: "0.85rem"
                   }}
                 >
-                  {editingInsurance ? "Guardar Cambios" : "Guardar Seguro 🛡️"}
+                  {editingInsurance ? "Guardar Cambios" : "Registrar Póliza 🛡️"}
                 </button>
               </div>
             </form>

@@ -968,6 +968,17 @@ export default function SalesView({
           </div>
         </div>
       )}
+
+      {/* Modal de Reportes PDF Oficiales */}
+      <ReportsModal
+        isOpen={isReportsModalOpen}
+        onClose={() => setIsReportsModalOpen(false)}
+        sales={sales}
+        products={products}
+        activeShift={activeShift}
+        storeConfig={storeConfig}
+        currentUser={currentUser}
+      />
     </div>
   );
 }
@@ -1318,17 +1329,6 @@ function CashMovementsSection({ activeShift, shiftClosings, dateFilter, customDa
           </div>
         </>
       )}
-
-      {/* Modal de Reportes PDF Oficiales */}
-      <ReportsModal
-        isOpen={isReportsModalOpen}
-        onClose={() => setIsReportsModalOpen(false)}
-        sales={sales}
-        products={products}
-        activeShift={activeShift}
-        storeConfig={storeConfig}
-        currentUser={currentUser}
-      />
     </div>
   );
 }

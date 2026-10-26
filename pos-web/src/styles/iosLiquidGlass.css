@@ -1,733 +1,546 @@
 /**
- * iosLiquidGlass.css — Versión 5.0 Integral
- * Sistema de Diseño Apple Liquid Glass & Vibrancy
- * Inspirado en la física de materiales de visionOS / macOS Sequoia / iOS 18 y la Guía UTS Power Zone
- * 
- * Totalmente desacoplado de la lógica: no altera funciones, estados ni flujos de venta.
- * Garantiza armonía perfecta en MODO CLARO (vidrio cristalino perla) y MODO OSCURO (vidrio ahumado zafiro).
+ * iosLiquidGlass.css — Versión 6.0 MASTER LIQUID GLASS & MJ VIOLET IDENTITY
+ * Sistema de Diseño Ultra-Premium inspirado en Apple VisionOS, macOS Sequoia y el Logo Oficial MJ.
+ * Translucidez real, desenfoque de lente, biseles especulares, refracción caústica y paleta violeta/dusk.
  */
 
 /* ==========================================================================
-   0. ATMÓSFERA Y FONDO APPLE — Profundidad Óptica & Refracción de Luz
+   0. ATMÓSFERA Y FONDO CÓSMICO LIQUID GLASS (MJ DUSK & PEARL AURORA)
    ========================================================================== */
-body {
-  background-color: #07090E !important;
-  background-image: 
-    radial-gradient(ellipse 80% 60% at 5% 5%, rgba(0, 122, 255, 0.22) 0%, transparent 60%),
-    radial-gradient(ellipse 70% 50% at 95% 15%, rgba(139, 92, 246, 0.20) 0%, transparent 55%),
-    radial-gradient(ellipse 60% 50% at 50% 50%, rgba(16, 185, 129, 0.10) 0%, transparent 50%),
-    radial-gradient(ellipse 70% 60% at 15% 90%, rgba(249, 115, 22, 0.12) 0%, transparent 55%),
-    radial-gradient(ellipse 80% 65% at 90% 95%, rgba(0, 122, 255, 0.16) 0%, transparent 55%) !important;
-  background-attachment: fixed !important;
-  background-repeat: no-repeat !important;
-  background-size: cover !important;
-  color: var(--text-main) !important;
+html, body {
+  min-height: 100vh !important;
+  margin: 0 !important;
+  padding: 0 !important;
   font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "DM Sans", "Inter", system-ui, sans-serif !important;
   -webkit-font-smoothing: antialiased !important;
   -moz-osx-font-smoothing: grayscale !important;
-  min-height: 100vh !important;
-  position: relative !important;
 }
 
-/* ☀️ LIGHT MODE: Atmósfera cristalina perlada con orbes celestes, lavanda, esmeralda y ámbar */
-[data-theme="light"] body {
-  background-color: #EDF1F7 !important;
+/* 🌙 DARK MODE: Océano Cósmico Obsidian con Auroras Violetas y Magentas */
+body {
+  background-color: #070410 !important;
   background-image: 
-    radial-gradient(ellipse 85% 65% at 5% 5%, rgba(0, 122, 255, 0.16) 0%, transparent 60%),
-    radial-gradient(ellipse 75% 55% at 95% 12%, rgba(168, 85, 247, 0.14) 0%, transparent 55%),
-    radial-gradient(ellipse 65% 50% at 50% 45%, rgba(52, 199, 89, 0.10) 0%, transparent 50%),
-    radial-gradient(ellipse 75% 60% at 12% 90%, rgba(255, 149, 0, 0.12) 0%, transparent 55%),
-    radial-gradient(ellipse 85% 65% at 88% 95%, rgba(0, 122, 255, 0.14) 0%, transparent 55%) !important;
+    radial-gradient(ellipse 75% 55% at 5% 5%, rgba(147, 51, 234, 0.32) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 50% at 95% 10%, rgba(236, 72, 153, 0.24) 0%, transparent 55%),
+    radial-gradient(ellipse 65% 50% at 50% 50%, rgba(124, 58, 237, 0.20) 0%, transparent 50%),
+    radial-gradient(ellipse 70% 60% at 10% 90%, rgba(99, 102, 241, 0.22) 0%, transparent 55%),
+    radial-gradient(ellipse 85% 65% at 90% 92%, rgba(168, 85, 247, 0.28) 0%, transparent 55%) !important;
   background-attachment: fixed !important;
   background-repeat: no-repeat !important;
   background-size: cover !important;
-  color: #0F172A !important;
+  color: #FFFFFF !important;
 }
 
-#root {
-  min-height: 100vh !important;
+/* ☀️ LIGHT MODE: Atmósfera Cristalina Perlada con Auroras Lilas y Violetas del Logo MJ */
+[data-theme="light"] body {
+  background-color: #F8F6FF !important;
+  background-image: 
+    radial-gradient(ellipse 85% 65% at 5% 5%, rgba(216, 180, 254, 0.55) 0%, transparent 60%),
+    radial-gradient(ellipse 75% 55% at 95% 10%, rgba(244, 114, 182, 0.32) 0%, transparent 55%),
+    radial-gradient(ellipse 65% 50% at 50% 45%, rgba(196, 181, 253, 0.40) 0%, transparent 50%),
+    radial-gradient(ellipse 75% 60% at 10% 90%, rgba(233, 213, 255, 0.48) 0%, transparent 55%),
+    radial-gradient(ellipse 85% 65% at 90% 95%, rgba(192, 132, 252, 0.35) 0%, transparent 55%) !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  color: #1E1035 !important;
+}
+
+/* Permitir que la atmósfera brille a través de todos los contenedores padre */
+#root,
+.pos-layout,
+.app-fullscreen-pos,
+.pos-catalog-column,
+.pos-catalog-content,
+.main-content,
+.view-container,
+.product-grid-container {
   background: transparent !important;
+  background-color: transparent !important;
 }
 
 /* ==========================================================================
    1. HEADER FLOTANTE — Liquid Glass Navigation Bar (Apple Style)
    ========================================================================== */
-.app-header {
+.app-header,
+.header,
+.pos-header {
   position: sticky !important;
   top: 0 !important;
   z-index: 200 !important;
-  background: rgba(11, 17, 27, 0.78) !important;
-  backdrop-filter: blur(34px) saturate(190%) contrast(105%) !important;
-  -webkit-backdrop-filter: blur(34px) saturate(190%) contrast(105%) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important;
+  background: rgba(14, 8, 28, 0.70) !important;
+  backdrop-filter: blur(32px) saturate(200%) contrast(108%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(200%) contrast(108%) !important;
+  border-bottom: 1px solid rgba(216, 180, 254, 0.22) !important;
   box-shadow: 
-    0 1px 0 rgba(255, 255, 255, 0.10),
-    0 10px 32px -4px rgba(0, 0, 0, 0.45) !important;
+    0 1px 0 rgba(255, 255, 255, 0.15),
+    0 12px 36px -4px rgba(0, 0, 0, 0.50),
+    0 0 20px rgba(168, 85, 247, 0.15) !important;
 }
 
-[data-theme="light"] .app-header {
-  background: rgba(255, 255, 255, 0.84) !important;
-  backdrop-filter: blur(34px) saturate(190%) contrast(105%) !important;
-  -webkit-backdrop-filter: blur(34px) saturate(190%) contrast(105%) !important;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
+[data-theme="light"] .app-header,
+[data-theme="light"] .header,
+[data-theme="light"] .pos-header {
+  background: rgba(255, 255, 255, 0.75) !important;
+  backdrop-filter: blur(32px) saturate(200%) contrast(105%) !important;
+  -webkit-backdrop-filter: blur(32px) saturate(200%) contrast(105%) !important;
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.95) !important;
   box-shadow: 
-    0 1px 0 rgba(255, 255, 255, 0.98),
-    0 8px 24px -4px rgba(15, 23, 42, 0.06) !important;
+    0 1px 0 #FFFFFF,
+    0 10px 30px -4px rgba(126, 34, 206, 0.08),
+    0 0 20px rgba(192, 132, 252, 0.15) !important;
+}
+
+/* Logo MJ con micro-interacción óptica */
+.logo-icon--liquid-glass,
+.header-logo .logo-icon {
+  background: transparent !important;
+  box-shadow: none !important;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+.logo-icon--liquid-glass:hover,
+.header-logo .logo-icon:hover {
+  transform: scale(1.10) rotate(-2deg) !important;
+}
+
+.logo-mj-img,
+.logo-icon--liquid-glass img {
+  filter: drop-shadow(0 6px 18px rgba(168, 85, 247, 0.6)) !important;
+  transition: filter 0.3s ease !important;
+}
+
+.logo-icon--liquid-glass:hover img {
+  filter: drop-shadow(0 8px 25px rgba(236, 72, 153, 0.75)) !important;
 }
 
 .logo-text h1 {
-  font-family: -apple-system, BlinkMacSystemFont, "Manrope", "SF Pro Display", sans-serif !important;
-  font-size: 1.05rem !important;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif !important;
+  font-size: 1.1rem !important;
   font-weight: 800 !important;
-  letter-spacing: -0.03em !important;
-  color: var(--text-main) !important;
+  letter-spacing: -0.02em !important;
+  background: linear-gradient(135deg, #FFFFFF 0%, #E9D5FF 60%, #C084FC 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
 }
 
 [data-theme="light"] .logo-text h1 {
-  color: #0F172A !important;
+  background: linear-gradient(135deg, #1E1035 0%, #581C87 60%, #9333EA 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
 }
 
-/* ── Segmented Control Tabs (Header) ── */
+/* Cápsula de Navegación Segmentada (Header Nav) */
 .header-nav {
-  background: rgba(0, 0, 0, 0.35) !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  background: rgba(0, 0, 0, 0.30) !important;
+  backdrop-filter: blur(18px) !important;
+  -webkit-backdrop-filter: blur(18px) !important;
+  border: 1px solid rgba(216, 180, 254, 0.18) !important;
   border-radius: 9999px !important;
   padding: 4px !important;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.35) !important;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4) !important;
 }
 
 [data-theme="light"] .header-nav {
-  background: rgba(0, 0, 0, 0.05) !important;
-  border: 1px solid rgba(0, 0, 0, 0.07) !important;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+  background: rgba(233, 213, 255, 0.35) !important;
+  border: 1px solid rgba(255, 255, 255, 0.85) !important;
+  box-shadow: inset 0 1px 2px rgba(126, 34, 206, 0.08) !important;
 }
 
 .nav-tab {
   border-radius: 9999px !important;
   font-size: 0.82rem !important;
   font-weight: 600 !important;
-  padding: 6px 14px !important;
-  color: var(--text-muted) !important;
-  transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1) !important;
+  padding: 6px 15px !important;
+  color: #D8B4FE !important;
+  transition: all 0.22s cubic-bezier(0.25, 1, 0.5, 1) !important;
+  border: 1px solid transparent !important;
 }
 
 [data-theme="light"] .nav-tab {
-  color: #475569 !important;
+  color: #581C87 !important;
+}
+
+.nav-tab:hover:not(.nav-tab--active) {
+  background: rgba(168, 85, 247, 0.18) !important;
+  color: #FFFFFF !important;
+  border-color: rgba(216, 180, 254, 0.3) !important;
 }
 
 [data-theme="light"] .nav-tab:hover:not(.nav-tab--active) {
-  background: rgba(255, 255, 255, 0.90) !important;
-  color: #0F172A !important;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06) !important;
+  background: rgba(255, 255, 255, 0.85) !important;
+  color: #1E1035 !important;
+  box-shadow: 0 2px 8px rgba(126, 34, 206, 0.1) !important;
 }
 
+/* Pestaña Activa: Cápsula Violeta Líquida Radiante */
 .nav-tab--active {
-  background: #007AFF !important;
+  background: linear-gradient(135deg, #A855F7 0%, #7E22CE 100%) !important;
   color: #FFFFFF !important;
   font-weight: 700 !important;
+  border: 1px solid rgba(255, 255, 255, 0.45) !important;
   box-shadow: 
-    0 3px 12px rgba(0, 122, 255, 0.45),
-    inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+    0 4px 18px rgba(168, 85, 247, 0.55),
+    inset 0 1px 1px rgba(255, 255, 255, 0.6) !important;
+  position: relative !important;
 }
 
-/* ── Badges y Chips en Header (Hora COL, Caja, Conexión) ── */
+.nav-tab--active::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 15% !important;
+  right: 15% !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, #FFFFFF, transparent) !important;
+}
+
+/* Chips del Header (Hora Colombia, Conexión, Caja) */
 .colombia-time-chip,
 .network-badge,
-.count-chip {
+.count-chip,
+.header-actions .btn-header-action {
+  background: rgba(255, 255, 255, 0.06) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1px solid rgba(216, 180, 254, 0.20) !important;
   border-radius: 9999px !important;
+  transition: all 0.2s ease !important;
+}
+
+[data-theme="light"] .colombia-time-chip,
+[data-theme="light"] .network-badge,
+[data-theme="light"] .count-chip,
+[data-theme="light"] .header-actions .btn-header-action {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 2px 10px rgba(126, 34, 206, 0.08) !important;
+  color: #1E1035 !important;
+}
+
+/* ==========================================================================
+   2. CONTROLES DEL CATÁLOGO Y BUSCADOR (LIQUID GLASS PILL)
+   ========================================================================== */
+.pos-catalog-controls,
+.catalog-controls {
+  background: rgba(22, 14, 44, 0.58) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border: 1px solid rgba(216, 180, 254, 0.22) !important;
+  border-radius: 22px !important;
+  box-shadow: 
+    0 12px 32px -4px rgba(0, 0, 0, 0.45),
+    inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
+  margin: 12px 16px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+[data-theme="light"] .pos-catalog-controls,
+[data-theme="light"] .catalog-controls {
+  background: rgba(255, 255, 255, 0.68) !important;
+  backdrop-filter: blur(28px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 
+    0 10px 30px -4px rgba(126, 34, 206, 0.08),
+    inset 0 1.5px 2px #FFFFFF !important;
+}
+
+/* Campo de Búsqueda de Código de Barras */
+.input-field,
+.search-input {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 1px solid rgba(216, 180, 254, 0.22) !important;
+  border-radius: 14px !important;
+  color: #FFFFFF !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.25) !important;
+  transition: all 0.2s ease !important;
+}
+
+.input-field:focus,
+.search-input:focus {
+  border-color: #C084FC !important;
+  box-shadow: 0 0 0 3px rgba(192, 132, 252, 0.35), 0 0 18px rgba(168, 85, 247, 0.25) !important;
+  outline: none !important;
+}
+
+[data-theme="light"] .input-field,
+[data-theme="light"] .search-input {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border: 1px solid rgba(192, 132, 252, 0.35) !important;
+  color: #1E1035 !important;
+  box-shadow: inset 0 1px 2px rgba(126, 34, 206, 0.05) !important;
+}
+
+[data-theme="light"] .input-field:focus,
+[data-theme="light"] .search-input:focus {
+  border-color: #7E22CE !important;
+  box-shadow: 0 0 0 3px rgba(126, 34, 206, 0.2), 0 0 14px rgba(192, 132, 252, 0.2) !important;
+}
+
+/* Pastillas de Categorías */
+.category-tab,
+.category-tab-btn,
+.category-pill-filter,
+[class*="category-button"] {
+  border-radius: 9999px !important;
+  font-weight: 600 !important;
+  font-size: 0.82rem !important;
+  padding: 7px 15px !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(216, 180, 254, 0.18) !important;
+  color: #D8B4FE !important;
   backdrop-filter: blur(14px) !important;
   -webkit-backdrop-filter: blur(14px) !important;
   transition: all 0.2s ease !important;
 }
 
-.colombia-time-chip {
-  background: rgba(255, 255, 255, 0.06) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+.category-tab:hover,
+.category-tab-btn:hover,
+.category-pill-filter:hover {
+  background: rgba(168, 85, 247, 0.20) !important;
+  border-color: rgba(216, 180, 254, 0.45) !important;
+  color: #FFFFFF !important;
+  transform: translateY(-1px) !important;
 }
 
-[data-theme="light"] .colombia-time-chip {
-  background: rgba(255, 255, 255, 0.85) !important;
-  border: 1px solid rgba(0, 0, 0, 0.08) !important;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04) !important;
+.category-tab.active,
+.category-tab-btn.active,
+.category-pill-active {
+  background: linear-gradient(135deg, #A855F7 0%, #7E22CE 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.45) !important;
+  color: #FFFFFF !important;
+  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.45), inset 0 1px 1px #FFFFFF !important;
+  font-weight: 700 !important;
 }
 
-[data-theme="light"] .colombia-time-chip span {
-  color: #0F172A !important;
+[data-theme="light"] .category-tab,
+[data-theme="light"] .category-tab-btn,
+[data-theme="light"] .category-pill-filter {
+  background: rgba(255, 255, 255, 0.70) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  color: #581C87 !important;
+  box-shadow: 0 2px 8px rgba(126, 34, 206, 0.06) !important;
+}
+
+[data-theme="light"] .category-tab:hover,
+[data-theme="light"] .category-tab-btn:hover,
+[data-theme="light"] .category-pill-filter:hover {
+  background: rgba(255, 255, 255, 0.95) !important;
+  color: #1E1035 !important;
+  box-shadow: 0 4px 12px rgba(126, 34, 206, 0.12) !important;
 }
 
 /* ==========================================================================
-   2. PRODUCT CARDS — Liquid Glass Surface con Borde Especular Apple
+   3. TARJETAS DE PRODUCTOS (LIQUID GLASS SLABS CON REFLEJO ÓPTICO)
    ========================================================================== */
-.product-card,
-.pos-product-card {
-  background: linear-gradient(135deg, rgba(26, 36, 56, 0.72) 0%, rgba(14, 20, 32, 0.78) 100%) !important;
-  backdrop-filter: blur(28px) saturate(190%) contrast(105%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(190%) contrast(105%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.16) !important;
+.pos-product-card,
+.product-card {
+  background: linear-gradient(135deg, rgba(28, 16, 52, 0.58) 0%, rgba(14, 8, 30, 0.68) 100%) !important;
+  backdrop-filter: blur(24px) saturate(190%) contrast(106%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(190%) contrast(106%) !important;
+  border: 1px solid rgba(216, 180, 254, 0.22) !important;
   border-radius: 20px !important;
   box-shadow: 
-    0 16px 40px -8px rgba(0, 0, 0, 0.55),
-    inset 0 1px 0 rgba(255, 255, 255, 0.20) !important;
+    0 12px 32px -4px rgba(0, 0, 0, 0.45),
+    0 0 16px rgba(168, 85, 247, 0.12),
+    inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
   transition: 
-    transform 0.26s cubic-bezier(0.25, 1, 0.5, 1),
-    box-shadow 0.26s cubic-bezier(0.25, 1, 0.5, 1),
+    transform 0.28s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.28s cubic-bezier(0.25, 1, 0.5, 1),
     border-color 0.2s ease !important;
   overflow: hidden !important;
   position: relative !important;
 }
 
-/* Brillo especular superior continuo (técnica maestra UTS Power Zone & Apple) */
-.product-card::before,
-.pos-product-card::before {
+.pos-product-card::before,
+.product-card::before {
   content: "" !important;
   position: absolute !important;
   left: 8% !important;
   right: 8% !important;
   top: 0 !important;
   height: 1px !important;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.60), transparent) !important;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent) !important;
   pointer-events: none !important;
   z-index: 2 !important;
 }
 
-.product-card:hover,
-.pos-product-card:hover {
-  transform: translateY(-4px) scale(1.01) !important;
+.pos-product-card:hover,
+.product-card:hover {
+  transform: translateY(-5px) scale(1.02) !important;
+  border-color: rgba(192, 132, 252, 0.70) !important;
   box-shadow: 
-    0 24px 54px -8px rgba(0, 0, 0, 0.65),
-    0 0 0 1px rgba(0, 122, 255, 0.35),
-    inset 0 1px 1px rgba(255, 255, 255, 0.30) !important;
-  border-color: rgba(0, 122, 255, 0.40) !important;
+    0 22px 50px -8px rgba(0, 0, 0, 0.65),
+    0 0 25px rgba(168, 85, 247, 0.35),
+    0 0 15px rgba(236, 72, 153, 0.20),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.45) !important;
 }
 
-/* ── MODO CLARO PRODUCT CARDS (Vidrio Cristalino con Resplandor) ── */
-[data-theme="light"] .product-card,
-[data-theme="light"] .pos-product-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(246, 249, 253, 0.74) 100%) !important;
-  backdrop-filter: blur(28px) saturate(190%) contrast(102%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(190%) contrast(102%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.98) !important;
+[data-theme="light"] .pos-product-card,
+[data-theme="light"] .product-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.72) 0%, rgba(246, 241, 255, 0.58) 100%) !important;
+  backdrop-filter: blur(24px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(200%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
   box-shadow: 
-    0 6px 20px -2px rgba(15, 23, 42, 0.06),
-    0 16px 36px -4px rgba(15, 23, 42, 0.08),
-    inset 0 1px 1px rgba(255, 255, 255, 1) !important;
+    0 8px 24px -2px rgba(126, 34, 206, 0.08),
+    0 0 16px rgba(192, 132, 252, 0.12),
+    inset 0 1.5px 2px #FFFFFF !important;
 }
 
-[data-theme="light"] .product-card::before,
-[data-theme="light"] .pos-product-card::before {
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 1), transparent) !important;
-}
-
-[data-theme="light"] .product-card:hover,
-[data-theme="light"] .pos-product-card:hover {
-  transform: translateY(-4px) scale(1.01) !important;
+[data-theme="light"] .pos-product-card:hover,
+[data-theme="light"] .product-card:hover {
+  transform: translateY(-5px) scale(1.02) !important;
+  border-color: rgba(168, 85, 247, 0.60) !important;
   box-shadow: 
-    0 10px 24px -2px rgba(15, 23, 42, 0.08),
-    0 24px 54px -6px rgba(15, 23, 42, 0.12),
-    0 0 0 1px rgba(0, 122, 255, 0.25),
-    inset 0 1px 1px #FFFFFF !important;
-  border-color: rgba(0, 122, 255, 0.35) !important;
+    0 18px 45px -6px rgba(126, 34, 206, 0.18),
+    0 0 25px rgba(192, 132, 252, 0.30),
+    inset 0 2px 2px #FFFFFF !important;
 }
 
-/* ==========================================================================
-   3. ETIQUETAS, BADGES Y PASTILLAS (SISTEMA INTEGRAL APPLE LIQUID GLASS)
-   ========================================================================== */
-/* Badge de Categoría sobre la foto */
-.product-card-category-badge {
-  background: rgba(0, 0, 0, 0.65) !important;
-  backdrop-filter: blur(16px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
-  color: #FFFFFF !important;
-  border: 1px solid rgba(255, 255, 255, 0.20) !important;
-  border-radius: 9999px !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.30), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
-  font-weight: 700 !important;
-  font-size: 0.68rem !important;
-  letter-spacing: 0.02em !important;
-  padding: 3px 10px !important;
-}
-
-/* En Modo Claro se transforma en una cápsula de cristal translúcida y nítida */
-[data-theme="light"] .product-card-category-badge {
-  background: rgba(255, 255, 255, 0.90) !important;
-  backdrop-filter: blur(16px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
-  color: #0F172A !important;
-  border: 1px solid rgba(255, 255, 255, 0.98) !important;
-  box-shadow: 
-    0 4px 12px rgba(15, 23, 42, 0.08),
-    inset 0 1px 0 #FFFFFF !important;
-}
-
-/* Status Pill (Stock en tarjeta) */
-.product-status-pill {
-  backdrop-filter: blur(14px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(14px) saturate(180%) !important;
-  border-radius: 9999px !important;
-  font-size: 0.68rem !important;
-  font-weight: 800 !important;
-  padding: 3px 9px !important;
-}
-
-.pill-available {
-  background: rgba(16, 185, 129, 0.85) !important;
-  color: #FFFFFF !important;
-  border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35) !important;
-}
-
-.pill-warning {
-  background: rgba(245, 158, 11, 0.90) !important;
-  color: #FFFFFF !important;
-  border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35) !important;
-}
-
-.pill-unavailable {
-  background: rgba(244, 63, 94, 0.85) !important;
-  color: #FFFFFF !important;
-  border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  box-shadow: 0 4px 14px rgba(244, 63, 94, 0.35) !important;
-}
-
-/* ── SISTEMA UNIVERSAL DE BADGES (Cápsulas Squircle Liquid Glass) ── */
-.badge {
-  display: inline-flex !important;
-  align-items: center !important;
-  gap: 4px !important;
-  padding: 3px 9px !important;
-  border-radius: 9999px !important;
-  font-size: 0.72rem !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.02em !important;
-  backdrop-filter: blur(12px) saturate(160%) !important;
-  -webkit-backdrop-filter: blur(12px) saturate(160%) !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.18) !important;
-  transition: all 0.15s ease !important;
-}
-
-/* Modo Oscuro Badges (Brillantes, saturados, contraste óptico) */
-.badge-blue {
-  background: rgba(0, 122, 255, 0.22) !important;
-  color: #93C5FD !important;
-  border: 1px solid rgba(0, 122, 255, 0.45) !important;
-}
-
-.badge-green {
-  background: rgba(16, 185, 129, 0.22) !important;
-  color: #6EE7B7 !important;
-  border: 1px solid rgba(16, 185, 129, 0.45) !important;
-}
-
-.badge-amber {
-  background: rgba(245, 158, 11, 0.22) !important;
-  color: #FCD34D !important;
-  border: 1px solid rgba(245, 158, 11, 0.45) !important;
-}
-
-.badge-red {
-  background: rgba(239, 68, 68, 0.22) !important;
-  color: #FCA5A5 !important;
-  border: 1px solid rgba(239, 68, 68, 0.45) !important;
-}
-
-.badge-purple {
-  background: rgba(168, 85, 247, 0.22) !important;
-  color: #D8B4FE !important;
-  border: 1px solid rgba(168, 85, 247, 0.45) !important;
-}
-
-.badge-pink {
-  background: rgba(236, 72, 153, 0.22) !important;
-  color: #F472B6 !important;
-  border: 1px solid rgba(236, 72, 153, 0.45) !important;
-}
-
-.badge-orange {
-  background: rgba(249, 115, 22, 0.22) !important;
-  color: #FDBA74 !important;
-  border: 1px solid rgba(249, 115, 22, 0.45) !important;
-}
-
-.badge-teal {
-  background: rgba(20, 184, 166, 0.22) !important;
-  color: #5EEAD4 !important;
-  border: 1px solid rgba(20, 184, 166, 0.45) !important;
-}
-
-.badge-cyan {
-  background: rgba(6, 182, 212, 0.22) !important;
-  color: #67E8F9 !important;
-  border: 1px solid rgba(6, 182, 212, 0.45) !important;
-}
-
-.badge-indigo {
-  background: rgba(99, 102, 241, 0.22) !important;
-  color: #C7D2FE !important;
-  border: 1px solid rgba(99, 102, 241, 0.45) !important;
-}
-
-.badge-gray {
-  background: rgba(148, 163, 184, 0.16) !important;
-  color: #CBD5E1 !important;
-  border: 1px solid rgba(148, 163, 184, 0.28) !important;
-}
-
-/* ── MODO CLARO BADGES (Máximo Contraste y Vidrio Nítido) ── */
-[data-theme="light"] .badge {
-  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.05), inset 0 1px 0 rgba(255, 255, 255, 0.95) !important;
-  font-weight: 800 !important;
-}
-
-[data-theme="light"] .badge-blue {
-  background: rgba(0, 122, 255, 0.12) !important;
-  color: #0056B3 !important;
-  border: 1px solid rgba(0, 122, 255, 0.30) !important;
-}
-
-[data-theme="light"] .badge-green {
-  background: rgba(16, 185, 129, 0.14) !important;
-  color: #065F46 !important;
-  border: 1px solid rgba(16, 185, 129, 0.32) !important;
-}
-
-[data-theme="light"] .badge-amber {
-  background: rgba(245, 158, 11, 0.14) !important;
-  color: #92400E !important;
-  border: 1px solid rgba(245, 158, 11, 0.32) !important;
-}
-
-[data-theme="light"] .badge-red {
-  background: rgba(239, 68, 68, 0.14) !important;
-  color: #991B1B !important;
-  border: 1px solid rgba(239, 68, 68, 0.32) !important;
-}
-
-[data-theme="light"] .badge-purple {
-  background: rgba(168, 85, 247, 0.14) !important;
-  color: #581C87 !important;
-  border: 1px solid rgba(168, 85, 247, 0.32) !important;
-}
-
-[data-theme="light"] .badge-pink {
-  background: rgba(236, 72, 153, 0.14) !important;
-  color: #831843 !important;
-  border: 1px solid rgba(236, 72, 153, 0.32) !important;
-}
-
-[data-theme="light"] .badge-orange {
-  background: rgba(249, 115, 22, 0.14) !important;
-  color: #9A3412 !important;
-  border: 1px solid rgba(249, 115, 22, 0.32) !important;
-}
-
-[data-theme="light"] .badge-teal {
-  background: rgba(20, 184, 166, 0.14) !important;
-  color: #115E59 !important;
-  border: 1px solid rgba(20, 184, 166, 0.32) !important;
-}
-
-[data-theme="light"] .badge-cyan {
-  background: rgba(6, 182, 212, 0.14) !important;
-  color: #155E75 !important;
-  border: 1px solid rgba(6, 182, 212, 0.32) !important;
-}
-
-[data-theme="light"] .badge-indigo {
-  background: rgba(99, 102, 241, 0.14) !important;
-  color: #3730A3 !important;
-  border: 1px solid rgba(99, 102, 241, 0.32) !important;
-}
-
-[data-theme="light"] .badge-gray {
-  background: rgba(100, 116, 139, 0.12) !important;
-  color: #334155 !important;
-  border: 1px solid rgba(100, 116, 139, 0.25) !important;
-}
-
-/* ── PASTILLAS DE FILTRO DE CATEGORÍA (InventoryView) ── */
-.category-pill-filter {
-  backdrop-filter: blur(14px) !important;
-  -webkit-backdrop-filter: blur(14px) !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.20), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
-  transition: all 0.18s cubic-bezier(0.25, 1, 0.5, 1) !important;
-}
-
-.category-pill-filter:hover {
-  transform: translateY(-1px) !important;
-  filter: brightness(1.08) !important;
-}
-
-.category-pill-filter:active {
-  transform: scale(0.97) !important;
-}
-
-/* Modo Claro en Pastillas de Filtro de Categoría */
-[data-theme="light"] .category-pill-filter {
-  background: rgba(255, 255, 255, 0.90) !important;
-  border: 1px solid rgba(0, 0, 0, 0.08) !important;
-  color: #334155 !important;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05), inset 0 1px 0 #FFFFFF !important;
-}
-
-[data-theme="light"] .category-pill-filter.category-pill-active {
-  background: rgba(0, 122, 255, 0.12) !important;
-  border-color: rgba(0, 122, 255, 0.40) !important;
-  color: #0056B3 !important;
-  box-shadow: 0 2px 10px rgba(0, 122, 255, 0.18), inset 0 1px 0 #FFFFFF !important;
-}
-
-/* Contadores numéricos de las pastillas */
-.category-pill-count {
-  font-weight: 800 !important;
-  border-radius: 9999px !important;
-}
-
-[data-theme="light"] .category-pill-count.count-sin-stock {
-  background: rgba(239, 68, 68, 0.15) !important;
-  color: #991B1B !important;
-  border: 1px solid rgba(239, 68, 68, 0.30) !important;
-}
-
-[data-theme="light"] .category-pill-count.count-bajo-stock {
-  background: rgba(245, 158, 11, 0.15) !important;
-  color: #92400E !important;
-  border: 1px solid rgba(245, 158, 11, 0.30) !important;
-}
-
-[data-theme="light"] .category-pill-active .category-pill-count {
-  background: #007AFF !important;
-  color: #FFFFFF !important;
-  border-color: transparent !important;
-}
-
-/* ── CORRECCIÓN INTEGRAL DE ETIQUETAS Y TEXTOS INLINE MODO CLARO ── */
-[data-theme="light"] [style*="color: #34d399"],
-[data-theme="light"] [style*="color: #34D399"],
-[data-theme="light"] [style*="color: #6ee7b7"],
-[data-theme="light"] [style*="color: #6EE7B7"] {
-  color: #047857 !important;
-}
-
-[data-theme="light"] [style*="color: #fb923c"],
-[data-theme="light"] [style*="color: #FB923C"],
-[data-theme="light"] [style*="color: #fed7aa"],
-[data-theme="light"] [style*="color: #FED7AA"] {
-  color: #C2410C !important;
-}
-
-[data-theme="light"] [style*="color: #fbbf24"],
-[data-theme="light"] [style*="color: #FBBF24"],
-[data-theme="light"] [style*="color: #facc15"],
-[data-theme="light"] [style*="color: #FACC15"],
-[data-theme="light"] [style*="color: #fcd34d"],
-[data-theme="light"] [style*="color: #FCD34D"] {
-  color: #B45309 !important;
-}
-
-[data-theme="light"] [style*="color: #c084fc"],
-[data-theme="light"] [style*="color: #C084FC"],
-[data-theme="light"] [style*="color: #d8b4fe"],
-[data-theme="light"] [style*="color: #D8B4FE"] {
-  color: #7E22CE !important;
-}
-
-[data-theme="light"] [style*="color: #f472b6"],
-[data-theme="light"] [style*="color: #F472B6"] {
-  color: #BE185D !important;
-}
-
-[data-theme="light"] [style*="color: #f87171"],
-[data-theme="light"] [style*="color: #F87171"],
-[data-theme="light"] [style*="color: #fca5a5"],
-[data-theme="light"] [style*="color: #FCA5A5"] {
-  color: #B91C1C !important;
-}
-
-[data-theme="light"] [style*="color: #93c5fd"],
-[data-theme="light"] [style*="color: #93C5FD"],
-[data-theme="light"] [style*="color: #60a5fa"],
-[data-theme="light"] [style*="color: #60A5FA"] {
-  color: #0284C7 !important;
-}
-
-[data-theme="light"] [style*="color: #2dd4bf"],
-[data-theme="light"] [style*="color: #2DD4BF"],
-[data-theme="light"] [style*="color: #5eead4"],
-[data-theme="light"] [style*="color: #5EEAD4"] {
-  color: #0F766E !important;
-}
-
-/* Textos dentro de la tarjeta */
-.product-card-title {
-  color: var(--text-main) !important;
-  font-family: -apple-system, BlinkMacSystemFont, "DM Sans", "Inter", sans-serif !important;
-  font-weight: 700 !important;
-}
-
-[data-theme="light"] .product-card-title {
-  color: #0F172A !important;
-}
-
-.product-card-code {
-  color: var(--text-dim) !important;
-}
-
-[data-theme="light"] .product-card-code {
-  color: #64748B !important;
-}
-
-/* Precio en tarjeta */
-.product-card-price {
-  font-weight: 800 !important;
-}
-
-[data-theme="light"] .product-card-price {
-  color: #059669 !important;
-}
-
-/* Botones de acción rápida en tarjeta POS */
+/* Botón Vender Unidad en Tarjetas */
 .btn-pos-add {
-  background: linear-gradient(135deg, #007AFF 0%, #0051A8 100%) !important;
-  border: none !important;
+  background: linear-gradient(135deg, #A855F7 0%, #7E22CE 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.30) !important;
   border-radius: 12px !important;
   color: #FFFFFF !important;
   box-shadow: 
-    0 4px 14px rgba(0, 122, 255, 0.35),
-    inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
-  transition: all 0.16s ease !important;
+    0 4px 16px rgba(168, 85, 247, 0.42),
+    inset 0 1px 1px rgba(255, 255, 255, 0.45) !important;
+  transition: all 0.2s ease !important;
+  position: relative !important;
+  overflow: hidden !important;
 }
 
 .btn-pos-add:hover:not(:disabled) {
-  filter: brightness(1.08) !important;
-  transform: translateY(-1px) !important;
-  box-shadow: 0 6px 18px rgba(0, 122, 255, 0.48) !important;
+  filter: brightness(1.10) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(168, 85, 247, 0.60), inset 0 1px 2px #FFFFFF !important;
 }
 
 .btn-pos-add:active:not(:disabled) {
   transform: scale(0.975) !important;
 }
 
-.btn-pos-package {
-  background: rgba(147, 51, 234, 0.15) !important;
-  border: 1px solid rgba(147, 51, 234, 0.35) !important;
-  border-radius: 12px !important;
-  color: #C084FC !important;
-  backdrop-filter: blur(8px) !important;
-  transition: all 0.16s ease !important;
-}
-
-[data-theme="light"] .btn-pos-package {
-  background: rgba(147, 51, 234, 0.10) !important;
-  color: #7E22CE !important;
-  border-color: rgba(147, 51, 234, 0.25) !important;
-}
-
-.btn-pos-package:hover:not(:disabled) {
-  background: rgba(147, 51, 234, 0.25) !important;
-  transform: translateY(-1px) !important;
-}
-
 /* ==========================================================================
-   4. FILTROS Y CATEGORÍAS (Apple Squircle Chips)
+   4. PANEL DERECHO DE CARRITO (LIQUID GLASS FLOATING SLAB)
    ========================================================================== */
-.category-tab,
-.filterbar .filter,
-[class*="category-button"] {
-  border-radius: 9999px !important;
-  font-weight: 600 !important;
-  font-size: 0.82rem !important;
-  padding: 7px 15px !important;
-  transition: all 0.18s ease !important;
-  background: rgba(255, 255, 255, 0.06) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  color: var(--text-muted) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-}
-
-.category-tab:hover,
-.filterbar .filter:hover {
-  background: rgba(255, 255, 255, 0.12) !important;
-  color: var(--text-main) !important;
-  transform: translateY(-1px) !important;
-}
-
-[data-theme="light"] .category-tab,
-[data-theme="light"] .filterbar .filter,
-[data-theme="light"] [class*="category-button"] {
-  background: rgba(255, 255, 255, 0.72) !important;
-  border: 1px solid rgba(0, 0, 0, 0.08) !important;
-  color: #334155 !important;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04) !important;
-}
-
-[data-theme="light"] .category-tab:hover,
-[data-theme="light"] .filterbar .filter:hover {
-  background: rgba(255, 255, 255, 0.98) !important;
-  color: #0F172A !important;
-  border-color: rgba(0, 0, 0, 0.15) !important;
-  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.07) !important;
-}
-
-/* Tab / Categoría Activa */
-.category-tab.active,
-.filterbar .filter.active,
-[class*="category-button"].active {
-  background: #007AFF !important;
-  color: #FFFFFF !important;
-  border-color: #007AFF !important;
+.pos-cart-column,
+.cart-panel,
+.ticket-panel {
+  background: rgba(18, 10, 36, 0.62) !important;
+  backdrop-filter: blur(34px) saturate(210%) contrast(108%) !important;
+  -webkit-backdrop-filter: blur(34px) saturate(210%) contrast(108%) !important;
+  border: 1px solid rgba(216, 180, 254, 0.25) !important;
+  border-radius: 24px !important;
   box-shadow: 
-    0 4px 14px rgba(0, 122, 255, 0.40),
-    inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
+    0 18px 48px -4px rgba(0, 0, 0, 0.55),
+    0 0 20px rgba(168, 85, 247, 0.15),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.30) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+[data-theme="light"] .pos-cart-column,
+[data-theme="light"] .cart-panel,
+[data-theme="light"] .ticket-panel {
+  background: rgba(255, 255, 255, 0.68) !important;
+  backdrop-filter: blur(34px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(34px) saturate(200%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 
+    0 14px 40px -4px rgba(126, 34, 206, 0.10),
+    0 0 20px rgba(192, 132, 252, 0.18),
+    inset 0 1.5px 2px #FFFFFF !important;
+}
+
+/* Ítems del carrito */
+.pos-cart-items-scroll > div {
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border: 1px solid rgba(216, 180, 254, 0.18) !important;
+  border-radius: 14px !important;
+  margin-bottom: 8px !important;
+  transition: all 0.2s ease !important;
+}
+
+[data-theme="light"] .pos-cart-items-scroll > div {
+  background: rgba(255, 255, 255, 0.60) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.90) !important;
+  box-shadow: 0 2px 8px rgba(126, 34, 206, 0.05) !important;
+}
+
+/* Botón Venta Express en Carrito */
+button[title*="Venta Express"],
+button[title*="artículos express"] {
+  background: rgba(168, 85, 247, 0.12) !important;
+  border: 1px solid rgba(192, 132, 252, 0.45) !important;
+  color: #D8B4FE !important;
+  backdrop-filter: blur(12px) !important;
+  border-radius: 12px !important;
+  transition: all 0.2s ease !important;
+}
+
+[data-theme="light"] button[title*="Venta Express"],
+[data-theme="light"] button[title*="artículos express"] {
+  background: rgba(168, 85, 247, 0.10) !important;
+  color: #7E22CE !important;
+  border-color: rgba(168, 85, 247, 0.35) !important;
+}
+
+/* Botón de Cobro Final (F2) */
+.pos-checkout-btn,
+.btn-checkout,
+.pos-cart-footer .btn-success {
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  border-radius: 16px !important;
+  box-shadow: 
+    0 8px 25px rgba(16, 185, 129, 0.45),
+    0 0 20px rgba(168, 85, 247, 0.25),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.50) !important;
+  transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.pos-checkout-btn:hover:not(:disabled),
+.btn-checkout:hover:not(:disabled) {
+  transform: translateY(-2px) scale(1.01) !important;
+  box-shadow: 
+    0 12px 32px rgba(16, 185, 129, 0.60),
+    0 0 30px rgba(168, 85, 247, 0.35),
+    inset 0 2px 2px #FFFFFF !important;
 }
 
 /* ==========================================================================
-   5. MODALES — Vidrio Cinematográfico Flotante
+   5. VENTANAS MODALES (APPLE VISIONOS / LIQUID GLASS WINDOWS)
    ========================================================================== */
 .modal-overlay,
 .reports-modal-overlay,
 .price-audit-overlay,
 [class*="modal-overlay"] {
-  position: fixed !important;
-  inset: 0 !important;
-  z-index: 1200 !important;
-  background: rgba(0, 0, 0, 0.65) !important;
-  backdrop-filter: blur(24px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  padding: 20px 16px !important;
-  box-sizing: border-box !important;
-  /* ✅ El overlay NO hace scroll — el scroll lo maneja el modal card internamente */
+  background: rgba(8, 4, 18, 0.65) !important;
+  backdrop-filter: blur(20px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
   overflow: hidden !important;
-  overscroll-behavior: contain !important;
-}
-
-/* En pantallas pequeñas, el overlay permite scroll y el modal se alinea arriba */
-@media (max-height: 800px) {
-  .modal-overlay,
-  .reports-modal-overlay,
-  .price-audit-overlay,
-  [class*="modal-overlay"] {
-    align-items: flex-start !important;
-    overflow-y: auto !important;
-    -webkit-overflow-scrolling: touch !important;
-    padding-top: 16px !important;
-    padding-bottom: 24px !important;
-  }
 }
 
 [data-theme="light"] .modal-overlay,
 [data-theme="light"] .reports-modal-overlay,
 [data-theme="light"] .price-audit-overlay,
 [data-theme="light"] [class*="modal-overlay"] {
-  background: rgba(15, 23, 42, 0.38) !important;
-  backdrop-filter: blur(24px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  background: rgba(30, 16, 53, 0.35) !important;
+  backdrop-filter: blur(20px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
 }
 
 .modal-content,
@@ -737,83 +550,22 @@ body {
 .price-audit-modal,
 [class*="modal-card"],
 [class*="modal-container"] {
-  background: linear-gradient(135deg, rgba(22, 32, 50, 0.92) 0%, rgba(12, 18, 30, 0.95) 100%) !important;
-  backdrop-filter: blur(44px) saturate(200%) contrast(105%) !important;
-  -webkit-backdrop-filter: blur(44px) saturate(200%) contrast(105%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.18) !important;
-  border-radius: 26px !important;
-  box-shadow:
-    0 36px 90px -16px rgba(0, 0, 0, 0.80),
-    0 0 0 1px rgba(255, 255, 255, 0.08),
-    inset 0 1px 1px rgba(255, 255, 255, 0.20) !important;
+  background: linear-gradient(135deg, rgba(22, 12, 42, 0.70) 0%, rgba(14, 8, 30, 0.78) 100%) !important;
+  backdrop-filter: blur(42px) saturate(220%) contrast(108%) !important;
+  -webkit-backdrop-filter: blur(42px) saturate(220%) contrast(108%) !important;
+  border: 1.5px solid rgba(216, 180, 254, 0.35) !important;
+  border-radius: 28px !important;
+  box-shadow: 
+    0 35px 90px -15px rgba(0, 0, 0, 0.85),
+    0 0 50px -10px rgba(168, 85, 247, 0.40),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.40) !important;
   color: #FFFFFF !important;
   position: relative !important;
-  /* ✅ SCROLL CORRECTO: max-height + overflow-y:auto hace que el scroll quede DENTRO del border-radius */
   max-height: min(92vh, 880px) !important;
-  width: 100% !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
   overscroll-behavior: contain !important;
-  -webkit-overflow-scrolling: touch !important;
-  /* ✅ Scrollbar reserva espacio interno para que no se salga del borde */
   scrollbar-gutter: stable !important;
-}
-
-/* Scrollbar ultrafino estilo iOS para modales — queda DENTRO del border-radius */
-.modal-content::-webkit-scrollbar,
-.modal-card::-webkit-scrollbar,
-.reports-modal-container::-webkit-scrollbar,
-.price-audit-modal::-webkit-scrollbar,
-[class*="modal-card"]::-webkit-scrollbar,
-[class*="modal-container"]::-webkit-scrollbar {
-  width: 5px !important;
-}
-
-.modal-content::-webkit-scrollbar-track,
-.modal-card::-webkit-scrollbar-track,
-[class*="modal-card"]::-webkit-scrollbar-track,
-[class*="modal-container"]::-webkit-scrollbar-track {
-  background: transparent !important;
-  /* Márgenes para que el track no llegue a las esquinas redondeadas */
-  margin-block: 20px !important;
-  border-radius: 9999px !important;
-}
-
-.modal-content::-webkit-scrollbar-thumb,
-.modal-card::-webkit-scrollbar-thumb,
-[class*="modal-card"]::-webkit-scrollbar-thumb,
-[class*="modal-container"]::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.22) !important;
-  border-radius: 9999px !important;
-  border: 1px solid rgba(255, 255, 255, 0.05) !important;
-}
-
-.modal-content::-webkit-scrollbar-thumb:hover,
-.modal-card::-webkit-scrollbar-thumb:hover,
-[class*="modal-card"]::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.38) !important;
-}
-
-/* El overlay no debe mostrar scrollbar (el scroll lo maneja el modal card) */
-.modal-overlay::-webkit-scrollbar,
-.reports-modal-overlay::-webkit-scrollbar,
-[class*="modal-overlay"]::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
-}
-
-
-.modal-content::before,
-.modal-card::before,
-.reports-modal-container::before {
-  content: "" !important;
-  position: absolute !important;
-  left: 10% !important;
-  right: 10% !important;
-  top: 0 !important;
-  height: 1px !important;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.65), transparent) !important;
-  pointer-events: none !important;
 }
 
 [data-theme="light"] .modal-content,
@@ -823,1277 +575,223 @@ body {
 [data-theme="light"] .price-audit-modal,
 [data-theme="light"] [class*="modal-card"],
 [data-theme="light"] [class*="modal-container"] {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.97) 0%, rgba(245, 248, 255, 0.94) 100%) !important;
-  backdrop-filter: blur(44px) saturate(200%) !important;
-  -webkit-backdrop-filter: blur(44px) saturate(200%) !important;
-  border: 1px solid rgba(255, 255, 255, 1) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(248, 244, 255, 0.65) 100%) !important;
+  backdrop-filter: blur(42px) saturate(220%) contrast(102%) !important;
+  -webkit-backdrop-filter: blur(42px) saturate(220%) contrast(102%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.98) !important;
   box-shadow: 
-    0 28px 70px -12px rgba(15, 23, 42, 0.18),
-    0 4px 16px rgba(15, 23, 42, 0.06),
-    inset 0 1px 1px #FFFFFF !important;
-  color: #0F172A !important;
-  max-height: min(92vh, 880px) !important;
-  overflow-y: auto !important;
-  overflow-x: hidden !important;
-  overscroll-behavior: contain !important;
-  scrollbar-gutter: stable !important;
+    0 30px 80px -12px rgba(76, 29, 149, 0.22),
+    0 0 40px rgba(192, 132, 252, 0.25),
+    inset 0 2px 2px #FFFFFF !important;
+  color: #1E1035 !important;
+}
+
+/* Tarjetas y Contenedores Interiores dentro de los Modales */
+.modal-content div[style*="border-radius"],
+.modal-card div[style*="border-radius"] {
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+}
+
+/* Scrollbar interno elegante */
+.modal-content::-webkit-scrollbar,
+.modal-card::-webkit-scrollbar,
+[class*="modal-card"]::-webkit-scrollbar {
+  width: 5px !important;
+}
+
+.modal-content::-webkit-scrollbar-track,
+.modal-card::-webkit-scrollbar-track,
+[class*="modal-card"]::-webkit-scrollbar-track {
+  background: transparent !important;
+  margin-block: 20px !important;
+}
+
+.modal-content::-webkit-scrollbar-thumb,
+.modal-card::-webkit-scrollbar-thumb,
+[class*="modal-card"]::-webkit-scrollbar-thumb {
+  background: rgba(216, 180, 254, 0.35) !important;
+  border-radius: 9999px !important;
 }
 
 [data-theme="light"] .modal-content::-webkit-scrollbar-thumb,
-[data-theme="light"] .modal-card::-webkit-scrollbar-thumb,
-[data-theme="light"] [class*="modal-card"]::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.16) !important;
-  border: 1px solid rgba(0, 0, 0, 0.04) !important;
-}
-
-[data-theme="light"] .modal-content::-webkit-scrollbar-thumb:hover,
-[data-theme="light"] .modal-card::-webkit-scrollbar-thumb:hover,
-[data-theme="light"] [class*="modal-card"]::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.28) !important;
-}
-
-[data-theme="light"] .modal-content::before,
-[data-theme="light"] .modal-card::before,
-[data-theme="light"] .reports-modal-container::before {
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 1), transparent) !important;
-}
-
-[data-theme="light"] .modal-header {
-  background: rgba(248, 250, 252, 0.75) !important;
-  backdrop-filter: blur(20px) !important;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
-}
-
-[data-theme="light"] .modal-header h2,
-[data-theme="light"] .modal-header h3,
-[data-theme="light"] .modal-title {
-  color: #0F172A !important;
+[data-theme="light"] .modal-card::-webkit-scrollbar-thumb {
+  background: rgba(126, 34, 206, 0.25) !important;
 }
 
 /* ==========================================================================
-   6. PANEL DE TICKET Y CARRITO DE COMPRAS (Liquid Glass Sidebar)
+   6. CONTROL Y CIERRE DE CAJA — RECREACIÓN LIQUID GLASS
    ========================================================================== */
-.ticket-panel,
-.sales-panel,
-.cart-panel,
-.pos-cart-column,
-[class*="ticket"],
-[class*="panel-right"] {
-  background: linear-gradient(135deg, rgba(20, 30, 48, 0.85) 0%, rgba(11, 17, 28, 0.88) 100%) !important;
-  backdrop-filter: blur(34px) saturate(190%) contrast(105%) !important;
-  -webkit-backdrop-filter: blur(34px) saturate(190%) contrast(105%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
-  border-radius: 24px !important;
-  box-shadow: 
-    0 16px 42px -4px rgba(0, 0, 0, 0.50),
-    inset 0 1px 1px rgba(255, 255, 255, 0.18) !important;
-  position: relative !important;
+/* Banners informativos dentro del modal de caja */
+div[style*="background: rgba(99, 102, 241, 0.08)"],
+div[style*="background: rgba(99, 102, 241"] {
+  background: rgba(168, 85, 247, 0.12) !important;
+  border: 1px solid rgba(192, 132, 252, 0.4) !important;
+  color: #E9D5FF !important;
 }
 
-.pos-cart-column::before,
-.cart-panel::before {
-  content: "" !important;
-  position: absolute !important;
-  left: 8% !important;
-  right: 8% !important;
-  top: 0 !important;
-  height: 1px !important;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.50), transparent) !important;
-  pointer-events: none !important;
+[data-theme="light"] div[style*="background: rgba(99, 102, 241"] {
+  background: rgba(168, 85, 247, 0.08) !important;
+  border: 1px solid rgba(147, 51, 234, 0.3) !important;
+  color: #581C87 !important;
 }
 
-[data-theme="light"] .ticket-panel,
-[data-theme="light"] .sales-panel,
-[data-theme="light"] .cart-panel,
-[data-theme="light"] .pos-cart-column,
-[data-theme="light"] [class*="ticket"],
-[data-theme="light"] [class*="panel-right"] {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(246, 249, 253, 0.80) 100%) !important;
-  backdrop-filter: blur(34px) saturate(190%) !important;
-  -webkit-backdrop-filter: blur(34px) saturate(190%) !important;
-  border: 1px solid rgba(255, 255, 255, 1) !important;
-  box-shadow: 
-    0 8px 24px -2px rgba(15, 23, 42, 0.07),
-    0 20px 48px -4px rgba(15, 23, 42, 0.09),
-    inset 0 1px 1px #FFFFFF !important;
+/* Banner de Jornada Activa (Verde Cristal) */
+div[style*="rgba(16, 185, 129, 0.18)"],
+div[style*="rgba(16, 185, 129"] {
+  background: rgba(16, 185, 129, 0.12) !important;
+  border: 1px solid rgba(16, 185, 129, 0.40) !important;
 }
 
-[data-theme="light"] .pos-cart-column::before,
-[data-theme="light"] .cart-panel::before {
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 1), transparent) !important;
+/* Banner de Caja Cerrada (Rojo Cristal con Resplandor) */
+div[style*="rgba(239, 68, 68, 0.18)"],
+div[style*="rgba(239, 68, 68"] {
+  background: rgba(244, 63, 94, 0.12) !important;
+  border: 1px solid rgba(244, 63, 94, 0.40) !important;
 }
 
-/* Ítems individuales dentro del carrito */
-.pos-cart-items-scroll > div {
-  background: rgba(255, 255, 255, 0.04) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+/* Pestañas de Turno Actual vs Historial en Modal de Caja */
+button[style*="var(--accent-blue)"],
+button[style*="#3b82f6"] {
+  background: linear-gradient(135deg, #A855F7 0%, #7E22CE 100%) !important;
+  color: #FFFFFF !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  box-shadow: 0 4px 16px rgba(168, 85, 247, 0.45) !important;
+}
+
+/* Botones de Montos Rápidos (0, 20000, 50000, etc.) */
+button[style*="Sin Base"],
+div[style*="display: flex; gap: 6px; margin-top: 8px"] button {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(216, 180, 254, 0.22) !important;
+  color: #D8B4FE !important;
+  border-radius: 10px !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+[data-theme="light"] div[style*="display: flex; gap: 6px; margin-top: 8px"] button {
+  background: rgba(255, 255, 255, 0.70) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  color: #581C87 !important;
+}
+
+/* ==========================================================================
+   7. BOTONES GLOBALES & ACCIONES
+   ========================================================================== */
+.btn-primary,
+.btn-indigo,
+.btn-save {
+  background: linear-gradient(135deg, #A855F7 0%, #7E22CE 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.30) !important;
   border-radius: 14px !important;
-  transition: all 0.16s ease !important;
-}
-
-[data-theme="light"] .pos-cart-items-scroll > div {
-  background: rgba(255, 255, 255, 0.85) !important;
-  border: 1px solid rgba(0, 0, 0, 0.06) !important;
-  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04) !important;
-}
-
-/* Footer del carrito y Botón Cobrar Venta (F2) Apple Emerald Highlight */
-.pos-cart-footer {
-  background: transparent !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.10) !important;
-  padding-top: 12px !important;
-}
-
-[data-theme="light"] .pos-cart-footer {
-  border-top: 1px solid rgba(0, 0, 0, 0.06) !important;
-}
-
-.pos-cart-footer .btn-success,
-.btn-checkout {
-  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
   color: #FFFFFF !important;
-  border: none !important;
-  border-radius: 16px !important;
   box-shadow: 
-    0 6px 20px rgba(16, 185, 129, 0.42),
-    inset 0 1px 1px rgba(255, 255, 255, 0.40) !important;
-  transition: all 0.18s cubic-bezier(0.25, 1, 0.5, 1) !important;
-  position: relative !important;
-  overflow: hidden !important;
+    0 6px 20px rgba(168, 85, 247, 0.45),
+    inset 0 1px 1px rgba(255, 255, 255, 0.45) !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
-.pos-cart-footer .btn-success::before,
-.btn-checkout::before {
-  content: "" !important;
-  position: absolute !important;
-  left: 12% !important;
-  right: 12% !important;
-  top: 0 !important;
-  height: 1px !important;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.80), transparent) !important;
-}
-
-.pos-cart-footer .btn-success:hover:not(:disabled),
-.btn-checkout:hover:not(:disabled) {
-  filter: brightness(1.08) !important;
-  transform: translateY(-2px) scale(1.008) !important;
-  box-shadow: 0 10px 28px rgba(16, 185, 129, 0.55) !important;
-}
-
-.pos-cart-footer .btn-success:active:not(:disabled),
-.btn-checkout:active:not(:disabled) {
-  transform: scale(0.98) !important;
-}
-
-/* ==========================================================================
-   7. INPUTS Y FORMULARIOS (iOS Squircle Fields)
-   ========================================================================== */
-input[type="text"],
-input[type="number"],
-input[type="search"],
-input[type="email"],
-input[type="password"],
-input[type="date"],
-select,
-textarea,
-.input-field {
-  border-radius: 12px !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
-  background: rgba(22, 32, 50, 0.75) !important;
-  color: #FFFFFF !important;
-  font-family: var(--font-body) !important;
-  transition: all 0.16s ease !important;
-}
-
-[data-theme="light"] input[type="text"],
-[data-theme="light"] input[type="number"],
-[data-theme="light"] input[type="search"],
-[data-theme="light"] input[type="email"],
-[data-theme="light"] input[type="password"],
-[data-theme="light"] input[type="date"],
-[data-theme="light"] select,
-[data-theme="light"] textarea,
-[data-theme="light"] .input-field {
-  background: rgba(255, 255, 255, 0.90) !important;
-  border: 1px solid rgba(0, 0, 0, 0.12) !important;
-  color: #0F172A !important;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.03) !important;
-}
-
-input:focus,
-select:focus,
-textarea:focus,
-.input-field:focus {
-  border-color: #007AFF !important;
-  box-shadow: 0 0 0 3.5px rgba(0, 122, 255, 0.25) !important;
-  outline: none !important;
-}
-
-/* ==========================================================================
-   8. GLASS PANEL & TABLAS DE DATOS (Inventario, Ventas, Clientes)
-   ========================================================================== */
-.glass-panel,
-.stat-card {
-  background: linear-gradient(135deg, rgba(26, 36, 56, 0.72) 0%, rgba(14, 20, 32, 0.76) 100%) !important;
-  backdrop-filter: blur(28px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
-  border-radius: 20px !important;
-  box-shadow: 
-    0 14px 34px -4px rgba(0, 0, 0, 0.45),
-    inset 0 1px 1px rgba(255, 255, 255, 0.16) !important;
-  position: relative !important;
-}
-
-.glass-panel::before,
-.stat-card::before {
-  content: "" !important;
-  position: absolute !important;
-  left: 8% !important;
-  right: 8% !important;
-  top: 0 !important;
-  height: 1px !important;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.50), transparent) !important;
-  pointer-events: none !important;
-}
-
-[data-theme="light"] .glass-panel,
-[data-theme="light"] .stat-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.86) 0%, rgba(246, 249, 253, 0.78) 100%) !important;
-  backdrop-filter: blur(28px) saturate(190%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
-  border: 1px solid rgba(255, 255, 255, 1) !important;
-  box-shadow: 
-    0 6px 20px -2px rgba(15, 23, 42, 0.06),
-    0 16px 40px -4px rgba(15, 23, 42, 0.08),
-    inset 0 1px 1px #FFFFFF !important;
-}
-
-[data-theme="light"] .glass-panel::before,
-[data-theme="light"] .stat-card::before {
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 1), transparent) !important;
-}
-
-/* ── TABLAS LIQUID GLASS ── */
-table thead tr {
-  background: rgba(0, 0, 0, 0.25) !important;
-  backdrop-filter: blur(16px) !important;
-  -webkit-backdrop-filter: blur(16px) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.10) !important;
-}
-
-[data-theme="light"] table thead tr {
-  background: rgba(241, 245, 249, 0.85) !important;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
-}
-
-[data-theme="light"] table th {
-  color: #475569 !important;
-}
-
-table tbody tr {
-  transition: background 0.16s ease !important;
-}
-
-table tbody tr:hover {
-  background: rgba(255, 255, 255, 0.05) !important;
-}
-
-[data-theme="light"] table tbody tr:hover {
-  background: rgba(0, 122, 255, 0.04) !important;
-}
-
-[data-theme="light"] table td {
-  color: #0F172A !important;
-}
-
-/* ==========================================================================
-   9. TEXTOS, TÍTULOS Y ETIQUETAS GLOBALES
-   ========================================================================== */
-h1, h2, h3, h4, h5, h6 {
-  color: var(--text-main) !important;
-  letter-spacing: -0.025em !important;
-}
-
-[data-theme="light"] h1,
-[data-theme="light"] h2,
-[data-theme="light"] h3,
-[data-theme="light"] h4,
-[data-theme="light"] h5,
-[data-theme="light"] h6 {
-  color: #0F172A !important;
-}
-
-/* Labels y Etiquetas de Formulario (Alta Legibilidad y Nitidez Apple) */
-label {
-  color: #E2E8F0 !important;
-  font-weight: 700 !important;
-  letter-spacing: -0.01em !important;
-  font-family: -apple-system, BlinkMacSystemFont, "DM Sans", "Inter", sans-serif !important;
-}
-
-[data-theme="light"] label {
-  color: #0F172A !important;
-  font-weight: 700 !important;
-}
-
-[data-theme="light"] label span,
-[data-theme="light"] label strong,
-[data-theme="light"] label b {
-  color: inherit !important;
-}
-
-[data-theme="light"] .modal-card label {
-  color: #0F172A !important;
-  font-weight: 800 !important;
-}
-
-/* ==========================================================================
-   10. BOTONES Y CÁPSULAS iOS
-   ========================================================================== */
-.btn {
-  border-radius: 12px !important;
-  font-weight: 700 !important;
-  letter-spacing: -0.01em !important;
-  transition: transform 0.14s ease, filter 0.14s ease, box-shadow 0.14s ease !important;
-}
-
-.btn:active:not(:disabled) {
-  transform: scale(0.975) !important;
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, #007AFF 0%, #0051A8 100%) !important;
-  color: #FFFFFF !important;
-  border: none !important;
-  box-shadow: 
-    0 4px 16px rgba(0, 122, 255, 0.40),
-    inset 0 1px 1px rgba(255, 255, 255, 0.35) !important;
-}
-
-.btn-primary:hover:not(:disabled) {
-  filter: brightness(1.08) !important;
-  box-shadow: 0 8px 24px rgba(0, 122, 255, 0.55) !important;
-  transform: translateY(-1px) !important;
+.btn-primary:hover,
+.btn-indigo:hover,
+.btn-save:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 10px 28px rgba(168, 85, 247, 0.65), inset 0 1px 2px #FFFFFF !important;
 }
 
 .btn-outline {
   background: rgba(255, 255, 255, 0.06) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
-  backdrop-filter: blur(10px) !important;
-  color: var(--text-main) !important;
+  border: 1px solid rgba(216, 180, 254, 0.25) !important;
+  color: #D8B4FE !important;
+  backdrop-filter: blur(12px) !important;
+  border-radius: 12px !important;
+  transition: all 0.2s ease !important;
 }
 
-.btn-outline:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.12) !important;
-  border-color: rgba(255, 255, 255, 0.25) !important;
+.btn-outline:hover {
+  background: rgba(168, 85, 247, 0.20) !important;
+  border-color: rgba(216, 180, 254, 0.50) !important;
+  color: #FFFFFF !important;
   transform: translateY(-1px) !important;
 }
 
 [data-theme="light"] .btn-outline {
-  background: rgba(0, 0, 0, 0.035) !important;
-  border: 1px solid rgba(0, 0, 0, 0.10) !important;
-  color: #334155 !important;
-}
-
-[data-theme="light"] .btn-outline:hover:not(:disabled) {
-  background: rgba(0, 0, 0, 0.07) !important;
-  border-color: rgba(0, 0, 0, 0.18) !important;
-  color: #0F172A !important;
-}
-
-/* ==========================================================================
-   11. SCROLLBARS MINIMALISTAS
-   ========================================================================== */
-::-webkit-scrollbar { width: 7px; height: 7px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.18); border-radius: 9999px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.30); }
-[data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, 0.16); }
-[data-theme="light"] ::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.28); }
-
-/* ==========================================================================
-   12. CORRECCIONES INTEGRALES MODO CLARO — Elementos con Estilos Inline
-   Sección que sobreescribe componentes sin clase CSS que usan variables oscuras
-   ========================================================================== */
-
-/* ── Modal Card (ProductEditModal, CashRegisterModal, modales POS) ── */
-[data-theme="light"] .modal-card,
-[data-theme="light"] [style*="background: var(--bg-secondary"] {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(246, 249, 253, 0.92) 100%) !important;
-  border-color: rgba(255, 255, 255, 1) !important;
-  color: #0F172A !important;
-}
-
-/* ── Cabeceras de modal (encabezado + footer con var(--bg-tertiary)) ── */
-[data-theme="light"] .modal-card > div:first-child,
-[data-theme="light"] .modal-card > form > div:last-child {
-  background: rgba(248, 250, 252, 0.92) !important;
-  border-color: rgba(0, 0, 0, 0.06) !important;
-}
-
-/* ── Body del formulario en modal de producto ── */
-[data-theme="light"] .modal-card > form > div:first-child + div,
-[data-theme="light"] .modal-card form > div[style*="overflow"] {
-  background: rgba(255, 255, 255, 0.60) !important;
-}
-
-/* ── Botones de categoría en ProductEditModal (sin clase CSS asignada) ── */
-[data-theme="light"] .modal-card button[style*="var(--bg-glass"],
-[data-theme="light"] .modal-card button[style*="rgba(255, 255, 255, 0.04)"],
-[data-theme="light"] .modal-card button[style*="rgba(255,255,255,0.04)"] {
-  background: rgba(255, 255, 255, 0.82) !important;
-  border-color: rgba(0, 0, 0, 0.10) !important;
-  color: #334155 !important;
-  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04) !important;
-}
-
-/* ── Botones de categoría ACTIVOS en modo claro ── */
-[data-theme="light"] .modal-card button[style*="rgba(59, 130, 246, 0.22)"],
-[data-theme="light"] .modal-card button[style*="rgba(16, 185, 129, 0.22)"],
-[data-theme="light"] .modal-card button[style*="rgba(236, 72, 153, 0.22)"],
-[data-theme="light"] .modal-card button[style*="rgba(251, 146, 60, 0.22)"],
-[data-theme="light"] .modal-card button[style*="rgba(234, 179, 8, 0.22)"],
-[data-theme="light"] .modal-card button[style*="rgba(20, 184, 166, 0.25)"] {
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.80) !important;
-}
-
-/* ── Secciones especiales dentro del modal (Cintas, Ropa, Bolsas, Calculadora) ── */
-[data-theme="light"] .modal-card div[style*="rgba(16, 185, 129, 0.08)"],
-[data-theme="light"] .modal-card div[style*="rgba(245, 158, 11, 0.08)"],
-[data-theme="light"] .modal-card div[style*="rgba(139, 92, 246, 0.08)"],
-[data-theme="light"] .modal-card div[style*="rgba(37, 99, 235, 0.08)"],
-[data-theme="light"] .modal-card div[style*="rgba(239, 68, 68, 0.08)"] {
   background: rgba(255, 255, 255, 0.70) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  color: #581C87 !important;
 }
 
-/* ── Inputs de margen/porcentaje en modo claro ── */
-[data-theme="light"] .modal-card input[style*="rgba(255, 255, 255, 0.04)"],
-[data-theme="light"] .modal-card button[style*="rgba(255, 255, 255, 0.04)"],
-[data-theme="light"] .modal-card div[style*="rgba(255, 255, 255, 0.04)"],
-[data-theme="light"] .modal-card div[style*="rgba(0, 0, 0, 0.2)"] {
-  background: rgba(241, 245, 249, 0.90) !important;
-  border-color: rgba(0, 0, 0, 0.08) !important;
-  color: #0F172A !important;
-}
-
-/* ── Sección "Disponible para venta" (switch toggle) modo claro ── */
-[data-theme="light"] .modal-card div[style*="rgba(255, 255, 255, 0.04)"][style*="border"] {
-  background: rgba(255, 255, 255, 0.88) !important;
-  border-color: rgba(0, 0, 0, 0.08) !important;
-}
-
-/* ── Sección de imágenes (bg-tertiary) ── */
-[data-theme="light"] .modal-card div[style*="var(--bg-tertiary)"] {
-  background: rgba(241, 245, 249, 0.80) !important;
-  border-color: rgba(0, 0, 0, 0.07) !important;
-}
-
-/* ── Texto explicativo en el modal en modo claro ── */
-[data-theme="light"] .modal-card span[style*="var(--text-muted)"],
-[data-theme="light"] .modal-card p[style*="var(--text-muted)"] {
-  color: #334155 !important;
+[data-theme="light"] .btn-outline:hover {
+  background: rgba(255, 255, 255, 0.95) !important;
+  color: #1E1035 !important;
+  box-shadow: 0 4px 14px rgba(126, 34, 206, 0.12) !important;
 }
 
 /* ==========================================================================
-   13. TABLAS DE DATOS AVANZADAS (CashRegisterModal, SalesView, InventoryView)
+   8. TABLAS Y VISTAS DE REPORTES (INVENTARIO, VENTAS, CLIENTES)
    ========================================================================== */
-
-/* Filas hover en tablas light */
-[data-theme="light"] table tr:hover td {
-  background: rgba(0, 122, 255, 0.03) !important;
-}
-
-/* Cabeceras de tabla en light */
-[data-theme="light"] table thead th {
-  color: #475569 !important;
-  font-weight: 700 !important;
-  background: rgba(241, 245, 249, 0.92) !important;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.06) !important;
-}
-
-/* Celdas de tabla en light */
-[data-theme="light"] table td {
-  color: #1E293B !important;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.04) !important;
-}
-
-/* Valores monetarios en verde oscuro para modo claro */
-[data-theme="light"] .price-tag,
-[data-theme="light"] [style*="color: #10b981"],
-[data-theme="light"] [style*="color: var(--accent-blue)"] {
-  color: #059669 !important;
-}
-
-/* Valores de TOTAL en azul en modo claro */
-[data-theme="light"] [style*="color: var(--accent-blue)"][style*="font-size: \"1.35rem\""],
-[data-theme="light"] [style*="color: \"#60a5fa\""] {
-  color: #0057B7 !important;
-}
-
-/* ==========================================================================
-   14. STAT CARDS (InsurancesView, SalesView, SectionsView)
-   ========================================================================== */
-[data-theme="light"] .stat-card,
-[data-theme="light"] div[style*="background: \"rgba(245, 158, 11, 0.08)\""],
-[data-theme="light"] div[style*="background: rgba(245, 158, 11, 0.08)"],
-[data-theme="light"] div[style*="background: rgba(16, 185, 129, 0.08)"],
-[data-theme="light"] div[style*="background: rgba(0, 122, 255, 0.08)"],
-[data-theme="light"] div[style*="background: rgba(236, 72, 153, 0.08)"],
-[data-theme="light"] div[style*="background: rgba(139, 92, 246, 0.08)"] {
-  background: rgba(255, 255, 255, 0.88) !important;
-  backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.96) !important;
-  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.07), inset 0 1px 0 rgba(255, 255, 255, 1) !important;
-}
-
-[data-theme="light"] .stat-card span,
-[data-theme="light"] .stat-card p,
-[data-theme="light"] .stat-card div {
-  color: inherit !important;
-}
-
-/* ==========================================================================
-   15. BADGES Y CHIPS DE ESTADO (VENTA, APERTURA, TURNO ABIERTO)
-   ========================================================================== */
-/* Badge TURNO ABIERTO en modo claro */
-[data-theme="light"] [style*="background: rgba(16, 185, 129, 0.16)"],
-[data-theme="light"] [style*="background: rgba(16,185,129,0.16)"] {
-  background: rgba(16, 185, 129, 0.14) !important;
-  color: #065F46 !important;
-  border-color: rgba(16, 185, 129, 0.30) !important;
-}
-
-/* Badge VENTA azul en modo claro */
-[data-theme="light"] [style*="background: rgba(59, 130, 246, 0.2)"],
-[data-theme="light"] [style*="background: rgba(59,130,246,0.2)"] {
-  background: rgba(0, 122, 255, 0.12) !important;
-  color: #1D4ED8 !important;
-  border-color: rgba(0, 122, 255, 0.25) !important;
-}
-
-/* ==========================================================================
-   16. POS CATALOG CONTROLS Y GRID DE PRODUCTOS (barra de búsqueda POS)
-   ========================================================================== */
-[data-theme="light"] .pos-catalog-controls {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(246, 249, 253, 0.86) 100%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.98) !important;
-  box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 1) !important;
-}
-
-/* ── Botones de categoría dentro del POS Catalog en modo claro ── */
-[data-theme="light"] .pos-catalog-controls button[style*="var(--bg-glass)"],
-[data-theme="light"] .pos-catalog-column button[style*="var(--bg-glass)"] {
-  background: rgba(255, 255, 255, 0.85) !important;
-  border-color: rgba(0, 0, 0, 0.09) !important;
-  color: #334155 !important;
-}
-
-/* ── Ticket en espera (parked carts) en modo claro ── */
-[data-theme="light"] div[style*="background: \"rgba(17, 24, 39, 0.95)\""],
-[data-theme="light"] div[style*="background: rgba(17, 24, 39, 0.95)"] {
-  background: rgba(255, 255, 255, 0.88) !important;
-  border-color: rgba(245, 158, 11, 0.40) !important;
-  color: #92400E !important;
-}
-
-/* ── Ítems del carrito en modo claro ── */
-[data-theme="light"] .pos-cart-items-scroll > div,
-[data-theme="light"] div[style*="background: rgba(0, 0, 0, 0.2)"][style*="border-radius"] {
-  background: rgba(255, 255, 255, 0.85) !important;
-  border-color: rgba(0, 0, 0, 0.07) !important;
-}
-
-/* ==========================================================================
-   17. ALERTA TOPBAR, NETWORK BADGE Y CHIPS DEL HEADER
-   ========================================================================== */
-[data-theme="light"] .alert-topbar {
-  background: rgba(245, 158, 11, 0.15) !important;
-  color: #92400E !important;
-  border-bottom: 1px solid rgba(245, 158, 11, 0.30) !important;
-}
-
-[data-theme="light"] .network-badge--online {
-  background: rgba(16, 185, 129, 0.12) !important;
-  color: #065F46 !important;
-  border: 1px solid rgba(16, 185, 129, 0.28) !important;
-}
-
-[data-theme="light"] .network-badge--offline {
-  background: rgba(239, 68, 68, 0.12) !important;
-  color: #991B1B !important;
-  border: 1px solid rgba(239, 68, 68, 0.28) !important;
-}
-
-[data-theme="light"] .network-badge--syncing {
-  background: rgba(245, 158, 11, 0.12) !important;
-  color: #92400E !important;
-  border: 1px solid rgba(245, 158, 11, 0.28) !important;
-}
-
-/* ==========================================================================
-   18. MICROINTERACCIONES GLOBALES (Apple Spring Physics)
-   ========================================================================== */
-button:not(:disabled):active {
-  transform: scale(0.97) !important;
-  transition: transform 0.08s cubic-bezier(0.25, 1, 0.5, 1) !important;
-}
-
-.product-card,
-.pos-product-card,
-.glass-panel,
-.stat-card,
-.modal-card {
-  will-change: transform !important;
-}
-
-/* Animación de entrada para modales */
-@keyframes liquidGlassModalIn {
-  from {
-    transform: scale(0.94) translateY(12px);
-    opacity: 0;
-  }
-  to {
-    transform: scale(1) translateY(0);
-    opacity: 1;
-  }
-}
-
-.modal-card {
-  animation: liquidGlassModalIn 0.28s cubic-bezier(0.25, 1, 0.5, 1) !important;
-}
-
-/* Animación de tarjetas al aparecer */
-@keyframes glassCardReveal {
-  from {
-    opacity: 0;
-    transform: translateY(6px) scale(0.98);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-}
-
-/* ==========================================================================
-   19. HISTORIAL DE CIERRES Y ARQUEO APPLE LIQUID GLASS (CashRegisterModal)
-   ========================================================================== */
-.cash-closing-card {
-  background: linear-gradient(135deg, rgba(24, 34, 54, 0.65) 0%, rgba(14, 20, 32, 0.70) 100%) !important;
-  backdrop-filter: blur(28px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
-  border-radius: 18px !important;
-  box-shadow: 
-    0 8px 24px -4px rgba(0, 0, 0, 0.45),
-    inset 0 1px 1px rgba(255, 255, 255, 0.18) !important;
-  transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1) !important;
-}
-
-.cash-closing-card:hover {
-  transform: translateY(-2px) !important;
-  border-color: rgba(0, 122, 255, 0.35) !important;
-  box-shadow: 0 12px 32px -4px rgba(0, 122, 255, 0.20), inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
-}
-
-[data-theme="light"] .cash-closing-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(246, 249, 253, 0.72) 100%) !important;
+.table-container,
+.inventory-table,
+.sales-table,
+.clients-table {
+  background: rgba(22, 14, 44, 0.58) !important;
   backdrop-filter: blur(28px) saturate(200%) !important;
   -webkit-backdrop-filter: blur(28px) saturate(200%) !important;
-  border: 1px solid rgba(255, 255, 255, 0.98) !important;
-  border-radius: 18px !important;
-  box-shadow: 
-    0 6px 20px -2px rgba(15, 23, 42, 0.06),
-    inset 0 1px 1px #FFFFFF !important;
-}
-
-[data-theme="light"] .cash-closing-card:hover {
-  transform: translateY(-2px) !important;
-  border-color: rgba(0, 122, 255, 0.30) !important;
-  box-shadow: 0 10px 28px -4px rgba(0, 122, 255, 0.14), inset 0 1px 1px #FFFFFF !important;
-}
-
-/* ==========================================================================
-   20. BOTÓN COBRAR VENTA Y FOOTER DE CARRITO (Estados Empty y Ready)
-   ========================================================================== */
-.pos-checkout-btn.btn-checkout-empty,
-.btn-checkout:disabled,
-.btn:disabled {
-  cursor: not-allowed !important;
-  transform: none !important;
-}
-
-[data-theme="light"] .pos-checkout-btn.btn-checkout-empty,
-[data-theme="light"] .btn-checkout:disabled,
-[data-theme="light"] .btn:disabled {
-  background: rgba(0, 0, 0, 0.05) !important;
-  color: #64748B !important;
-  border: 1px solid rgba(0, 0, 0, 0.08) !important;
-  opacity: 1 !important;
-  box-shadow: none !important;
-}
-
-.pos-checkout-btn.btn-checkout-empty,
-.btn-checkout:disabled {
-  background: rgba(255, 255, 255, 0.06) !important;
-  color: #64748B !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  opacity: 1 !important;
-  box-shadow: none !important;
-}
-
-/* Botón Listo para Cobrar (Activo, vibrante y pulsante) */
-.pos-checkout-btn.btn-checkout-ready,
-.btn-checkout:not(:disabled) {
-  background: linear-gradient(135deg, #10B981 0%, #059669 100%) !important;
-  color: #FFFFFF !important;
-  font-weight: 800 !important;
-  border: none !important;
-  border-radius: 16px !important;
-  box-shadow: 
-    0 8px 26px rgba(16, 185, 129, 0.45),
-    inset 0 1px 1.5px rgba(255, 255, 255, 0.50) !important;
-  animation: appleCheckoutPulse 2.4s infinite ease-in-out !important;
-}
-
-@keyframes appleCheckoutPulse {
-  0%, 100% {
-    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.40), inset 0 1px 1.5px rgba(255, 255, 255, 0.50);
-  }
-  50% {
-    box-shadow: 0 10px 32px rgba(16, 185, 129, 0.65), inset 0 1px 1.5px rgba(255, 255, 255, 0.70);
-  }
-}
-
-/* ==========================================================================
-   21. PANTALLA DE LOGIN APPLE LIQUID GLASS (Inspiración visionOS & iOS)
-   ========================================================================== */
-.login-overlay {
-  background: transparent !important;
-  backdrop-filter: blur(28px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(180%) !important;
-}
-
-/* Tarjeta Principal de Login */
-.login-card {
-  background: linear-gradient(135deg, rgba(22, 32, 52, 0.75) 0%, rgba(12, 18, 30, 0.80) 100%) !important;
-  backdrop-filter: blur(48px) saturate(200%) contrast(105%) !important;
-  -webkit-backdrop-filter: blur(48px) saturate(200%) contrast(105%) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.18) !important;
-  border-radius: 28px !important;
-  box-shadow: 
-    0 35px 90px -15px rgba(0, 0, 0, 0.80),
-    0 0 0 1px rgba(255, 255, 255, 0.08),
-    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.25) !important;
-  position: relative !important;
+  border: 1px solid rgba(216, 180, 254, 0.22) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 16px 42px -4px rgba(0, 0, 0, 0.45) !important;
   overflow: hidden !important;
 }
 
-.login-card::before {
-  content: "" !important;
-  position: absolute !important;
-  left: 10% !important;
-  right: 10% !important;
-  top: 0 !important;
-  height: 1.5px !important;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.80), transparent) !important;
-  pointer-events: none !important;
+[data-theme="light"] .table-container,
+[data-theme="light"] .inventory-table,
+[data-theme="light"] .sales-table,
+[data-theme="light"] .clients-table {
+  background: rgba(255, 255, 255, 0.68) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 12px 32px -4px rgba(126, 34, 206, 0.08) !important;
 }
 
-/* Login Card en Modo Claro */
-[data-theme="light"] .login-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.75) 0%, rgba(246, 249, 253, 0.65) 100%) !important;
-  backdrop-filter: blur(48px) saturate(210%) contrast(102%) !important;
-  -webkit-backdrop-filter: blur(48px) saturate(210%) contrast(102%) !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.98) !important;
-  border-radius: 28px !important;
-  box-shadow: 
-    0 28px 75px -12px rgba(15, 23, 42, 0.15),
-    0 4px 16px rgba(15, 23, 42, 0.05),
-    inset 0 1.5px 1.5px #FFFFFF !important;
-}
-
-[data-theme="light"] .login-card::before {
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 1), transparent) !important;
-}
-
-/* Botones de usuario en Login */
-.login-user-btn {
-  background: rgba(255, 255, 255, 0.06) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
-  border-radius: 18px !important;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
-  transition: all 0.2s cubic-bezier(0.25, 1, 0.5, 1) !important;
-}
-
-.login-user-btn:hover {
-  transform: translateY(-2px) scale(1.01) !important;
-  background: rgba(0, 122, 255, 0.18) !important;
-  border-color: rgba(0, 122, 255, 0.40) !important;
-  box-shadow: 0 8px 24px rgba(0, 122, 255, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
-}
-
-[data-theme="light"] .login-user-btn {
-  background: rgba(255, 255, 255, 0.85) !important;
-  border: 1px solid rgba(255, 255, 255, 0.98) !important;
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.05), inset 0 1px 0 #FFFFFF !important;
-}
-
-[data-theme="light"] .login-user-btn:hover {
-  background: rgba(0, 122, 255, 0.12) !important;
-  border-color: rgba(0, 122, 255, 0.35) !important;
-  box-shadow: 0 6px 20px rgba(0, 122, 255, 0.15), inset 0 1px 0 #FFFFFF !important;
-}
-
-/* Numpad de PIN táctil estilo iOS Passcode */
-.login-numpad-key {
-  width: 68px !important;
-  height: 68px !important;
-  border-radius: 50% !important;
-  font-size: 1.45rem !important;
-  font-weight: 600 !important;
-  background: rgba(255, 255, 255, 0.08) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.16) !important;
-  color: #FFFFFF !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
-  transition: all 0.14s ease !important;
-}
-
-.login-numpad-key:hover {
-  background: rgba(255, 255, 255, 0.18) !important;
-  transform: scale(1.05) !important;
-}
-
-.login-numpad-key:active {
-  transform: scale(0.92) !important;
-  background: rgba(0, 122, 255, 0.40) !important;
-}
-
-[data-theme="light"] .login-numpad-key {
-  background: rgba(255, 255, 255, 0.90) !important;
-  border: 1px solid rgba(0, 0, 0, 0.08) !important;
-  color: #0F172A !important;
-  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.06), inset 0 1px 0 #FFFFFF !important;
-}
-
-[data-theme="light"] .login-numpad-key:hover {
-  background: rgba(0, 122, 255, 0.10) !important;
-  border-color: rgba(0, 122, 255, 0.30) !important;
-}
-
-[data-theme="light"] .login-numpad-key:active {
-  background: rgba(0, 122, 255, 0.25) !important;
-}
-
-/* Casillas de PIN estilo Apple */
-.login-pin-box {
-  width: 52px !important;
-  height: 58px !important;
-  border-radius: 14px !important;
-  border: 1.5px solid rgba(255, 255, 255, 0.18) !important;
-  background: rgba(255, 255, 255, 0.05) !important;
-  backdrop-filter: blur(16px) !important;
-}
-
-.login-pin-box--filled {
-  border-color: #007AFF !important;
-  background: rgba(0, 122, 255, 0.15) !important;
-  box-shadow: 0 0 16px rgba(0, 122, 255, 0.40) !important;
-}
-
-[data-theme="light"] .login-pin-box {
-  border-color: rgba(0, 0, 0, 0.12) !important;
-  background: rgba(255, 255, 255, 0.85) !important;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.04) !important;
-}
-
-[data-theme="light"] .login-pin-box--filled {
-  border-color: #007AFF !important;
-  background: rgba(0, 122, 255, 0.10) !important;
-  box-shadow: 0 0 14px rgba(0, 122, 255, 0.25) !important;
-}
-
-/* ==========================================================================
-   22. REFRACCIÓN CRISTALINA GLOBAL EN PANELES Y BUSCADOR
-   ========================================================================== */
-.pos-catalog-controls input.input-field,
-.input-field:focus {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border-color: #007AFF !important;
-  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.25) !important;
-}
-
-[data-theme="light"] .pos-catalog-controls input.input-field,
-[data-theme="light"] .input-field:focus {
-  background: #FFFFFF !important;
-  border-color: #007AFF !important;
-  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.20) !important;
-}
-
-/* Ticket Oficial de Cierre en Modal */
-.closing-ticket-modal-card #printable-closing-ticket {
-  border-radius: 12px !important;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15) !important;
-}
-
-/* ==========================================================================
-   23. CORRECCIONES MODO CLARO — VISTAS PRINCIPALES Y PANELES
-   ========================================================================== */
-
-/* ── Main content backgrounds ── */
-[data-theme="light"] .main-content,
-[data-theme="light"] .view-container,
-[data-theme="light"] .page-container,
-[data-theme="light"] main {
-  background: transparent !important;
-  color: #0F172A !important;
-}
-
-/* ── Paneles y secciones generales con fondos oscuros ── */
-[data-theme="light"] [style*="background: var(--bg-secondary)"],
-[data-theme="light"] [style*="background: var(--bg-base)"],
-[data-theme="light"] [style*="background: var(--bg-card)"],
-[data-theme="light"] [style*="background: var(--bg-tertiary)"] {
-  background: rgba(255, 255, 255, 0.80) !important;
-  color: #0F172A !important;
-}
-
-/* ── Todos los textos oscuros en modo claro ── */
-[data-theme="light"] [style*="color: var(--text-main)"],
-[data-theme="light"] [style*="color: var(--text-heading)"] {
-  color: #0F172A !important;
-}
-
-[data-theme="light"] [style*="color: var(--text-muted)"],
-[data-theme="light"] [style*="color: var(--text-dim)"] {
-  color: #475569 !important;
-}
-
-/* ── Bordes en modo claro ── */
-[data-theme="light"] [style*="border: 1px solid var(--border-color)"],
-[data-theme="light"] [style*="border-color: var(--border-color)"],
-[data-theme="light"] [style*="borderColor: var(--border-color)"] {
-  border-color: rgba(0, 0, 0, 0.08) !important;
-}
-
-/* ── Inputs globales en modo claro (que usan var(--bg-input) o var(--bg-glass)) ── */
-[data-theme="light"] [style*="background: var(--bg-input)"],
-[data-theme="light"] [style*="background: var(--bg-glass)"],
-[data-theme="light"] [style*="backgroundColor: var(--bg-input)"],
-[data-theme="light"] [style*="backgroundColor: var(--bg-glass)"] {
-  background: rgba(255, 255, 255, 0.92) !important;
-  border-color: rgba(0, 0, 0, 0.10) !important;
-  color: #0F172A !important;
-}
-
-/* ── Select desplegables en modo claro ── */
-[data-theme="light"] select {
-  background: rgba(255, 255, 255, 0.92) !important;
-  color: #0F172A !important;
-  border: 1px solid rgba(0, 0, 0, 0.12) !important;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E") !important;
-  background-repeat: no-repeat !important;
-  background-position: right 10px center !important;
-  background-size: 18px !important;
-}
-
-/* ── Badges de inventario con mejor contraste en modo claro ── */
-[data-theme="light"] .badge,
-[data-theme="light"] [class*="badge"] {
+thead th {
+  background: rgba(14, 8, 28, 0.65) !important;
+  border-bottom: 1px solid rgba(216, 180, 254, 0.25) !important;
+  color: #D8B4FE !important;
   font-weight: 700 !important;
 }
 
-/* Badges rojos (sin stock, urgente) */
-[data-theme="light"] .badge-red,
-[data-theme="light"] [style*="background: rgba(239, 68, 68"],
-[data-theme="light"] [style*="background: rgba(220, 38, 38"] {
-  background: rgba(239, 68, 68, 0.12) !important;
-  color: #B91C1C !important;
-  border: 1px solid rgba(239, 68, 68, 0.30) !important;
+[data-theme="light"] thead th {
+  background: rgba(243, 238, 255, 0.75) !important;
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  color: #581C87 !important;
 }
 
-/* Badges verdes (en stock, activo) */
-[data-theme="light"] .badge-green,
-[data-theme="light"] [style*="background: rgba(16, 185, 129"],
-[data-theme="light"] [style*="background: rgba(5, 150, 105"] {
-  background: rgba(16, 185, 129, 0.12) !important;
-  color: #065F46 !important;
-  border: 1px solid rgba(16, 185, 129, 0.28) !important;
-}
-
-/* Badges amarillos (bajo stock, advertencia) */
-[data-theme="light"] .badge-yellow,
-[data-theme="light"] .badge-amber,
-[data-theme="light"] [style*="background: rgba(245, 158, 11"],
-[data-theme="light"] [style*="background: rgba(251, 191, 36"] {
-  background: rgba(245, 158, 11, 0.12) !important;
-  color: #92400E !important;
-  border: 1px solid rgba(245, 158, 11, 0.28) !important;
-}
-
-/* Badges azules (información) */
-[data-theme="light"] .badge-blue,
-[data-theme="light"] [style*="background: rgba(59, 130, 246"],
-[data-theme="light"] [style*="background: rgba(37, 99, 235"] {
-  background: rgba(37, 99, 235, 0.10) !important;
-  color: #1D4ED8 !important;
-  border: 1px solid rgba(37, 99, 235, 0.24) !important;
-}
-
-/* Badges violetas (especial, premium) */
-[data-theme="light"] .badge-purple,
-[data-theme="light"] [style*="background: rgba(139, 92, 246"],
-[data-theme="light"] [style*="background: rgba(124, 58, 237"] {
-  background: rgba(139, 92, 246, 0.10) !important;
-  color: #5B21B6 !important;
-  border: 1px solid rgba(139, 92, 246, 0.24) !important;
-}
-
-/* ── Textos de código monospace en modo claro ── */
-[data-theme="light"] code,
-[data-theme="light"] .code,
-[data-theme="light"] [style*="font-family: monospace"],
-[data-theme="light"] [style*="fontFamily: monospace"] {
-  background: rgba(0, 0, 0, 0.06) !important;
-  color: #0F172A !important;
-  border-color: rgba(0, 0, 0, 0.08) !important;
-}
-
-/* ── Líneas divisoras en modo claro ── */
-[data-theme="light"] hr {
-  border-color: rgba(0, 0, 0, 0.08) !important;
-}
-
-/* ── Cards con estilos inline en modo claro (sin clase CSS) ── */
-[data-theme="light"] div[style*="border-radius"][style*="background: rgba(0, 0, 0, 0.3)"],
-[data-theme="light"] div[style*="border-radius"][style*="background: rgba(0,0,0,0.3)"],
-[data-theme="light"] div[style*="border-radius"][style*="background: rgba(0, 0, 0, 0.4)"],
-[data-theme="light"] div[style*="border-radius"][style*="background: rgba(0,0,0,0.4)"],
-[data-theme="light"] div[style*="border-radius"][style*="background: rgba(0, 0, 0, 0.5)"],
-[data-theme="light"] div[style*="border-radius"][style*="background: rgba(17, 24, 39"] {
-  background: rgba(255, 255, 255, 0.85) !important;
-  border-color: rgba(0, 0, 0, 0.07) !important;
-  color: #0F172A !important;
-}
-
-/* ── Información de "Nota de Disponibilidad" y alertas info en modo claro ── */
-[data-theme="light"] [style*="background: rgba(37, 99, 235, 0.12)"],
-[data-theme="light"] [style*="background: rgba(37,99,235,0.12)"] {
-  background: rgba(37, 99, 235, 0.08) !important;
-  color: #1E3A8A !important;
-  border-color: rgba(37, 99, 235, 0.25) !important;
-}
-
-/* ── Panel lateral del POS (carrito) en modo claro ── */
-[data-theme="light"] .pos-cart-panel,
-[data-theme="light"] .cart-panel {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(246, 249, 253, 0.92) 100%) !important;
-  border-left: 1px solid rgba(0, 0, 0, 0.06) !important;
-}
-
-/* ── Panel de productos POS en modo claro ── */
-[data-theme="light"] .pos-products-panel {
-  background: transparent !important;
-}
-
-/* ── Encabezados de sección (SalesView, InventoryView, etc.) ── */
-[data-theme="light"] .section-header,
-[data-theme="light"] .view-header {
-  color: #0F172A !important;
-}
-
-/* ── Scroll general de la página en modo claro ── */
-[data-theme="light"] ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.16) !important;
-}
-
-[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.28) !important;
-}
-
-/* ── Tooltip y popover en modo claro ── */
-[data-theme="light"] [class*="tooltip"],
-[data-theme="light"] [class*="popover"] {
-  background: rgba(255, 255, 255, 0.97) !important;
-  color: #0F172A !important;
-  border: 1px solid rgba(0, 0, 0, 0.08) !important;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12) !important;
-}
-
-/* ── Overlay de carga (LoadingSpinner) en modo claro ── */
-[data-theme="light"] [class*="loading"],
-[data-theme="light"] [class*="spinner"] {
-  color: #0F172A !important;
+tbody tr:hover {
+  background: rgba(168, 85, 247, 0.10) !important;
 }
 
 /* ==========================================================================
-   24. CORRECCIONES FINALES — MODO CLARO: TEXTO EN ELEMENTOS SIN CLASE
+   9. ORION WIDGET — ASISTENTE IA EN VIDRIO LÍQUIDO
    ========================================================================== */
-
-/* Cualquier span/p/div que tenga color blanco explícito en modo claro */
-[data-theme="light"] [style*="color: #ffffff"],
-[data-theme="light"] [style*="color: #FFFFFF"],
-[data-theme="light"] [style*="color: white"],
-[data-theme="light"] [style*="color: rgb(255, 255, 255)"] {
-  /* Sólo aplicar cuando NO esté dentro de un botón primario o elemento con fondo azul/verde oscuro */
-  color: #0F172A !important;
+.orion-chat-bubble,
+.orion-window,
+[class*="orion-dialog"] {
+  background: linear-gradient(135deg, rgba(22, 12, 42, 0.75) 0%, rgba(14, 8, 30, 0.82) 100%) !important;
+  backdrop-filter: blur(36px) saturate(210%) !important;
+  -webkit-backdrop-filter: blur(36px) saturate(210%) !important;
+  border: 1.5px solid rgba(216, 180, 254, 0.35) !important;
+  border-radius: 24px !important;
+  box-shadow: 
+    0 25px 65px -10px rgba(0, 0, 0, 0.8),
+    0 0 35px rgba(168, 85, 247, 0.35),
+    inset 0 1.5px 1.5px rgba(255, 255, 255, 0.35) !important;
 }
 
-/* Excluir botones primarios, elementos de acción y el header nav del override anterior */
-[data-theme="light"] .btn-primary [style*="color: #ffffff"],
-[data-theme="light"] .btn-primary [style*="color: white"],
-[data-theme="light"] .btn-success [style*="color: white"],
-[data-theme="light"] .btn-checkout [style*="color: white"],
-[data-theme="light"] .nav-tab--active [style*="color: white"],
-[data-theme="light"] .nav-tab--active * {
-  color: #FFFFFF !important;
+[data-theme="light"] .orion-chat-bubble,
+[data-theme="light"] .orion-window,
+[data-theme="light"] [class*="orion-dialog"] {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.78) 0%, rgba(248, 244, 255, 0.68) 100%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.98) !important;
+  box-shadow: 
+    0 20px 50px -10px rgba(76, 29, 149, 0.18),
+    0 0 30px rgba(192, 132, 252, 0.25),
+    inset 0 1.5px 2px #FFFFFF !important;
 }
-
-/* ==========================================================================
-   25. SCROLL MEJORADO — CORRECCIÓN BARRA FUERA DEL CONTENEDOR
-   ========================================================================== */
-
-/* Asegurar que todos los contenedores con overflow y border-radius contengan el scroll */
-.modal-overlay,
-.reports-modal-overlay,
-[class*="modal-overlay"] {
-  /* Ocultar scrollbar propio del overlay (el modal card hace el scroll) */
-  scrollbar-width: none !important; /* Firefox */
-  -ms-overflow-style: none !important; /* IE/Edge */
-}
-
-.modal-content,
-.modal-card,
-.modal-box,
-[class*="modal-card"],
-[class*="modal-container"] {
-  /* Firefox scrollbar fino */
-  scrollbar-width: thin !important;
-  scrollbar-color: rgba(255, 255, 255, 0.22) transparent !important;
-}
-
-[data-theme="light"] .modal-content,
-[data-theme="light"] .modal-card,
-[data-theme="light"] .modal-box,
-[data-theme="light"] [class*="modal-card"] {
-  scrollbar-color: rgba(0, 0, 0, 0.16) transparent !important;
-}
-
-/* ==========================================================================
-   26. SISTEMA GLOBAL LIQUID GLASS & LOGO BRANDING (MJ)
-   ========================================================================== */
-
-/* Logo MJ Liquid Glass con micro-interacción óptica */
-.logo-icon--liquid-glass {
-  position: relative;
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.logo-icon--liquid-glass:hover {
-  transform: scale(1.08) rotate(-2deg);
-}
-
-.logo-icon--liquid-glass img {
-  filter: drop-shadow(0 6px 18px rgba(168, 85, 247, 0.5));
-  transition: filter 0.3s ease;
-}
-
-.logo-icon--liquid-glass:hover img {
-  filter: drop-shadow(0 8px 24px rgba(236, 72, 153, 0.65));
-}
-
-/* Header Navbar Liquid Glass especular */
-.header {
-  background: var(--lg-surface-base) !important;
-  backdrop-filter: blur(28px) saturate(190%) !important;
-  -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
-  border-bottom: 1px solid var(--lg-border-specular) !important;
-  box-shadow: var(--lg-shadow-sm) !important;
-}
-
-[data-theme="light"] .header {
-  background: rgba(255, 255, 255, 0.82) !important;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.85) !important;
-  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.08) !important;
-}
-
-/* Botones principales con brillo de cristal líquido */
-.btn-primary,
-.btn-checkout,
-.btn-success {
-  position: relative !important;
-  overflow: hidden !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  box-shadow: 0 6px 20px -4px rgba(99, 102, 241, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.35) !important;
-  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
-}
-
-.btn-primary::before,
-.btn-checkout::before,
-.btn-success::before {
-  content: "" !important;
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  height: 45% !important;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0) 100%) !important;
-  border-radius: inherit !important;
-  pointer-events: none !important;
-}
-
-.btn-primary:hover,
-.btn-checkout:hover,
-.btn-success:hover {
-  transform: translateY(-2px) !important;
-  box-shadow: 0 10px 28px -4px rgba(99, 102, 241, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
-}
-
-.btn-primary:active,
-.btn-checkout:active,
-.btn-success:active {
-  transform: translateY(0) scale(0.98) !important;
-}
-
-/* Inputs con borde translúcido Apple Glass */
-input:not([type="checkbox"]):not([type="radio"]),
-select,
-textarea {
-  background: var(--lg-surface-lowest) !important;
-  border: 1px solid var(--lg-border-subtle) !important;
-  backdrop-filter: blur(10px) !important;
-  -webkit-backdrop-filter: blur(10px) !important;
-  transition: all 0.2s ease !important;
-}
-
-input:not([type="checkbox"]):not([type="radio"]):focus,
-select:focus,
-textarea:focus {
-  border-color: var(--lg-dusk-purple) !important;
-  box-shadow: 0 0 0 3px rgba(192, 132, 252, 0.25), var(--lg-shadow-sm) !important;
-  outline: none !important;
-}
-
-[data-theme="light"] input:not([type="checkbox"]):not([type="radio"]),
-[data-theme="light"] select,
-[data-theme="light"] textarea {
-  background: rgba(255, 255, 255, 0.85) !important;
-  border: 1px solid rgba(0, 0, 0, 0.12) !important;
-}
-
-[data-theme="light"] input:not([type="checkbox"]):not([type="radio"]):focus,
-[data-theme="light"] select:focus,
-[data-theme="light"] textarea:focus {
-  border-color: #7c3aed !important;
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.2), 0 4px 12px rgba(0, 0, 0, 0.05) !important;
-}
-
-

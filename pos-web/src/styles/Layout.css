@@ -6,7 +6,7 @@
   height: 100vh;
   max-height: 100vh;
   overflow: hidden;
-  background-color: var(--bg-body);
+  background-color: transparent;
   position: relative;
 }
 

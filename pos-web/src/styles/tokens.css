@@ -1,54 +1,64 @@
 /**
  * tokens.css
- * Sistema de Diseño Centralizado — Inspirado en iOS & Human Interface Guidelines
- * Efecto Liquid Glass Selectivo, Profundidad Visual y Elevaciones Suaves.
- * Compatible con la arquitectura existente y retrocompatible con alias previos.
+ * Sistema de Diseño Centralizado — LIQUID GLASS APPLE & MJ DUSK PALETTE
+ * Tonos Morados, Violetas, Magentas, Blancos Especulares y Cristal Translúcido
  */
 
 :root {
   /* ==========================================================================
-     PALETA OFICIAL DE SISTEMA iOS (Apple System Colors)
+     PALETA OFICIAL LIQUID GLASS MJ (Inspirada en el Logo y Apple VisionOS)
      ========================================================================== */
-  --ios-blue: #007AFF;
-  --ios-green: #34C759;
-  --ios-indigo: #5856D6;
-  --ios-orange: #FF9500;
-  --ios-pink: #FF2D55;
-  --ios-purple: #AF52DE;
-  --ios-red: #FF3B30;
-  --ios-teal: #5AC8FA;
-  --ios-yellow: #FFCC00;
+  --lg-purple-light: #e9d5ff;
+  --lg-purple-lavender: #d8b4fe;
+  --lg-purple-vivid: #c084fc;
+  --lg-purple-core: #a855f7;
+  --lg-purple-deep: #9333ea;
+  --lg-purple-dark: #7e22ce;
+  --lg-purple-midnight: #3b0764;
+  --lg-magenta-dusk: #ff9ffc;
+  --lg-pink-glow: #ec4899;
+  --lg-indigo-accent: #6366f1;
+
+  --ios-blue: #a855f7; /* Mapeo de acento principal a Morado MJ */
+  --ios-green: #10b981;
+  --ios-indigo: #8b5cf6;
+  --ios-orange: #f97316;
+  --ios-pink: #ec4899;
+  --ios-purple: #c084fc;
+  --ios-red: #f43f5e;
+  --ios-teal: #06b6d4;
+  --ios-yellow: #facc15;
 
   /* ==========================================================================
-     DARK MODE (Por defecto) — Estilo iOS Midnight Glass
+     DARK MODE (Por defecto) — Obsidian Liquid Glass & Violet Aurora
      ========================================================================== */
-  --ios-bg: #07090E;
-  --ios-bg-secondary: #0D111A;
-  --ios-bg-tertiary: #141A28;
+  --ios-bg: #080512;
+  --ios-bg-secondary: #120a22;
+  --ios-bg-tertiary: #1c1035;
 
-  /* Superficies Liquid Glass */
-  --ios-glass-nav: rgba(13, 17, 26, 0.78);
-  --ios-glass-card: rgba(18, 24, 38, 0.65);
-  --ios-glass-card-hover: rgba(25, 33, 52, 0.75);
-  --ios-glass-modal: rgba(15, 20, 32, 0.88);
-  --ios-glass-dock: rgba(16, 22, 35, 0.85);
+  /* Superficies Liquid Glass (Translucidez real + desenfoque de lente) */
+  --ios-glass-nav: rgba(14, 8, 28, 0.70);
+  --ios-glass-card: rgba(24, 15, 46, 0.58);
+  --ios-glass-card-hover: rgba(38, 22, 68, 0.72);
+  --ios-glass-modal: rgba(18, 10, 36, 0.75);
+  --ios-glass-dock: rgba(18, 12, 38, 0.80);
 
-  /* Bordes Translúcidos con Brillo Especular Superior */
-  --ios-glass-border: rgba(255, 255, 255, 0.08);
-  --ios-glass-border-hover: rgba(255, 255, 255, 0.16);
-  --ios-glass-border-specular: rgba(255, 255, 255, 0.22);
-  --ios-glass-separator: rgba(255, 255, 255, 0.06);
+  /* Bordes Translúcidos con Resplandor Violeta y Bisel Especular Blanco */
+  --ios-glass-border: rgba(216, 180, 254, 0.20);
+  --ios-glass-border-hover: rgba(216, 180, 254, 0.45);
+  --ios-glass-border-specular: rgba(255, 255, 255, 0.35);
+  --ios-glass-separator: rgba(216, 180, 254, 0.12);
 
-  /* Filtros de Desenfoque Controlados */
-  --ios-blur-nav: blur(24px) saturate(180%);
-  --ios-blur-card: blur(18px) saturate(160%);
-  --ios-blur-modal: blur(36px) saturate(200%);
+  /* Filtros de Desenfoque Óptico Apple */
+  --ios-blur-nav: blur(28px) saturate(200%) contrast(108%);
+  --ios-blur-card: blur(22px) saturate(190%) contrast(106%);
+  --ios-blur-modal: blur(40px) saturate(220%) contrast(110%);
 
-  /* Tipografía & Contrastes */
+  /* Tipografía & Contrastes en Oscuro */
   --ios-text-primary: #FFFFFF;
-  --ios-text-secondary: #94A3B8;
-  --ios-text-tertiary: #64748B;
-  --ios-text-quaternary: #475569;
+  --ios-text-secondary: #d8b4fe;
+  --ios-text-tertiary: #a855f7;
+  --ios-text-quaternary: #7e22ce;
 
   /* ==========================================================================
      SISTEMA DE RADIOS SQUIRCLE (Curvatura Continua iOS)
@@ -62,30 +72,31 @@
   --radius-full: 9999px;
 
   /* ==========================================================================
-     ELEVACIONES & SOMBRAS SUAVES (Soft Ambient Shadows)
+     ELEVACIONES & SOMBRAS SUAVES (Luminosidad Caústica Púrpura)
      ========================================================================== */
-  --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.2);
-  --shadow-card: 0 8px 24px -4px rgba(0, 0, 0, 0.35);
-  --shadow-floating: 0 16px 40px -6px rgba(0, 0, 0, 0.45);
-  --shadow-modal: 0 24px 60px -12px rgba(0, 0, 0, 0.65), 0 0 1px 1px var(--ios-glass-border-specular);
-  --shadow-glow-blue: 0 0 20px rgba(0, 122, 255, 0.35);
-  --shadow-glow-green: 0 0 20px rgba(52, 199, 89, 0.35);
+  --shadow-subtle: 0 4px 16px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  --shadow-card: 0 12px 32px -4px rgba(0, 0, 0, 0.5), 0 0 16px -2px rgba(168, 85, 247, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.25);
+  --shadow-floating: 0 20px 48px -6px rgba(0, 0, 0, 0.65), 0 0 24px rgba(168, 85, 247, 0.35), inset 0 1.5px 1.5px rgba(255, 255, 255, 0.35);
+  --shadow-modal: 0 32px 80px -12px rgba(0, 0, 0, 0.85), 0 0 45px rgba(168, 85, 247, 0.35), 0 0 1px 1px var(--ios-glass-border-specular);
+  --shadow-glow-blue: 0 0 25px rgba(168, 85, 247, 0.45);
+  --shadow-glow-green: 0 0 25px rgba(16, 185, 129, 0.45);
+  --shadow-glow-purple: 0 0 30px rgba(192, 132, 252, 0.55);
 
   /* ==========================================================================
      MICROINTERACCIONES & CURVAS DE TIEMPO iOS
      ========================================================================== */
-  --transition-spring: 0.26s cubic-bezier(0.25, 1, 0.5, 1);
-  --transition-smooth: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring: 0.28s cubic-bezier(0.25, 1, 0.5, 1);
+  --transition-smooth: 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-fast: 0.14s ease-out;
 
   /* ==========================================================================
      RETROCOMPATIBILIDAD CON COMPONENTES PREVIOS (Alias funcionales)
      ========================================================================== */
-  --primary: var(--ios-blue);
-  --primary-hover: #0062cc;
-  --primary-glow: var(--shadow-glow-blue);
-  --primary-gradient: linear-gradient(135deg, #007AFF 0%, #0051A8 100%);
-  --accent: var(--ios-indigo);
+  --primary: var(--lg-purple-core);
+  --primary-hover: var(--lg-purple-deep);
+  --primary-glow: var(--shadow-glow-purple);
+  --primary-gradient: linear-gradient(135deg, #c084fc 0%, #9333ea 50%, #6b21a8 100%);
+  --accent: var(--lg-magenta-dusk);
   --success: var(--ios-green);
   --danger: var(--ios-red);
 
@@ -106,9 +117,9 @@
   --text-dim: var(--ios-text-tertiary);
   --divider: var(--ios-glass-separator);
 
-  --input-bg: rgba(20, 26, 40, 0.7);
+  --input-bg: rgba(255, 255, 255, 0.08);
   --input-border: var(--ios-glass-border);
-  --input-focus: var(--ios-blue);
+  --input-focus: var(--lg-purple-vivid);
 
   --font-body: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Inter", system-ui, sans-serif;
   --font-title: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Space Grotesk", "Inter", sans-serif;
@@ -116,41 +127,44 @@
 }
 
 /* ==========================================================================
-   MODO CLARO (iOS Light Glass)
+   MODO CLARO (Apple Pearl Liquid Glass & Violet Crystal)
    ========================================================================== */
 [data-theme="light"] {
-  --ios-bg: #F4F5F8;
+  --ios-bg: #F8F6FF;
   --ios-bg-secondary: #FFFFFF;
-  --ios-bg-tertiary: #E9EBF0;
+  --ios-bg-tertiary: #F1ECFE;
 
-  --ios-glass-nav: rgba(255, 255, 255, 0.82);
-  --ios-glass-card: rgba(255, 255, 255, 0.78);
-  --ios-glass-card-hover: rgba(255, 255, 255, 0.92);
-  --ios-glass-modal: rgba(255, 255, 255, 0.94);
-  --ios-glass-dock: rgba(245, 246, 250, 0.88);
+  --ios-glass-nav: rgba(255, 255, 255, 0.72);
+  --ios-glass-card: rgba(255, 255, 255, 0.65);
+  --ios-glass-card-hover: rgba(255, 255, 255, 0.85);
+  --ios-glass-modal: rgba(255, 255, 255, 0.75);
+  --ios-glass-dock: rgba(255, 255, 255, 0.78);
 
-  --ios-glass-border: rgba(0, 0, 0, 0.07);
-  --ios-glass-border-hover: rgba(0, 0, 0, 0.12);
-  --ios-glass-border-specular: rgba(255, 255, 255, 0.95);
-  --ios-glass-separator: rgba(0, 0, 0, 0.05);
+  --ios-glass-border: rgba(255, 255, 255, 0.95);
+  --ios-glass-border-hover: rgba(192, 132, 252, 0.65);
+  --ios-glass-border-specular: #FFFFFF;
+  --ios-glass-separator: rgba(147, 51, 234, 0.12);
 
-  --ios-text-primary: #0F172A;
-  --ios-text-secondary: #475569;
-  --ios-text-tertiary: #94A3B8;
-  --ios-text-quaternary: #CBD5E1;
+  --ios-text-primary: #1E1035;
+  --ios-text-secondary: #581C87;
+  --ios-text-tertiary: #7E22CE;
+  --ios-text-quaternary: #A855F7;
 
-  --shadow-subtle: 0 1px 4px rgba(0, 0, 0, 0.04);
-  --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.06);
-  --shadow-floating: 0 12px 32px -4px rgba(0, 0, 0, 0.08);
-  --shadow-modal: 0 20px 50px -10px rgba(0, 0, 0, 0.14), 0 0 1px 1px var(--ios-glass-border-specular);
+  --shadow-subtle: 0 2px 10px rgba(126, 34, 206, 0.06), inset 0 1px 0 #FFFFFF;
+  --shadow-card: 0 8px 24px -2px rgba(126, 34, 206, 0.09), inset 0 1.5px 1.5px #FFFFFF;
+  --shadow-floating: 0 16px 40px -4px rgba(126, 34, 206, 0.14), 0 0 20px rgba(192, 132, 252, 0.25), inset 0 1.5px 2px #FFFFFF;
+  --shadow-modal: 0 28px 70px -10px rgba(76, 29, 149, 0.22), 0 0 35px rgba(192, 132, 252, 0.25), inset 0 2px 2px #FFFFFF;
 
-  --primary: var(--ios-blue);
-  --primary-hover: #0056b3;
+  --primary: var(--lg-purple-core);
+  --primary-hover: var(--lg-purple-dark);
+  --primary-glow: 0 0 20px rgba(168, 85, 247, 0.35);
+  --primary-gradient: linear-gradient(135deg, #a855f7 0%, #7e22ce 100%);
+
   --dark-bg: var(--ios-bg);
   --bg-body: var(--ios-bg);
   --bg-base: var(--ios-bg);
   --bg-primary: #FFFFFF;
-  --bg-secondary: #F1F3F7;
+  --bg-secondary: #F3EEFF;
   --bg-card: var(--ios-glass-card);
   --surface-header: var(--ios-glass-nav);
   --surface-panel: var(--ios-glass-card);
@@ -163,7 +177,7 @@
   --text-dim: var(--ios-text-tertiary);
   --divider: var(--ios-glass-separator);
 
-  --input-bg: rgba(255, 255, 255, 0.85);
-  --input-border: rgba(0, 0, 0, 0.12);
-  --input-focus: var(--ios-blue);
+  --input-bg: rgba(255, 255, 255, 0.70);
+  --input-border: rgba(192, 132, 252, 0.35);
+  --input-focus: var(--lg-purple-core);
 }

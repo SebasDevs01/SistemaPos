@@ -1471,6 +1471,7 @@ export default function App() {
             onOpenCashRegister={handleOpenCashRegister}
             onSaveRental={handleSaveRental}
             rentals={rentals}
+            insurances={insurances}
           />
         )}
 

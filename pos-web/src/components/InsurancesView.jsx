@@ -1457,15 +1457,15 @@ export default function InsurancesView({
                         Sexo *:
                       </label>
                       <select
-                        className="form-select"
+                        className="form-select select-with-arrow"
                         value={formData.sexo}
                         onChange={(e) => setFormData({ ...formData, sexo: e.target.value })}
                         style={{
                           width: "100%",
-                          padding: "9px 28px 9px 10px",
+                          padding: "9px 32px 9px 10px",
                           borderRadius: "10px",
                           border: "1px solid var(--border-color)",
-                          background: "var(--bg-tertiary)",
+                          backgroundColor: "var(--bg-tertiary)",
                           color: "var(--text-main)",
                           fontSize: "0.84rem",
                           cursor: "pointer"
@@ -1481,15 +1481,15 @@ export default function InsurancesView({
                         Tipo Documento *:
                       </label>
                       <select
-                        className="form-select"
+                        className="form-select select-with-arrow"
                         value={formData.tipoDocumento}
                         onChange={(e) => setFormData({ ...formData, tipoDocumento: e.target.value })}
                         style={{
                           width: "100%",
-                          padding: "9px 34px 9px 12px",
+                          padding: "9px 36px 9px 12px",
                           borderRadius: "10px",
                           border: "1px solid var(--border-color)",
-                          background: "var(--bg-tertiary)",
+                          backgroundColor: "var(--bg-tertiary)",
                           color: "var(--text-main)",
                           fontSize: "0.84rem",
                           cursor: "pointer"
@@ -1554,15 +1554,15 @@ export default function InsurancesView({
                         Curso Escolar (0 a 11) *:
                       </label>
                       <select
-                        className="form-select"
+                        className="form-select select-with-arrow"
                         value={formData.curso}
                         onChange={(e) => setFormData({ ...formData, curso: e.target.value })}
                         style={{
                           width: "100%",
-                          padding: "8px 32px 8px 12px",
+                          padding: "8px 34px 8px 12px",
                           borderRadius: "10px",
                           border: "1px solid var(--border-color)",
-                          background: "var(--bg-tertiary)",
+                          backgroundColor: "var(--bg-tertiary)",
                           color: "var(--text-main)",
                           fontSize: "0.84rem",
                           fontWeight: 700,
@@ -1669,15 +1669,15 @@ export default function InsurancesView({
                         Inclusión:
                       </label>
                       <select
-                        className="form-select"
+                        className="form-select select-with-arrow"
                         value={formData.inclusion}
                         onChange={(e) => setFormData({ ...formData, inclusion: e.target.value })}
                         style={{
                           width: "100%",
-                          padding: "8px 28px 8px 10px",
+                          padding: "8px 30px 8px 10px",
                           borderRadius: "10px",
                           border: "1px solid var(--border-color)",
-                          background: "var(--bg-tertiary)",
+                          backgroundColor: "var(--bg-tertiary)",
                           color: "var(--text-main)",
                           fontSize: "0.84rem",
                           cursor: "pointer"
@@ -1755,15 +1755,15 @@ export default function InsurancesView({
                         Método de Pago:
                       </label>
                       <select
-                        className="form-select"
+                        className="form-select select-with-arrow"
                         value={formData.metodoPago}
                         onChange={(e) => setFormData({ ...formData, metodoPago: e.target.value })}
                         style={{
                           width: "100%",
-                          padding: "8px 30px 8px 10px",
+                          padding: "8px 32px 8px 10px",
                           borderRadius: "10px",
                           border: "1px solid var(--border-color)",
-                          background: "var(--bg-tertiary)",
+                          backgroundColor: "var(--bg-tertiary)",
                           color: "var(--text-main)",
                           fontSize: "0.84rem",
                           cursor: "pointer"

@@ -69,7 +69,8 @@ export default function PosView({
   activeShift,
   onOpenCashRegister,
   onSaveRental,
-  rentals = []
+  rentals = [],
+  insurances = []
 }) {
   // Claves de almacenamiento para mantener el ticket de venta entre secciones
   const CART_STORAGE_KEY = "pos_active_cart";
@@ -559,11 +560,24 @@ export default function PosView({
         stockIlimitado: false,
         maxStock: prod.stock || 9999,
         seguroData: {
+          apellido1: insuranceData.apellido1,
+          apellido2: insuranceData.apellido2,
+          nombre1: insuranceData.nombre1,
+          nombre2: insuranceData.nombre2,
           estudianteNombre: insuranceData.estudianteNombre,
-          identificacion: insuranceData.identificacion,
-          edad: insuranceData.edad,
+          sexo: insuranceData.sexo,
+          tipoDocumento: insuranceData.tipoDocumento,
+          numeroDocumento: insuranceData.numeroDocumento,
+          identificacion: insuranceData.numeroDocumento,
+          fechaNacimiento: insuranceData.fechaNacimiento,
+          curso: insuranceData.curso,
           grado: insuranceData.grado,
-          telefonoResponsable: insuranceData.telefonoResponsable,
+          responsableVenta: insuranceData.responsableVenta || currentUser?.nombre || "Caja Mostrador",
+          vendedor: insuranceData.responsableVenta || currentUser?.nombre || "Caja Mostrador",
+          fechaVenta: insuranceData.fechaVenta || new Date().toISOString().split("T")[0],
+          responsableVerificacion: insuranceData.responsableVerificacion || "",
+          inclusion: insuranceData.inclusion || "NO",
+          telefonoResponsable: insuranceData.telefonoResponsable || "",
           precio: price,
           observaciones: insuranceData.observaciones || ""
         }
@@ -2385,12 +2399,15 @@ export default function PosView({
         cart={cart}
       />
 
-      {/* MODAL DE DATOS PARA SEGUROS ESCOLARES */}
+      {/* MODAL DE DATOS PARA SEGUROS ESCOLARES (FORMATO OFICIAL LUIS CARLOS GALÁN) */}
       <StudentInsuranceModal
         isOpen={Boolean(insuranceTargetProduct)}
         onClose={() => setInsuranceTargetProduct(null)}
         product={insuranceTargetProduct}
         onConfirm={handleConfirmInsuranceSale}
+        currentUser={currentUser}
+        nextPolizaNumber={insurances.length + 1}
+        maxPolizas={152}
       />
 
       {/* MODAL DE ALQUILER Y APARTADOS DE SILLAS / MESAS */}

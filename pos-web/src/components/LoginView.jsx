@@ -11,6 +11,18 @@ export default function LoginView({ users = [], onLogin, storeConfig = {} }) {
   const [step, setStep] = useState("select"); // "select" | "pin"
   const pinRef = useRef(null);
 
+  // Detectar tema claro/oscuro
+  const [isLight, setIsLight] = useState(
+    () => document.documentElement.getAttribute("data-theme") === "light"
+  );
+  useEffect(() => {
+    const obs = new MutationObserver(() => {
+      setIsLight(document.documentElement.getAttribute("data-theme") === "light");
+    });
+    obs.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => obs.disconnect();
+  }, []);
+
   useEffect(() => {
     if (step === "pin" && pinRef.current) {
       pinRef.current.focus();
@@ -80,20 +92,37 @@ export default function LoginView({ users = [], onLogin, storeConfig = {} }) {
   return (
     <div className="login-overlay">
       <div className="login-bg" style={{ position: "absolute", inset: 0, overflow: "hidden", zIndex: 0 }}>
-        <GradientWaves
-          horizonColor="#240a5e"
-          waveColor="#ff9ffc"
-          crestColor="#ffffff"
-          backgroundColor="#080711"
-          amplitude={2.5}
-          swell={35}
-          lightAngle={120}
-          speed={0.4}
-          grain={0.15}
-          parallaxStrength={0.4}
-          mouseStrength={0.5}
-          swellOnClick={true}
-        />
+        {isLight ? (
+          /* Modo claro: Aurora Apple con orbs flotantes (sin canvas pesado) */
+          <div style={{
+            position: "absolute", inset: 0,
+            background: [
+              "radial-gradient(ellipse 90% 55% at 12% 8%,  rgba(192, 132, 252, 0.60) 0%, transparent 52%)",
+              "radial-gradient(ellipse 75% 50% at 88% 12%, rgba(244, 114, 182, 0.50) 0%, transparent 50%)",
+              "radial-gradient(ellipse 65% 45% at 50% 50%, rgba(99,  102, 241, 0.25) 0%, transparent 55%)",
+              "radial-gradient(ellipse 80% 60% at 20% 82%, rgba(216, 180, 254, 0.60) 0%, transparent 55%)",
+              "radial-gradient(ellipse 65% 45% at 82% 85%, rgba(244, 114, 182, 0.40) 0%, transparent 50%)",
+              "linear-gradient(160deg, #EDE9FE 0%, #FAF5FF 35%, #FDF4FF 60%, #EFF6FF 100%)"
+            ].join(", "),
+            animation: "lightAuroraFloat 8s ease-in-out infinite alternate"
+          }} />
+        ) : (
+          /* Modo oscuro: GradientWaves Canvas animado */
+          <GradientWaves
+            horizonColor="#240a5e"
+            waveColor="#ff9ffc"
+            crestColor="#ffffff"
+            backgroundColor="#080711"
+            amplitude={2.5}
+            swell={35}
+            lightAngle={120}
+            speed={0.4}
+            grain={0.15}
+            parallaxStrength={0.4}
+            mouseStrength={0.5}
+            swellOnClick={true}
+          />
+        )}
       </div>
 
       <div className="login-container" style={{ position: "relative", zIndex: 1 }}>

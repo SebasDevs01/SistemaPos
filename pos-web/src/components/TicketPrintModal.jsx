@@ -108,143 +108,136 @@ ${ticketHTML}
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose} style={{ zIndex: 1250 }}>
+    <div className="modal-overlay" onClick={onClose} style={{ zIndex: 1250, padding: "16px" }}>
       <div
-        className="modal-content modal-card"
-        style={{
-          maxWidth: "440px",
-          width: "94%",
-          padding: "20px",
-          background: "var(--bg-secondary, #111827)",
-          border: "1px solid var(--border-strong)",
-          borderRadius: "20px",
-          boxShadow: "0 25px 65px -10px rgba(0,0,0,0.85)"
-        }}
+        className="modal-content modal-card ticket-modal-card"
         onClick={(e) => e.stopPropagation()}
       >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
-          <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-main)" }}>
-            Vista Previa de Factura Térmica
-          </h3>
-          <button onClick={onClose} className="btn btn-outline" style={{ padding: "4px 8px" }}>
+        {/* Cabecera Liquid Glass */}
+        <div className="ticket-modal-header">
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <div className="ticket-icon-box">
+              <Printer size={22} />
+            </div>
+            <div>
+              <h3 style={{ fontSize: "1.12rem", fontWeight: 800, color: "var(--text-main)", margin: 0 }}>
+                Factura de Venta POS
+              </h3>
+              <span style={{ fontSize: "0.76rem", color: "var(--text-muted)" }}>
+                Ticket #{sale.id} · {sale.cliente?.nombre || "Cliente Mostrador"}
+              </span>
+            </div>
+          </div>
+          <button onClick={onClose} className="btn-modal-close-circle" title="Cerrar modal" disabled={isGeneratingPDF}>
             <X size={16} />
           </button>
         </div>
 
-        {/* TICKET IMPRIMIBLE EN ALTA NITIDEZ */}
-        <div 
-          id="printable-ticket"
-          style={{
-            background: "#ffffff",
-            color: "#000000",
-            padding: "16px",
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
-            fontSize: "12px",
-            fontWeight: 600,
-            lineHeight: "1.35",
-            borderRadius: "6px",
-            border: "1.5px solid #000000",
-            boxShadow: "0 4px 15px rgba(0,0,0,0.2)"
-          }}
-        >
-          {/* Encabezado */}
-          <div style={{ textAlign: "center", marginBottom: "8px" }}>
-            <div style={{ fontSize: "15px", fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.3px" }}>
-              {storeName}
-            </div>
-            <div>NIT: {storeNit}</div>
-            <div>${storeDir}${storeBarrio}</div>
-            {storeCity && <div>${storeCity}</div>}
-            <div>Tel: {storeTel}${storeWA}</div>
-            <div style={{ borderTop: "1.5px dashed #000000", margin: "6px 0" }}></div>
-            <div style={{ fontWeight: 800, fontSize: "12px" }}>FACTURA DE VENTA</div>
-            <div style={{ borderTop: "1.5px dashed #000000", margin: "6px 0" }}></div>
-          </div>
-
-          {/* Información del Ticket */}
-          <div style={{ marginBottom: "8px", fontSize: "11px" }}>
-            <div><strong>Ticket:</strong> #{sale.id}</div>
-            <div><strong>Fecha:</strong> {new Date(sale.fecha || Date.now()).toLocaleString("es-CO")}</div>
-            <div><strong>Cliente:</strong> {sale.cliente?.nombre || "Mostrador"} ({sale.cliente?.dni || "0"})</div>
-            <div><strong>Cajero:</strong> {sale.vendedor || "Caja Principal"}</div>
-            <div style={{ borderTop: "1.5px dashed #000000", margin: "6px 0" }}></div>
-          </div>
-
-          {/* Lista de Productos */}
-          <div style={{ marginBottom: "8px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 800, marginBottom: "4px" }}>
-              <span>CANT  DESCRIPCIÓN</span>
-              <span>TOTAL</span>
-            </div>
-            <div style={{ borderTop: "1px dashed #000000", marginBottom: "6px" }}></div>
-            {(sale.items || []).map((item, idx) => (
-              <div key={idx} style={{ marginBottom: "4px" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 700 }}>
-                  <span>
-                    {item.cantidad}x {item.nombre}
-                    {item.presentacion === "paquete" ? " (PAQ)" : ""}
-                    {item.talla ? ` [T:${item.talla}]` : ""}
-                  </span>
-                  <span>${Number(item.subtotal || 0).toLocaleString("es-CO")}</span>
-                </div>
-                <div style={{ fontSize: "10px", color: "#000000", fontWeight: 600 }}>
-                  (${Number(item.precioUnitario || 0).toLocaleString("es-CO")} c/u)
-                </div>
+        {/* VIEWPORT CON SCROLL DEDICADO DEL TICKET */}
+        <div className="ticket-scroll-viewport">
+          <div 
+            id="printable-ticket"
+            className="ticket-thermal-paper"
+          >
+            {/* Encabezado */}
+            <div style={{ textAlign: "center", marginBottom: "8px" }}>
+              <div style={{ fontSize: "14px", fontWeight: 900, textTransform: "uppercase", letterSpacing: "0.3px" }}>
+                {storeName}
               </div>
-            ))}
-            <div style={{ borderTop: "1.5px dashed #000000", margin: "6px 0" }}></div>
-          </div>
-
-          {/* Totales y Pagos */}
-          <div style={{ marginBottom: "8px" }}>
-            <div style={{
-              display: "flex",
-              justifyContent: "space-between",
-              fontSize: "14px",
-              fontWeight: 900,
-              border: "1.5px solid #000000",
-              padding: "6px 8px",
-              borderRadius: "4px",
-              margin: "6px 0"
-            }}>
-              <span>TOTAL A PAGAR:</span>
-              <span>${Number(sale.total || 0).toLocaleString("es-CO")} COP</span>
+              <div>NIT: {storeNit}</div>
+              <div>{storeDir}{storeBarrio}</div>
+              {storeCity && <div>{storeCity}</div>}
+              <div>Tel: {storeTel}{storeWA}</div>
+              <div style={{ borderTop: "1.5px dashed #000000", margin: "6px 0" }}></div>
+              <div style={{ fontWeight: 800, fontSize: "12px" }}>FACTURA DE VENTA</div>
+              <div style={{ borderTop: "1.5px dashed #000000", margin: "6px 0" }}></div>
             </div>
-            <div style={{ display: "flex", justifyContent: "space-between", marginTop: "4px" }}>
-              <span>Método de Pago:</span>
-              <strong style={{ fontWeight: 800 }}>{sale.metodoPago || "Efectivo"}</strong>
-            </div>
-            {sale.metodoPago === "Efectivo" && Number(sale.efectivoRecibido || 0) > 0 && (
-              <>
-                <div style={{ display: "flex", justifyContent: "space-between", marginTop: "2px" }}>
-                  <span>Efectivo Recibido:</span>
-                  <span>${Number(sale.efectivoRecibido).toLocaleString("es-CO")}</span>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 800, fontSize: "12px", marginTop: "2px" }}>
-                  <span>Cambio / Vueltos:</span>
-                  <span>${Number(sale.cambio || 0).toLocaleString("es-CO")} COP</span>
-                </div>
-              </>
-            )}
-            <div style={{ borderTop: "1.5px dashed #000000", margin: "6px 0" }}></div>
-          </div>
 
-          {/* Pie de ticket */}
-          <div style={{ textAlign: "center", fontSize: "10.5px", fontWeight: 600 }}>
-            <div>{storeMsg}</div>
-            <div style={{ marginTop: "4px", fontSize: "9.5px", fontWeight: 700 }}>Software POS Web 2.0</div>
+            {/* Información del Ticket */}
+            <div style={{ marginBottom: "8px", fontSize: "11px" }}>
+              <div><strong>Ticket:</strong> #{sale.id}</div>
+              <div><strong>Fecha:</strong> {new Date(sale.fecha || Date.now()).toLocaleString("es-CO")}</div>
+              <div><strong>Cliente:</strong> {sale.cliente?.nombre || "Mostrador"} ({sale.cliente?.dni || "0"})</div>
+              <div><strong>Cajero:</strong> {sale.vendedor || "Caja Principal"}</div>
+              <div style={{ borderTop: "1.5px dashed #000000", margin: "6px 0" }}></div>
+            </div>
+
+            {/* Lista de Productos */}
+            <div style={{ marginBottom: "8px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 800, marginBottom: "4px" }}>
+                <span>CANT  DESCRIPCIÓN</span>
+                <span>TOTAL</span>
+              </div>
+              <div style={{ borderTop: "1px dashed #000000", marginBottom: "6px" }}></div>
+              {(sale.items || []).map((item, idx) => (
+                <div key={idx} style={{ marginBottom: "4px" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 700 }}>
+                    <span>
+                      {item.cantidad}x {item.nombre}
+                      {item.presentacion === "paquete" ? " (PAQ)" : ""}
+                      {item.talla ? ` [T:${item.talla}]` : ""}
+                    </span>
+                    <span>${Number(item.subtotal || 0).toLocaleString("es-CO")}</span>
+                  </div>
+                  <div style={{ fontSize: "10px", color: "#000000", fontWeight: 600 }}>
+                    (${Number(item.precioUnitario || 0).toLocaleString("es-CO")} c/u)
+                  </div>
+                </div>
+              ))}
+              <div style={{ borderTop: "1.5px dashed #000000", margin: "6px 0" }}></div>
+            </div>
+
+            {/* Totales y Pagos */}
+            <div style={{ marginBottom: "8px" }}>
+              <div style={{
+                display: "flex",
+                justifyContent: "space-between",
+                fontSize: "13px",
+                fontWeight: 900,
+                border: "1.5px solid #000000",
+                padding: "6px 8px",
+                borderRadius: "4px",
+                margin: "6px 0"
+              }}>
+                <span>TOTAL A PAGAR:</span>
+                <span>${Number(sale.total || 0).toLocaleString("es-CO")} COP</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", marginTop: "4px" }}>
+                <span>Método de Pago:</span>
+                <strong style={{ fontWeight: 800 }}>{sale.metodoPago || "Efectivo"}</strong>
+              </div>
+              {sale.metodoPago === "Efectivo" && Number(sale.efectivoRecibido || 0) > 0 && (
+                <>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginTop: "2px" }}>
+                    <span>Efectivo Recibido:</span>
+                    <span>${Number(sale.efectivoRecibido).toLocaleString("es-CO")}</span>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 800, fontSize: "12px", marginTop: "2px" }}>
+                    <span>Cambio / Vueltos:</span>
+                    <span>${Number(sale.cambio || 0).toLocaleString("es-CO")} COP</span>
+                  </div>
+                </>
+              )}
+              <div style={{ borderTop: "1.5px dashed #000000", margin: "6px 0" }}></div>
+            </div>
+
+            {/* Pie de ticket */}
+            <div style={{ textAlign: "center", fontSize: "10.5px", fontWeight: 600 }}>
+              <div>{storeMsg}</div>
+              <div style={{ marginTop: "4px", fontSize: "9.5px", fontWeight: 700 }}>Software POS Web 2.0</div>
+            </div>
           </div>
         </div>
 
-        {/* Acciones */}
-        <div style={{ display: "flex", gap: "8px", marginTop: "16px", flexWrap: "wrap" }}>
-          <button onClick={onClose} className="btn btn-outline" style={{ flex: "1 1 80px", padding: "10px" }} disabled={isGeneratingPDF}>
+        {/* Acciones Flotantes Liquid Glass */}
+        <div className="ticket-modal-footer">
+          <button onClick={onClose} className="btn btn-modal-cancel" style={{ flex: "1 1 70px", padding: "10px 14px", borderRadius: "12px" }} disabled={isGeneratingPDF}>
             Cerrar
           </button>
           <button
             onClick={handleDownloadPDF}
             className="btn btn-outline"
-            style={{ flex: "1 1 120px", padding: "10px", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}
+            style={{ flex: "1 1 110px", padding: "10px 14px", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", borderRadius: "12px" }}
             title="Descargar factura en PDF"
             disabled={isGeneratingPDF}
           >
@@ -255,7 +248,19 @@ ${ticketHTML}
             <button
               onClick={handleWhatsApp}
               className="btn btn-whatsapp"
-              style={{ flex: "1.5 1 140px", padding: "10px", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}
+              style={{
+                flex: "1.2 1 130px",
+                padding: "10px 14px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "6px",
+                borderRadius: "12px",
+                background: "#25D366",
+                color: "#ffffff",
+                border: "none",
+                fontWeight: 700
+              }}
               title="Enviar factura en PDF por WhatsApp al cliente"
               disabled={isGeneratingPDF}
             >
@@ -267,14 +272,15 @@ ${ticketHTML}
             onClick={handlePrint}
             className="btn btn-primary"
             style={{
-              flex: "2 1 160px",
-              padding: "10px",
-              fontSize: "0.95rem",
-              fontWeight: 700,
+              flex: "1.8 1 150px",
+              padding: "10px 16px",
+              fontSize: "0.92rem",
+              fontWeight: 800,
               display: "inline-flex",
               alignItems: "center",
               justifyContent: "center",
-              gap: "6px"
+              gap: "6px",
+              borderRadius: "12px"
             }}
             disabled={isGeneratingPDF}
           >

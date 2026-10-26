@@ -259,251 +259,256 @@ export default function ClosingTicketModal({ closing, onClose, storeConfig = {} 
   return (
     <div className="modal-overlay" onClick={onClose} style={{ zIndex: 1200, padding: "16px" }}>
       <div
-        className="modal-content modal-card closing-ticket-modal-card"
-        style={{
-          maxWidth: "490px",
-          width: "100%",
-          maxHeight: "92vh",
-          overflowY: "auto",
-          overscrollBehavior: "contain",
-          padding: "20px",
-          borderRadius: "24px",
-          display: "flex",
-          flexDirection: "column",
-          position: "relative"
-        }}
+        className="modal-content modal-card ticket-modal-card"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Cabecera Sticky */}
-        <div style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "14px",
-          position: "sticky",
-          top: "-20px",
-          paddingTop: "4px",
-          paddingBottom: "10px",
-          background: "inherit",
-          backdropFilter: "blur(20px)",
-          WebkitBackdropFilter: "blur(20px)",
-          zIndex: 10,
-          borderBottom: "1px solid var(--border-color)"
-        }}>
-          <div>
-            <h3 style={{ fontSize: "1.1rem", fontWeight: 800, color: "var(--text-main)", margin: 0 }}>
-              Ticket Oficial de Cierre de Caja
-            </h3>
-            <span style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
-              {closing.id || "Cierre de Turno"}
-            </span>
+        {/* Cabecera Liquid Glass */}
+        <div className="ticket-modal-header">
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <div className="ticket-icon-box">
+              <Printer size={22} />
+            </div>
+            <div>
+              <h3 style={{ fontSize: "1.12rem", fontWeight: 800, color: "var(--text-main)", margin: 0 }}>
+                Ticket Oficial de Cierre de Caja
+              </h3>
+              <span style={{ fontSize: "0.76rem", color: "var(--text-muted)" }}>
+                {closing.id || "Cierre de Turno"} · {closing.horarioOficial || "Arqueo de Jornada"}
+              </span>
+            </div>
           </div>
-          <button onClick={onClose} className="btn btn-outline" style={{ padding: "6px 8px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }} title="Cerrar modal">
+          <button onClick={onClose} className="btn-modal-close-circle" title="Cerrar modal">
             <X size={16} />
           </button>
         </div>
 
-        {/* CONTENEDOR DEL TICKET (Estilo papel térmico) */}
-        <div
-          id="printable-closing-ticket"
-          style={{
-            background: "#ffffff",
-            color: "#000000",
-            padding: "16px",
-            fontFamily: "'Courier New', Courier, monospace",
-            fontSize: "11px",
-            lineHeight: "1.3",
-            borderRadius: "6px",
-            border: "1px dashed #cccccc",
-            boxShadow: "0 4px 15px rgba(0,0,0,0.05)"
-          }}
-        >
-          {/* Encabezado */}
-          <div style={{ textAlign: "center", marginBottom: "8px" }}>
-            <div style={{ fontSize: "14px", fontWeight: "bold", textTransform: "uppercase" }}>
-              {storeConfig?.nombre || "Miscelánea María José"}
+        {/* CONTENEDOR CON SCROLL DEDICADO DEL TICKET (Estilo papel térmico ultra nítido) */}
+        <div className="ticket-scroll-viewport">
+          <div
+            id="printable-closing-ticket"
+            className="ticket-thermal-paper"
+          >
+            {/* Encabezado */}
+            <div style={{ textAlign: "center", marginBottom: "8px" }}>
+              <div style={{ fontSize: "14px", fontWeight: "bold", textTransform: "uppercase" }}>
+                {storeConfig?.nombre || "Miscelánea María José"}
+              </div>
+              <div>NIT: {storeConfig?.nit || "151515"}</div>
+              <div>{storeConfig?.direccion || "Calle 59# 39 w24"}{storeConfig?.barrio ? ` - B/ ${storeConfig.barrio}` : ""}</div>
+              <div>Tel: {storeConfig?.telefono || "3171166497"}{storeConfig?.celularWhatsApp ? ` · Cel: ${storeConfig.celularWhatsApp}` : ""}</div>
+              <div style={{ margin: "6px 0", borderTop: "1px dashed #999" }}></div>
+              <div style={{ fontSize: "13px", fontWeight: "bold" }}>*** CIERRE DE CAJA ***</div>
+              <div style={{ fontSize: "10px" }}>Comprobante de Arqueo de Jornada</div>
             </div>
-            <div>NIT: {storeConfig?.nit || "151515"}</div>
-            <div>{storeConfig?.direccion || "Calle 59# 39 w24"}{storeConfig?.barrio ? ` - B/ ${storeConfig.barrio}` : ""}</div>
-            <div>Tel: {storeConfig?.telefono || "3171166497"}{storeConfig?.celularWhatsApp ? ` · Cel: ${storeConfig.celularWhatsApp}` : ""}</div>
+
             <div style={{ margin: "6px 0", borderTop: "1px dashed #999" }}></div>
-            <div style={{ fontSize: "13px", fontWeight: "bold" }}>*** CIERRE DE CAJA ***</div>
-            <div style={{ fontSize: "10px" }}>Comprobante de Arqueo de Jornada</div>
-          </div>
 
-          <div style={{ margin: "6px 0", borderTop: "1px dashed #999" }}></div>
-
-          {/* Metadatos */}
-          <div style={{ fontSize: "10.5px", marginBottom: "8px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>ID Cierre:</span>
-              <strong>{closing.id || "CIERRE"}</strong>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>Apertura:</span>
-              <span>{fechaAperturaStr}</span>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>Cierre:</span>
-              <span>{fechaCierreStr}</span>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>Cajero Apertura:</span>
-              <span>{closing.cajeroApertura || "Cajero"}</span>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>Cajero Cierre:</span>
-              <span>{closing.cajeroCierre || closing.cajeroApertura || "Cajero"}</span>
-            </div>
-          </div>
-
-          <div style={{ margin: "6px 0", borderTop: "1px solid #000", borderBottom: "1px solid #000", padding: "2px 0", textAlign: "center", fontWeight: "bold" }}>
-            BALANCE DE CAJA Y ARQUEO
-          </div>
-
-          <div style={{ margin: "6px 0 8px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>(+) Base Inicial:</span>
-              <strong>{formatCOP(closing.baseInicial || 0)}</strong>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>(+) Ventas Efectivo:</span>
-              <strong>{formatCOP(closing.ventasEfectivo || 0)}</strong>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>(+) Entradas Extras:</span>
-              <strong>+{formatCOP(closing.entradasEfectivo || 0)}</strong>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>(-) Salidas / Gastos:</span>
-              <strong>-{formatCOP(closing.salidasEfectivo || 0)}</strong>
-            </div>
-            <div style={{ margin: "4px 0", borderTop: "1px dashed #aaa" }}></div>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", fontWeight: "bold" }}>
-              <span>EFECTIVO ESPERADO:</span>
-              <span>{formatCOP(closing.efectivoTeorico || 0)}</span>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", fontWeight: "bold" }}>
-              <span>EFECTIVO CONTADO:</span>
-              <span>{formatCOP(closing.efectivoFisicoContado || 0)}</span>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: diff === 0 ? "#059669" : diff > 0 ? "#2563eb" : "#dc2626" }}>
-              <span>DESCUADRE / DIF:</span>
-              <span>
-                {diff === 0 ? "CUADRADA ($0)" : `${diff > 0 ? "SOBRANTE +" : "FALTANTE -"}${formatCOP(Math.abs(diff))}`}
-              </span>
-            </div>
-          </div>
-
-          <div style={{ margin: "6px 0", borderTop: "1px solid #000", borderBottom: "1px solid #000", padding: "2px 0", textAlign: "center", fontWeight: "bold" }}>
-            TOTALES POR MÉTODO DE PAGO
-          </div>
-          <div style={{ margin: "6px 0 8px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>Efectivo ({closing.totalTransacciones || 0} vtas):</span>
-              <span>{formatCOP(closing.ventasEfectivo || 0)}</span>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>Nequi / Transferencia:</span>
-              <span>{formatCOP(closing.ventasTransferencia || 0)}</span>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <span>Tarjeta:</span>
-              <span>{formatCOP(closing.ventasTarjeta || 0)}</span>
-            </div>
-            <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", borderTop: "1px dashed #aaa", paddingTop: "3px", marginTop: "3px" }}>
-              <span>TOTAL VENTAS:</span>
-              <span>{formatCOP(closing.totalVentas || 0)}</span>
-            </div>
-          </div>
-
-          {/* TABLA DE PRODUCTOS VENDIDOS */}
-          <div style={{ margin: "6px 0", borderTop: "1px solid #000", borderBottom: "1px solid #000", padding: "2px 0", textAlign: "center", fontWeight: "bold" }}>
-            DETALLE DE PRODUCTOS VENDIDOS
-          </div>
-
-          {productos.length > 0 ? (
-            <div style={{ margin: "6px 0" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", borderBottom: "1px dashed #666", paddingBottom: "2px" }}>
-                <span style={{ width: "45%" }}>PRODUCTO</span>
-                <span style={{ width: "15%", textAlign: "center" }}>CANT</span>
-                <span style={{ width: "20%", textAlign: "right" }}>P.U.</span>
-                <span style={{ width: "20%", textAlign: "right" }}>TOTAL</span>
+            {/* Metadatos */}
+            <div style={{ fontSize: "10.5px", marginBottom: "8px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span>ID Cierre:</span>
+                <strong>{closing.id || "CIERRE"}</strong>
               </div>
-              {productos.map((p, idx) => (
-                <div key={idx} style={{ display: "flex", justifyContent: "space-between", padding: "2px 0", borderBottom: "1px dotted #eee" }}>
-                  <span style={{ width: "45%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {p.nombre}
-                  </span>
-                  <span style={{ width: "15%", textAlign: "center" }}>{p.cantidad}</span>
-                  <span style={{ width: "20%", textAlign: "right" }}>{formatCOP(p.precioUnitario)}</span>
-                  <span style={{ width: "20%", textAlign: "right" }}>{formatCOP(p.subtotal)}</span>
-                </div>
-              ))}
-              <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", marginTop: "4px", paddingTop: "3px", borderTop: "1px dashed #aaa" }}>
-                <span>Total Unidades:</span>
-                <span>{closing.totalUnidadesVendidas || productos.reduce((a, b) => a + (b.cantidad || 0), 0)} unds</span>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span>Apertura:</span>
+                <span>{fechaAperturaStr}</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span>Cierre:</span>
+                <span>{fechaCierreStr}</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span>Cajero Apertura:</span>
+                <span>{closing.cajeroApertura || "Cajero"}</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span>Cajero Cierre:</span>
+                <span>{closing.cajeroCierre || closing.cajeroApertura || "Cajero"}</span>
               </div>
             </div>
-          ) : (
-            <div style={{ textAlign: "center", padding: "8px 0", fontStyle: "italic", fontSize: "10px" }}>
-              No se registraron productos en este turno.
-            </div>
-          )}
 
-          {/* Movimientos Extras */}
-          {(entradas.length > 0 || salidas.length > 0) && (
-            <div style={{ marginTop: "8px" }}>
-              <div style={{ margin: "6px 0", borderTop: "1px solid #000", borderBottom: "1px solid #000", padding: "2px 0", textAlign: "center", fontWeight: "bold" }}>
-                MOVIMIENTOS MANUALES
+            <div style={{ margin: "6px 0", borderTop: "1.5px solid #000", borderBottom: "1.5px solid #000", padding: "3px 0", textAlign: "center", fontWeight: "bold" }}>
+              BALANCE DE CAJA Y ARQUEO
+            </div>
+
+            <div style={{ margin: "6px 0 8px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span>(+) Base Inicial:</span>
+                <strong>{formatCOP(closing.baseInicial || 0)}</strong>
               </div>
-              {entradas.map((e, idx) => (
-                <div key={idx} style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span>(+) Ingreso: {e.motivo}</span>
-                  <span>+{formatCOP(e.monto || 0)}</span>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span>(+) Ventas Efectivo:</span>
+                <strong>{formatCOP(closing.ventasEfectivo || 0)}</strong>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span>(+) Entradas Extras:</span>
+                <strong>+{formatCOP(closing.entradasEfectivo || 0)}</strong>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span>(-) Salidas / Gastos:</span>
+                <strong>-{formatCOP(closing.salidasEfectivo || 0)}</strong>
+              </div>
+              <div style={{ margin: "4px 0", borderTop: "1px dashed #aaa" }}></div>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", fontWeight: "bold" }}>
+                <span>EFECTIVO ESPERADO:</span>
+                <span>{formatCOP(closing.efectivoTeorico || 0)}</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", fontWeight: "bold" }}>
+                <span>EFECTIVO CONTADO:</span>
+                <span>{formatCOP(closing.efectivoFisicoContado || 0)}</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", color: diff === 0 ? "#059669" : diff > 0 ? "#2563eb" : "#dc2626" }}>
+                <span>DESCUADRE / DIF:</span>
+                <span>
+                  {diff === 0 ? "CUADRADA ($0)" : `${diff > 0 ? "SOBRANTE +" : "FALTANTE -"}${formatCOP(Math.abs(diff))}`}
+                </span>
+              </div>
+            </div>
+
+            <div style={{ margin: "6px 0", borderTop: "1.5px solid #000", borderBottom: "1.5px solid #000", padding: "3px 0", textAlign: "center", fontWeight: "bold" }}>
+              TOTALES POR MÉTODO DE PAGO
+            </div>
+            <div style={{ margin: "6px 0 8px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span>Efectivo ({closing.totalTransacciones || 0} vtas):</span>
+                <span>{formatCOP(closing.ventasEfectivo || 0)}</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span>Nequi / Transferencia:</span>
+                <span>{formatCOP(closing.ventasTransferencia || 0)}</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <span>Tarjeta:</span>
+                <span>{formatCOP(closing.ventasTarjeta || 0)}</span>
+              </div>
+              <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", borderTop: "1px dashed #aaa", paddingTop: "3px", marginTop: "3px" }}>
+                <span>TOTAL VENTAS:</span>
+                <span>{formatCOP(closing.totalVentas || 0)}</span>
+              </div>
+            </div>
+
+            {/* TABLA DE PRODUCTOS VENDIDOS */}
+            <div style={{ margin: "6px 0", borderTop: "1.5px solid #000", borderBottom: "1.5px solid #000", padding: "3px 0", textAlign: "center", fontWeight: "bold" }}>
+              DETALLE DE PRODUCTOS VENDIDOS
+            </div>
+
+            {productos.length > 0 ? (
+              <div style={{ margin: "6px 0" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", borderBottom: "1px dashed #666", paddingBottom: "2px" }}>
+                  <span style={{ width: "45%" }}>PRODUCTO</span>
+                  <span style={{ width: "15%", textAlign: "center" }}>CANT</span>
+                  <span style={{ width: "20%", textAlign: "right" }}>P.U.</span>
+                  <span style={{ width: "20%", textAlign: "right" }}>TOTAL</span>
                 </div>
-              ))}
-              {salidas.map((s, idx) => (
-                <div key={idx} style={{ display: "flex", justifyContent: "space-between" }}>
-                  <span>(-) Gasto: {s.motivo}</span>
-                  <span>-{formatCOP(s.monto || 0)}</span>
+                {productos.map((p, idx) => (
+                  <div key={idx} style={{ display: "flex", justifyContent: "space-between", padding: "2px 0", borderBottom: "1px dotted #eee" }}>
+                    <span style={{ width: "45%", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                      {p.nombre}
+                    </span>
+                    <span style={{ width: "15%", textAlign: "center" }}>{p.cantidad}</span>
+                    <span style={{ width: "20%", textAlign: "right" }}>{formatCOP(p.precioUnitario)}</span>
+                    <span style={{ width: "20%", textAlign: "right" }}>{formatCOP(p.subtotal)}</span>
+                  </div>
+                ))}
+                <div style={{ display: "flex", justifyContent: "space-between", fontWeight: "bold", marginTop: "4px", paddingTop: "3px", borderTop: "1px dashed #aaa" }}>
+                  <span>Total Unidades:</span>
+                  <span>{closing.totalUnidadesVendidas || productos.reduce((a, b) => a + (b.cantidad || 0), 0)} unds</span>
                 </div>
-              ))}
-            </div>
-          )}
+              </div>
+            ) : (
+              <div style={{ textAlign: "center", padding: "8px 0", fontStyle: "italic", fontSize: "10px" }}>
+                No se registraron productos en este turno.
+              </div>
+            )}
 
-          {/* Notas */}
-          {closing.notasCierre && (
-            <div style={{ marginTop: "8px", borderTop: "1px dashed #aaa", paddingTop: "4px" }}>
-              <strong>Notas:</strong> {closing.notasCierre}
-            </div>
-          )}
+            {/* Movimientos Extras */}
+            {(entradas.length > 0 || salidas.length > 0) && (
+              <div style={{ marginTop: "8px" }}>
+                <div style={{ margin: "6px 0", borderTop: "1.5px solid #000", borderBottom: "1.5px solid #000", padding: "3px 0", textAlign: "center", fontWeight: "bold" }}>
+                  MOVIMIENTOS MANUALES
+                </div>
+                {entradas.map((e, idx) => (
+                  <div key={idx} style={{ display: "flex", justifyContent: "space-between" }}>
+                    <span>(+) Ingreso: {e.motivo}</span>
+                    <span>+{formatCOP(e.monto || 0)}</span>
+                  </div>
+                ))}
+                {salidas.map((s, idx) => (
+                  <div key={idx} style={{ display: "flex", justifyContent: "space-between" }}>
+                    <span>(-) Gasto: {s.motivo}</span>
+                    <span>-{formatCOP(s.monto || 0)}</span>
+                  </div>
+                ))}
+              </div>
+            )}
 
-          {/* Firmas */}
-          <div style={{ display: "flex", justifyContent: "space-between", marginTop: "30px", fontSize: "9.5px", textAlign: "center" }}>
-            <div style={{ width: "45%", borderTop: "1px solid #000", paddingTop: "4px" }}>
-              Entrega Turno<br />
-              <strong>{closing.cajeroApertura || "Cajero"}</strong>
-            </div>
-            <div style={{ width: "45%", borderTop: "1px solid #000", paddingTop: "4px" }}>
-              Recibe / Revisa<br />
-              <strong>{closing.cajeroCierre || "Administrador"}</strong>
-            </div>
-          </div>
+            {/* Notas */}
+            {closing.notasCierre && (
+              <div style={{ marginTop: "8px", borderTop: "1px dashed #aaa", paddingTop: "4px" }}>
+                <strong>Notas:</strong> {closing.notasCierre}
+              </div>
+            )}
 
-          <div style={{ textAlign: "center", fontSize: "9px", marginTop: "12px", color: "#666" }}>
-            Software POS Miscelánea · Ticket Oficial de Cierre
+            {/* Firmas */}
+            <div style={{ display: "flex", justifyContent: "space-between", marginTop: "30px", fontSize: "9.5px", textAlign: "center" }}>
+              <div style={{ width: "45%", borderTop: "1px solid #000", paddingTop: "4px" }}>
+                Entrega Turno<br />
+                <strong>{closing.cajeroApertura || "Cajero"}</strong>
+              </div>
+              <div style={{ width: "45%", borderTop: "1px solid #000", paddingTop: "4px" }}>
+                Recibe / Revisa<br />
+                <strong>{closing.cajeroCierre || "Administrador"}</strong>
+              </div>
+            </div>
+
+            <div style={{ textAlign: "center", fontSize: "9px", marginTop: "12px", color: "#666" }}>
+              Software POS Miscelánea · Ticket Oficial de Cierre
+            </div>
           </div>
         </div>
 
-        {/* Acciones */}
-        <div style={{ display: "flex", gap: "10px", marginTop: "16px" }}>
-          <button onClick={onClose} className="btn btn-outline" style={{ flex: 1, padding: "10px" }}>
+        {/* Acciones Flotantes Liquid Glass */}
+        <div className="ticket-modal-footer">
+          <button onClick={onClose} className="btn btn-modal-cancel" style={{ flex: "1 1 80px", padding: "10px 14px", borderRadius: "12px" }}>
             Cerrar
           </button>
-          <button onClick={handlePrint} className="btn btn-primary" style={{ flex: 2, padding: "10px", display: "flex", alignItems: "center", justifyContent: "center", gap: "8px" }}>
+          <button
+            onClick={() => downloadClosingAndWhatsApp(closing, storeConfig)}
+            className="btn btn-whatsapp"
+            style={{
+              flex: "1.5 1 150px",
+              padding: "10px 14px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "6px",
+              borderRadius: "12px",
+              background: "#25D366",
+              color: "#ffffff",
+              border: "none",
+              fontWeight: 700
+            }}
+            title="Compartir resumen y descargar PDF para WhatsApp"
+          >
+            <Share2 size={16} />
+            <span>WhatsApp (PDF)</span>
+          </button>
+          <button
+            onClick={handlePrint}
+            className="btn btn-primary"
+            style={{
+              flex: "2 1 170px",
+              padding: "10px 16px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
+              borderRadius: "12px",
+              fontWeight: 800
+            }}
+          >
             <Printer size={18} />
-            <span>Imprimir Ticket (Térmica / PDF)</span>
+            <span>Imprimir Ticket</span>
           </button>
         </div>
       </div>

@@ -932,39 +932,54 @@ export default function InsurancesView({
 
       {/* ── MODAL: REGISTRAR / EDITAR SEGURO ── */}
       {isNewModalOpen && (
-        <div className="modal-overlay" onClick={() => setIsNewModalOpen(false)} style={{ zIndex: 1200 }}>
+        <div className="modal-overlay" onClick={() => setIsNewModalOpen(false)} style={{ zIndex: 1200, padding: "16px" }}>
           <div 
             className="modal-card" 
             onClick={(e) => e.stopPropagation()} 
             style={{ 
               maxWidth: "520px", 
-              width: "92%", 
-              background: "var(--bg-secondary, #111827)",
-              borderRadius: "20px",
-              border: "1px solid var(--border-color)",
+              width: "94%", 
+              borderRadius: "24px",
               overflow: "hidden"
             }}
           >
-            {/* Header */}
+            {/* Header Liquid Glass */}
             <div style={{ 
               padding: "16px 20px", 
               borderBottom: "1px solid var(--border-color)", 
               display: "flex", 
               justifyContent: "space-between", 
               alignItems: "center",
-              background: "var(--bg-tertiary)"
+              background: "transparent"
             }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <span style={{ fontSize: "1.3rem" }}>🛡️</span>
-                <h3 style={{ margin: 0, fontSize: "1.1rem", fontWeight: 800, color: "var(--text-main)" }}>
-                  {editingInsurance ? "Editar Seguro Escolar" : "Registrar Seguro Escolar"}
-                </h3>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <div style={{
+                  width: "44px",
+                  height: "44px",
+                  borderRadius: "12px",
+                  background: "rgba(13, 148, 136, 0.16)",
+                  border: "1px solid rgba(13, 148, 136, 0.3)",
+                  color: "#2dd4bf",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>
+                  <ShieldCheck size={24} />
+                </div>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: "1.18rem", fontWeight: 800, color: "var(--text-main)" }}>
+                    {editingInsurance ? "Editar Seguro Escolar" : "Registrar Seguro Escolar"}
+                  </h3>
+                  <span style={{ fontSize: "0.76rem", color: "var(--text-muted)" }}>
+                    Póliza estudiantil para cobertura médica y accidentes
+                  </span>
+                </div>
               </div>
               <button 
                 type="button" 
                 onClick={() => setIsNewModalOpen(false)} 
-                className="btn btn-outline" 
-                style={{ padding: "4px 8px" }}
+                className="btn-modal-close-circle"
+                title="Cerrar modal"
               >
                 <X size={16} />
               </button>
@@ -1158,21 +1173,25 @@ export default function InsurancesView({
                 </div>
               </div>
 
-              {/* Botones */}
-              <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px", marginTop: "20px" }}>
+              {/* Botones Liquid Glass */}
+              <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px", marginTop: "22px" }}>
                 <button
                   type="button"
                   onClick={() => setIsNewModalOpen(false)}
-                  className="btn btn-outline"
+                  className="btn btn-modal-cancel"
+                  style={{ padding: "10px 20px", borderRadius: "12px" }}
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="btn btn-primary"
+                  className="btn btn-primary btn-primary-action"
                   style={{
                     background: "linear-gradient(135deg, #0d9488 0%, #0f766e 100%)",
-                    fontWeight: 800
+                    fontWeight: 800,
+                    padding: "10px 24px",
+                    borderRadius: "12px",
+                    boxShadow: "0 4px 16px rgba(13, 148, 136, 0.4)"
                   }}
                 >
                   {editingInsurance ? "Guardar Cambios" : "Guardar Seguro 🛡️"}

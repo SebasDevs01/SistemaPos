@@ -556,7 +556,7 @@ export default function InventoryView({
         </div>
 
         {/* Categorías */}
-        <div style={{ display: "flex", gap: "8px", overflowX: "auto", paddingBottom: "4px" }}>
+        <div style={{ display: "flex", gap: "8px", overflowX: "auto", paddingTop: "6px", paddingBottom: "6px", paddingLeft: "4px", paddingRight: "4px" }}>
           {categories.map(cat => {
             const isSinStock = cat.includes("Sin Stock");
             const isBajoStock = cat.includes("Bajo Stock");
@@ -1103,21 +1103,19 @@ export default function InventoryView({
               width: "94%",
               maxHeight: "88vh",
               overflowY: "auto",
-              background: "var(--bg-secondary, #111827)",
-              border: "1px solid var(--border-strong)",
-              borderRadius: "18px",
-              padding: "24px",
-              boxShadow: "0 25px 70px rgba(0,0,0,0.85)"
+              borderRadius: "24px",
+              padding: "24px"
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "16px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "18px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
                 <div style={{
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "10px",
-                  background: "rgba(245, 158, 11, 0.15)",
+                  width: "44px",
+                  height: "44px",
+                  borderRadius: "12px",
+                  background: "rgba(245, 158, 11, 0.16)",
+                  border: "1px solid rgba(245, 158, 11, 0.3)",
                   color: "#fbbf24",
                   display: "flex",
                   alignItems: "center",
@@ -1134,17 +1132,17 @@ export default function InventoryView({
                   </p>
                 </div>
               </div>
-              <button onClick={() => setIsSupplierModalOpen(false)} className="btn btn-outline" style={{ padding: "6px", borderRadius: "50%" }}>
+              <button onClick={() => setIsSupplierModalOpen(false)} className="btn-modal-close-circle" title="Cerrar modal">
                 <X size={16} />
               </button>
             </div>
 
             {/* Aviso y Botones de Copiar / WhatsApp */}
             <div style={{
-              background: "rgba(255, 255, 255, 0.02)",
+              background: "rgba(255, 255, 255, 0.04)",
               border: "1px solid var(--border-color)",
-              borderRadius: "12px",
-              padding: "12px 16px",
+              borderRadius: "14px",
+              padding: "14px 18px",
               marginBottom: "16px",
               display: "flex",
               justifyContent: "space-between",
@@ -1152,7 +1150,7 @@ export default function InventoryView({
               flexWrap: "wrap",
               gap: "10px"
             }}>
-              <span style={{ fontSize: "0.85rem", color: "var(--text-main)", fontWeight: 700 }}>
+              <span style={{ fontSize: "0.88rem", color: "var(--text-main)", fontWeight: 700 }}>
                 {lowStockProducts.length} artículos necesitan reposición
               </span>
               <div style={{ display: "flex", gap: "8px" }}>
@@ -1160,7 +1158,7 @@ export default function InventoryView({
                   type="button"
                   onClick={handleCopySupplierList}
                   className="btn btn-outline"
-                  style={{ padding: "6px 12px", fontSize: "0.8rem" }}
+                  style={{ padding: "8px 14px", fontSize: "0.82rem", borderRadius: "10px" }}
                 >
                   <Copy size={14} />
                   <span>{copiedNotice ? "¡Copiado!" : "Copiar Lista"}</span>
@@ -1168,8 +1166,8 @@ export default function InventoryView({
                 <button
                   type="button"
                   onClick={handleSendWhatsAppSupplierList}
-                  className="btn btn-primary"
-                  style={{ padding: "6px 14px", fontSize: "0.8rem", background: "#25D366", borderColor: "#25D366" }}
+                  className="btn btn-whatsapp"
+                  style={{ padding: "8px 16px", fontSize: "0.82rem", borderRadius: "10px", background: "#25D366", color: "#fff", border: "none", fontWeight: 700 }}
                 >
                   <Share2 size={14} />
                   <span>Enviar por WhatsApp</span>
@@ -1191,24 +1189,24 @@ export default function InventoryView({
                     <div
                       key={p.codigo}
                       style={{
-                        padding: "10px 14px",
-                        borderRadius: "10px",
-                        border: isZero ? "1px solid rgba(239, 68, 68, 0.3)" : "1px solid var(--border-color)",
-                        background: isZero ? "rgba(239, 68, 68, 0.05)" : "rgba(255,255,255,0.02)",
+                        padding: "12px 16px",
+                        borderRadius: "12px",
+                        border: isZero ? "1px solid rgba(239, 68, 68, 0.35)" : "1px solid var(--border-color)",
+                        background: isZero ? "rgba(239, 68, 68, 0.08)" : "rgba(255,255,255,0.03)",
                         display: "flex",
                         justifyContent: "space-between",
                         alignItems: "center"
                       }}
                     >
                       <div>
-                        <div style={{ fontWeight: 700, fontSize: "0.88rem", color: "var(--text-main)" }}>
+                        <div style={{ fontWeight: 700, fontSize: "0.9rem", color: "var(--text-main)" }}>
                           {p.nombre}
                         </div>
                         <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "2px" }}>
                           Cód: <span className="font-mono">{p.codigo}</span> · {p.categoria}
                         </div>
                       </div>
-                      <span className={`badge ${isZero ? "badge-red" : "badge-amber"}`} style={{ fontSize: "0.7rem", fontWeight: 800 }}>
+                      <span className={`badge ${isZero ? "badge-red" : "badge-amber"}`} style={{ fontSize: "0.74rem", fontWeight: 800 }}>
                         {isZero ? "AGOTADO (0)" : `${p.stock} unids`}
                       </span>
                     </div>
@@ -1229,18 +1227,25 @@ export default function InventoryView({
               width: "94%",
               maxHeight: "90vh",
               overflowY: "auto",
-              background: "var(--bg-secondary, #111827)",
-              border: "1px solid var(--border-strong)",
-              borderRadius: "18px",
-              padding: "24px",
-              boxShadow: "0 25px 70px rgba(0,0,0,0.85)"
+              borderRadius: "24px",
+              padding: "24px"
             }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "18px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                <div style={{ width: "40px", height: "40px", borderRadius: "10px", background: "rgba(239, 68, 68, 0.15)", color: "#f87171", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "18px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <div style={{
+                  width: "44px",
+                  height: "44px",
+                  borderRadius: "12px",
+                  background: "rgba(239, 68, 68, 0.16)",
+                  border: "1px solid rgba(239, 68, 68, 0.3)",
+                  color: "#f87171",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>
                   <TrendingDown size={22} />
                 </div>
                 <div>
@@ -1248,7 +1253,7 @@ export default function InventoryView({
                   <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", margin: "2px 0 0" }}>Roturas, vencidos, hurtos y errores de inventario</p>
                 </div>
               </div>
-              <button onClick={() => setIsMermasModalOpen(false)} className="btn btn-outline" style={{ padding: "6px", borderRadius: "50%" }}>
+              <button onClick={() => setIsMermasModalOpen(false)} className="btn-modal-close-circle" title="Cerrar modal">
                 <X size={16} />
               </button>
             </div>

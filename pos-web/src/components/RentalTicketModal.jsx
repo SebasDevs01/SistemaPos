@@ -144,48 +144,37 @@ ${ticketHTML}
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose} style={{ zIndex: 1250 }}>
+    <div className="modal-overlay" onClick={onClose} style={{ zIndex: 1250, padding: "16px" }}>
       <div
-        className="modal-content modal-card"
-        style={{
-          maxWidth: "460px",
-          width: "95%",
-          padding: "20px",
-          background: "var(--bg-secondary, #111827)",
-          border: "1px solid var(--border-strong)",
-          borderRadius: "20px",
-          boxShadow: "0 25px 65px -10px rgba(0,0,0,0.8)"
-        }}
+        className="modal-content modal-card ticket-modal-card"
         onClick={(e) => e.stopPropagation()}
       >
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <Armchair size={20} color="var(--accent-blue, #3b82f6)" />
-            <h3 style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--text-main)" }}>
-              {isApartado ? "Comprobante de Reserva / Apartado" : "Ticket de Alquiler"}
-            </h3>
+        {/* Cabecera Liquid Glass */}
+        <div className="ticket-modal-header">
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <div className="ticket-icon-box">
+              <Armchair size={22} />
+            </div>
+            <div>
+              <h3 style={{ fontSize: "1.12rem", fontWeight: 800, color: "var(--text-main)", margin: 0 }}>
+                {isApartado ? "Comprobante de Reserva / Apartado" : "Ticket de Alquiler"}
+              </h3>
+              <span style={{ fontSize: "0.76rem", color: "var(--text-muted)" }}>
+                Ticket #{rental.id} · {rental.clienteNombre || "Cliente"}
+              </span>
+            </div>
           </div>
-          <button onClick={onClose} className="btn btn-outline" style={{ padding: "4px 8px" }}>
+          <button onClick={onClose} className="btn-modal-close-circle" title="Cerrar modal" disabled={isGeneratingPDF}>
             <X size={16} />
           </button>
         </div>
 
-        {/* TICKET TÉRMICO IMPRIMIBLE */}
-        <div 
-          id="printable-ticket"
-          style={{
-            background: "#ffffff",
-            color: "#000000",
-            padding: "16px",
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
-            fontSize: "12px",
-            fontWeight: 600,
-            lineHeight: "1.35",
-            borderRadius: "6px",
-            border: "1.5px solid #000000",
-            boxShadow: "0 4px 15px rgba(0,0,0,0.2)"
-          }}
-        >
+        {/* VIEWPORT CON SCROLL DEDICADO DEL TICKET */}
+        <div className="ticket-scroll-viewport">
+          <div 
+            id="printable-ticket"
+            className="ticket-thermal-paper"
+          >
           {/* Encabezado */}
           <div style={{ textAlign: "center", marginBottom: "10px" }}>
             <div style={{ fontSize: "15px", fontWeight: "bold", textTransform: "uppercase" }}>
@@ -324,47 +313,68 @@ ${ticketHTML}
             </div>
           </div>
         </div>
+      </div>
 
-
-        {/* Acciones */}
-        <div style={{ display: "flex", gap: "8px", marginTop: "16px", flexWrap: "wrap" }}>
-          <button onClick={onClose} className="btn btn-outline" style={{ flex: "1 1 80px", padding: "10px" }} disabled={isGeneratingPDF}>
-            Cerrar
-          </button>
+      {/* Acciones Flotantes Liquid Glass */}
+      <div className="ticket-modal-footer">
+        <button onClick={onClose} className="btn btn-modal-cancel" style={{ flex: "1 1 70px", padding: "10px 14px", borderRadius: "12px" }} disabled={isGeneratingPDF}>
+          Cerrar
+        </button>
+        <button
+          onClick={handleDownloadPDF}
+          className="btn btn-outline"
+          style={{ flex: "1 1 110px", padding: "10px 14px", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px", borderRadius: "12px" }}
+          title="Descargar factura en PDF"
+          disabled={isGeneratingPDF}
+        >
+          {isGeneratingPDF ? <Loader2 size={16} className="animate-spin" /> : <FileDown size={16} />}
+          <span>Descargar PDF</span>
+        </button>
+        {rental.clienteTelefono && (
           <button
-            onClick={handleDownloadPDF}
-            className="btn btn-outline"
-            style={{ flex: "1 1 120px", padding: "10px", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}
-            title="Descargar factura en PDF"
+            onClick={handleWhatsApp}
+            className="btn btn-whatsapp"
+            style={{
+              flex: "1.2 1 130px",
+              padding: "10px 14px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "6px",
+              borderRadius: "12px",
+              background: "#25D366",
+              color: "#ffffff",
+              border: "none",
+              fontWeight: 700
+            }}
+            title="Enviar comprobante en PDF por WhatsApp al cliente"
             disabled={isGeneratingPDF}
           >
-            {isGeneratingPDF ? <Loader2 size={16} className="animate-spin" /> : <FileDown size={16} />}
-            <span>Descargar PDF</span>
+            {isGeneratingPDF ? <Loader2 size={16} className="animate-spin" /> : <MessageCircle size={16} />}
+            <span>{isGeneratingPDF ? "Generando..." : "WhatsApp (PDF)"}</span>
           </button>
-          {rental.clienteTelefono && (
-            <button
-              onClick={handleWhatsApp}
-              className="btn btn-whatsapp"
-              style={{ flex: "1.5 1 140px", padding: "10px", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}
-              title="Enviar comprobante en PDF por WhatsApp al cliente"
-              disabled={isGeneratingPDF}
-            >
-              {isGeneratingPDF ? <Loader2 size={16} className="animate-spin" /> : <MessageCircle size={16} />}
-              <span>{isGeneratingPDF ? "Generando..." : "WhatsApp (PDF)"}</span>
-            </button>
-          )}
-          <button
-            onClick={handlePrint}
-            className="btn btn-primary"
-            style={{ flex: "2 1 160px", padding: "10px", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}
-            disabled={isGeneratingPDF}
-          >
-            <Printer size={16} />
-            <span>Imprimir Ticket</span>
-          </button>
-        </div>
-
+        )}
+        <button
+          onClick={handlePrint}
+          className="btn btn-primary"
+          style={{
+            flex: "1.8 1 150px",
+            padding: "10px 16px",
+            fontSize: "0.92rem",
+            fontWeight: 800,
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "6px",
+            borderRadius: "12px"
+          }}
+          disabled={isGeneratingPDF}
+        >
+          <Printer size={16} />
+          <span>Imprimir Ticket</span>
+        </button>
       </div>
     </div>
-  );
+  </div>
+);
 }

@@ -62,47 +62,56 @@ export default function StudentInsuranceModal({
   };
 
   return (
-    <div className="modal-overlay" onClick={onClose} style={{ zIndex: 1400 }}>
+    <div className="modal-overlay" onClick={onClose} style={{ zIndex: 1400, padding: "16px" }}>
       <div 
         className="modal-card" 
         onClick={(e) => e.stopPropagation()} 
         style={{ 
-          maxWidth: "500px", 
-          width: "92%", 
-          background: "var(--bg-secondary, #111827)",
-          borderRadius: "20px",
-          border: "2px solid #0d9488",
-          boxShadow: "0 25px 65px rgba(0, 0, 0, 0.75)",
+          maxWidth: "520px", 
+          width: "94%", 
+          borderRadius: "24px",
           overflow: "hidden"
         }}
       >
-        {/* Cabecera */}
+        {/* Cabecera Liquid Glass */}
         <div style={{
           padding: "16px 20px",
-          background: "linear-gradient(135deg, rgba(13, 148, 136, 0.25) 0%, rgba(15, 118, 110, 0.15) 100%)",
+          background: "transparent",
           borderBottom: "1px solid var(--border-color)",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center"
         }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-            <span style={{ fontSize: "1.5rem" }}>🛡️</span>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            <div style={{
+              width: "44px",
+              height: "44px",
+              borderRadius: "12px",
+              background: "rgba(13, 148, 136, 0.16)",
+              border: "1px solid rgba(13, 148, 136, 0.3)",
+              color: "#2dd4bf",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
+            }}>
+              <ShieldCheck size={24} />
+            </div>
             <div>
-              <h3 style={{ margin: 0, fontSize: "1.1rem", fontWeight: 800, color: "var(--text-main)" }}>
+              <h3 style={{ margin: 0, fontSize: "1.18rem", fontWeight: 800, color: "var(--text-main)" }}>
                 Venta de Seguro Escolar
               </h3>
-              <span style={{ fontSize: "0.74rem", color: "#2dd4bf", fontWeight: 700 }}>
-                {product.nombre} • Precio Inventario: ${Number(product.precio).toLocaleString()}
+              <span style={{ fontSize: "0.76rem", color: "var(--text-muted)", fontWeight: 700 }}>
+                {product.nombre} • Precio: ${Number(product.precio).toLocaleString()} COP
               </span>
             </div>
           </div>
           <button 
             type="button" 
             onClick={onClose} 
-            className="btn btn-outline" 
-            style={{ padding: "5px 8px", borderRadius: "8px" }}
+            className="btn-modal-close-circle"
+            title="Cerrar modal"
           >
-            <X size={15} />
+            <X size={16} />
           </button>
         </div>
 
@@ -296,26 +305,29 @@ export default function StudentInsuranceModal({
             </div>
           </div>
 
-          {/* Acciones */}
-          <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px", marginTop: "18px" }}>
+          {/* Acciones Liquid Glass */}
+          <div style={{ display: "flex", justifyContent: "flex-end", gap: "10px", marginTop: "22px" }}>
             <button
               type="button"
               onClick={onClose}
-              className="btn btn-outline"
-              style={{ fontSize: "0.85rem" }}
+              className="btn btn-modal-cancel"
+              style={{ padding: "10px 20px", borderRadius: "12px", fontSize: "0.88rem" }}
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="btn btn-primary"
+              className="btn btn-primary btn-primary-action"
               style={{
                 background: "linear-gradient(135deg, #0d9488 0%, #0f766e 100%)",
                 fontWeight: 800,
-                fontSize: "0.85rem",
+                fontSize: "0.88rem",
+                padding: "10px 24px",
+                borderRadius: "12px",
                 display: "flex",
                 alignItems: "center",
-                gap: "6px"
+                gap: "8px",
+                boxShadow: "0 4px 16px rgba(13, 148, 136, 0.4)"
               }}
             >
               <Check size={16} />

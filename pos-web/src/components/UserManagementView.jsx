@@ -426,90 +426,119 @@ export default function UserManagementView({ users, onSaveUsers, currentUser }) 
         </div>
       )}
 
-      {/* Editor Modal */}
+      {/* Editor Modal — Liquid Glass Premium */}
       {editing && (
         <div className="modal-overlay" onClick={closeEditor}>
           <div
-            className="modal-card modal-box"
+            className="modal-card"
             style={{
-              maxWidth: 440,
-              width: "92%",
-              background: "var(--bg-secondary)",
-              border: "1px solid var(--border-strong)",
-              borderRadius: "20px",
-              boxShadow: "0 25px 65px -10px rgba(0, 0, 0, 0.8)",
+              maxWidth: 480,
+              width: "96%",
+              borderRadius: "28px",
               overflow: "hidden",
               display: "flex",
-              flexDirection: "column"
+              flexDirection: "column",
+              maxHeight: "92vh"
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div
-              className="modal-header"
-              style={{
-                padding: "16px 20px",
-                background: "var(--bg-tertiary)",
-                borderBottom: "1px solid var(--border-color)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between"
-              }}
-            >
-              <h3 className="modal-title" style={{ margin: 0 }}>
-                {isNew ? <><UserPlus size={16} /> Nuevo Usuario</> : <><Pencil size={16} /> Editar Usuario</>}
-              </h3>
-              <button className="modal-close" onClick={closeEditor}><X size={18} /></button>
+            {/* Header Liquid Glass */}
+            <div className="ticket-modal-header">
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <div
+                  className="ticket-icon-box"
+                  style={{
+                    background: isNew ? "rgba(168, 85, 247, 0.18)" : "rgba(59, 130, 246, 0.18)",
+                    border: `1px solid ${isNew ? "rgba(168, 85, 247, 0.38)" : "rgba(59, 130, 246, 0.38)"}`,
+                    color: isNew ? "#c084fc" : "#60a5fa"
+                  }}
+                >
+                  {isNew ? <UserPlus size={22} /> : <Pencil size={22} />}
+                </div>
+                <div>
+                  <h3 style={{ margin: 0, fontSize: "1.15rem", fontWeight: 800, color: "var(--text-main)" }}>
+                    {isNew ? "Nuevo Usuario" : "Editar Usuario"}
+                  </h3>
+                  <span style={{ fontSize: "0.76rem", color: "var(--text-muted)" }}>
+                    {isNew ? "Permisos, PIN y rol de acceso" : `Editando: ${editing.nombre || "Usuario"}`}
+                  </span>
+                </div>
+              </div>
+              <button className="btn-modal-close-circle" onClick={closeEditor} title="Cerrar modal">
+                <X size={16} />
+              </button>
             </div>
 
+            {/* Body con Scroll */}
             <div
-              className="modal-body"
               style={{
                 padding: "20px",
-                background: "var(--bg-secondary)",
+                overflowY: "auto",
+                flex: "1 1 auto",
                 display: "flex",
                 flexDirection: "column",
-                gap: "16px"
+                gap: "12px"
               }}
             >
               {/* Nombre */}
-              <label className="form-label">
-                <span>Nombre completo *</span>
+              <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: "16px", padding: "14px 16px", border: "1px solid rgba(216,180,254,0.13)", display: "flex", flexDirection: "column", gap: "8px" }}>
+                <label style={{ fontSize: "0.74rem", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.07em" }}>Nombre completo *</label>
                 <input
                   className="form-input"
                   value={editing.nombre}
                   onChange={(e) => setEditing({ ...editing, nombre: e.target.value })}
                   placeholder="Ej: María José"
+                  style={{ margin: 0 }}
                 />
-              </label>
+              </div>
 
-              {/* Correo / Usuario */}
-              <label className="form-label">
-                <span>Correo / Identificador</span>
+              {/* Correo */}
+              <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: "16px", padding: "14px 16px", border: "1px solid rgba(216,180,254,0.13)", display: "flex", flexDirection: "column", gap: "8px" }}>
+                <label style={{ fontSize: "0.74rem", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.07em" }}>Correo / Identificador</label>
                 <input
                   className="form-input"
                   value={editing.correo}
                   onChange={(e) => setEditing({ ...editing, correo: e.target.value })}
                   placeholder="Ej: diana@correo.com"
+                  style={{ margin: 0 }}
                 />
-              </label>
+              </div>
 
               {/* Rol */}
-              <label className="form-label">
-                <span>Rol *</span>
+              <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: "16px", padding: "14px 16px", border: "1px solid rgba(216,180,254,0.13)", display: "flex", flexDirection: "column", gap: "8px" }}>
+                <label style={{ fontSize: "0.74rem", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.07em" }}>Rol *</label>
                 <select
                   className="form-select"
                   value={editing.rol}
                   onChange={(e) => setEditing({ ...editing, rol: e.target.value })}
+                  style={{ margin: 0 }}
                 >
                   {ROLES.map((r) => (
                     <option key={r} value={r}>{r}</option>
                   ))}
                 </select>
-              </label>
+                <div
+                  style={{
+                    padding: "8px 12px",
+                    borderRadius: "10px",
+                    background: editing.rol === "Administrador" ? "rgba(129,140,248,0.10)" : "rgba(52,211,153,0.10)",
+                    border: `1px solid ${editing.rol === "Administrador" ? "rgba(129,140,248,0.22)" : "rgba(52,211,153,0.22)"}`,
+                    fontSize: "0.75rem",
+                    color: "var(--text-muted)"
+                  }}
+                >
+                  {editing.rol === "Administrador"
+                    ? "🛡️ Administrador: Acceso total — inventario, BD, gestión de usuarios."
+                    : "👤 Asistente: Solo POS, sillas, stickers, ventas y clientes."
+                  }
+                </div>
+              </div>
 
               {/* PIN */}
-              <label className="form-label">
-                <span>PIN de acceso (numérico, mín. 4 dígitos) *</span>
+              <div style={{ background: "rgba(255,255,255,0.04)", borderRadius: "16px", padding: "14px 16px", border: "1px solid rgba(216,180,254,0.13)", display: "flex", flexDirection: "column", gap: "8px" }}>
+                <label style={{ fontSize: "0.74rem", fontWeight: 700, color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.07em", display: "flex", alignItems: "center", gap: "6px" }}>
+                  <KeyRound size={13} /> PIN de acceso (mín. 4 dígitos) *
+                </label>
                 <div style={{ position: "relative" }}>
                   <input
                     className="form-input"
@@ -521,76 +550,56 @@ export default function UserManagementView({ users, onSaveUsers, currentUser }) 
                     }}
                     placeholder="••••"
                     inputMode="numeric"
-                    style={{ paddingRight: "40px" }}
+                    style={{ paddingRight: "44px", margin: 0 }}
                   />
                   <button
                     type="button"
                     onClick={() => setShowPass(!showPass)}
-                    style={{
-                      position: "absolute", right: "10px", top: "50%",
-                      transform: "translateY(-50%)", background: "none",
-                      border: "none", cursor: "pointer", color: "var(--text-muted)"
-                    }}
+                    style={{ position: "absolute", right: "12px", top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", color: "var(--text-muted)", display: "flex", alignItems: "center" }}
                   >
-                    {showPass ? <EyeOff size={15} /> : <Eye size={15} />}
+                    {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
                   </button>
                 </div>
-                <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginTop: "4px" }}>
-                  <KeyRound size={11} style={{ verticalAlign: "middle" }} /> Solo números, entre 4 y 8 dígitos
-                </span>
-              </label>
-
-              {/* Rol description */}
-              <div
-                style={{
-                  padding: "10px 14px",
-                  borderRadius: "8px",
-                  background: editing.rol === "Administrador" ? "rgba(129,140,248,0.08)" : "rgba(52,211,153,0.08)",
-                  border: `1px solid ${editing.rol === "Administrador" ? "rgba(129,140,248,0.2)" : "rgba(52,211,153,0.2)"}`,
-                  fontSize: "0.75rem",
-                  color: "var(--text-muted)"
-                }}
-              >
-                {editing.rol === "Administrador"
-                  ? "🛡️ Administrador: Acceso total — inventario, BD, gestión de usuarios."
-                  : "👤 Asistente: Solo POS, sillas, stickers, ventas y clientes."
-                }
+                <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>Solo números, entre 4 y 8 dígitos</span>
               </div>
             </div>
 
+            {/* Footer Liquid Glass */}
             <div
-              className="modal-footer"
               style={{
-                padding: "14px 20px",
-                background: "var(--bg-tertiary)",
-                borderTop: "1px solid var(--border-color)",
+                padding: "16px 20px",
+                borderTop: "1px solid rgba(216, 180, 254, 0.14)",
                 display: "flex",
                 justifyContent: "flex-end",
-                gap: "10px"
+                gap: "10px",
+                flexShrink: 0
               }}
             >
-              <button className="btn btn-outline" onClick={closeEditor}>Cancelar</button>
-              <button className="btn btn-primary" onClick={handleSave}>
-                <Save size={14} />
-                {isNew ? "Crear usuario" : "Guardar cambios"}
+              <button className="btn btn-modal-cancel" onClick={closeEditor} style={{ padding: "10px 20px", borderRadius: "14px" }}>
+                Cancelar
+              </button>
+              <button
+                className="btn btn-primary"
+                onClick={handleSave}
+                style={{ padding: "10px 24px", borderRadius: "14px", fontWeight: 800, display: "flex", alignItems: "center", gap: "8px" }}
+              >
+                <Save size={16} />
+                <span>{isNew ? "Crear usuario" : "Guardar cambios"}</span>
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Delete Confirm Modal */}
+      {/* Delete Confirm Modal Liquid Glass */}
       {confirmDelete && (
         <div className="modal-overlay" onClick={() => setConfirmDelete(null)}>
           <div
             className="modal-card modal-box"
             style={{
-              maxWidth: 380,
+              maxWidth: 400,
               width: "92%",
-              background: "var(--bg-secondary)",
-              border: "1px solid var(--border-strong)",
-              borderRadius: "20px",
-              boxShadow: "0 25px 65px -10px rgba(0, 0, 0, 0.8)",
+              borderRadius: "24px",
               overflow: "hidden",
               display: "flex",
               flexDirection: "column"
@@ -601,28 +610,45 @@ export default function UserManagementView({ users, onSaveUsers, currentUser }) 
               className="modal-header"
               style={{
                 padding: "16px 20px",
-                background: "var(--bg-tertiary)",
+                background: "transparent",
                 borderBottom: "1px solid var(--border-color)",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between"
               }}
             >
-              <h3 className="modal-title" style={{ color: "var(--danger)", margin: 0 }}>
-                <Trash2 size={16} /> Eliminar usuario
-              </h3>
-              <button className="modal-close" onClick={() => setConfirmDelete(null)}><X size={18} /></button>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <div style={{
+                  width: "36px",
+                  height: "36px",
+                  borderRadius: "10px",
+                  background: "rgba(239, 68, 68, 0.16)",
+                  border: "1px solid rgba(239, 68, 68, 0.3)",
+                  color: "#f87171",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>
+                  <Trash2 size={18} />
+                </div>
+                <h3 className="modal-title" style={{ color: "#f87171", margin: 0, fontSize: "1.1rem", fontWeight: 800 }}>
+                  Eliminar usuario
+                </h3>
+              </div>
+              <button className="btn-modal-close-circle" onClick={() => setConfirmDelete(null)} title="Cerrar modal">
+                <X size={16} />
+              </button>
             </div>
             <div
               className="modal-body"
               style={{
                 padding: "20px",
-                background: "var(--bg-secondary)"
+                background: "transparent"
               }}
             >
-              <p style={{ color: "var(--text-muted)", lineHeight: 1.6, margin: 0 }}>
+              <p style={{ color: "var(--text-muted)", lineHeight: 1.6, margin: 0, fontSize: "0.88rem" }}>
                 ¿Estás seguro de que deseas eliminar a{" "}
-                <strong style={{ color: "var(--text-primary)" }}>{confirmDelete.nombre}</strong>?
+                <strong style={{ color: "var(--text-main)" }}>{confirmDelete.nombre}</strong>?
                 Esta acción no se puede deshacer.
               </p>
             </div>
@@ -630,17 +656,19 @@ export default function UserManagementView({ users, onSaveUsers, currentUser }) 
               className="modal-footer"
               style={{
                 padding: "14px 20px",
-                background: "var(--bg-tertiary)",
+                background: "transparent",
                 borderTop: "1px solid var(--border-color)",
                 display: "flex",
                 justifyContent: "flex-end",
                 gap: "10px"
               }}
             >
-              <button className="btn btn-outline" onClick={() => setConfirmDelete(null)}>Cancelar</button>
-              <button className="btn btn-danger" onClick={() => handleDelete(confirmDelete.id)}>
-                <Trash2 size={13} />
-                Eliminar
+              <button className="btn btn-modal-cancel" onClick={() => setConfirmDelete(null)} style={{ padding: "8px 18px", borderRadius: "10px" }}>
+                Cancelar
+              </button>
+              <button className="btn btn-danger" onClick={() => handleDelete(confirmDelete.id)} style={{ padding: "8px 20px", borderRadius: "10px", fontWeight: 700, display: "flex", alignItems: "center", gap: "6px" }}>
+                <Trash2 size={14} />
+                <span>Eliminar</span>
               </button>
             </div>
           </div>

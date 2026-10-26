@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { 
   Users, 
+  UserPlus,
   Plus, 
   Phone, 
   MapPin, 
@@ -515,22 +516,39 @@ export default function ClientsView({
           <div
             className="modal-content modal-card"
             style={{
-              maxWidth: "500px",
-              width: "92%",
-              background: "var(--bg-secondary, #111827)",
-              border: "1px solid var(--border-strong)",
-              borderRadius: "18px",
-              padding: "24px",
-              boxShadow: "0 25px 65px -10px rgba(0,0,0,0.85)"
+              maxWidth: "520px",
+              width: "94%",
+              borderRadius: "24px",
+              padding: "24px"
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-              <h3 style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--text-main)", margin: 0 }}>
-                Nuevo Cliente
-              </h3>
-              <button onClick={() => setIsModalOpen(false)} className="btn btn-outline" style={{ padding: "4px 8px" }}>
-                ✕
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "18px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <div style={{
+                  width: "44px",
+                  height: "44px",
+                  borderRadius: "12px",
+                  background: "rgba(168, 85, 247, 0.16)",
+                  border: "1px solid rgba(168, 85, 247, 0.3)",
+                  color: "#c084fc",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>
+                  <UserPlus size={22} />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--text-main)", margin: 0 }}>
+                    Nuevo Cliente
+                  </h3>
+                  <span style={{ fontSize: "0.76rem", color: "var(--text-muted)" }}>
+                    Registro en base de datos para facturación y créditos
+                  </span>
+                </div>
+              </div>
+              <button onClick={() => setIsModalOpen(false)} className="btn-modal-close-circle" title="Cerrar modal">
+                <X size={16} />
               </button>
             </div>
 
@@ -609,19 +627,19 @@ export default function ClientsView({
                 </span>
               </div>
 
-              <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end", marginTop: "8px" }}>
+              <div style={{ display: "flex", gap: "10px", justifyContent: "flex-end", marginTop: "12px" }}>
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="btn btn-outline"
-                  style={{ padding: "8px 16px" }}
+                  className="btn btn-modal-cancel"
+                  style={{ padding: "10px 20px", borderRadius: "12px" }}
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="btn btn-primary"
-                  style={{ padding: "8px 20px" }}
+                  className="btn btn-primary btn-primary-action"
+                  style={{ padding: "10px 24px", borderRadius: "12px", fontWeight: 800 }}
                 >
                   Guardar Cliente
                 </button>
@@ -637,25 +655,39 @@ export default function ClientsView({
           <div
             className="modal-content modal-card"
             style={{
-              maxWidth: "460px",
-              width: "92%",
-              background: "var(--bg-secondary, #111827)",
-              border: "1px solid var(--border-strong)",
-              borderRadius: "18px",
-              padding: "24px",
-              boxShadow: "0 25px 65px -10px rgba(0,0,0,0.85)"
+              maxWidth: "480px",
+              width: "94%",
+              borderRadius: "24px",
+              padding: "24px"
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <DollarSign size={22} color="#fbbf24" />
-                <h3 style={{ fontSize: "1.15rem", fontWeight: 800, color: "var(--text-main)", margin: 0 }}>
-                  Abonar a Cuenta Fiada
-                </h3>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "18px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <div style={{
+                  width: "44px",
+                  height: "44px",
+                  borderRadius: "12px",
+                  background: "rgba(245, 158, 11, 0.16)",
+                  border: "1px solid rgba(245, 158, 11, 0.3)",
+                  color: "#fbbf24",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>
+                  <DollarSign size={22} />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--text-main)", margin: 0 }}>
+                    Abonar a Cuenta Fiada
+                  </h3>
+                  <span style={{ fontSize: "0.76rem", color: "var(--text-muted)" }}>
+                    Cliente: {abonoClient.nombre}
+                  </span>
+                </div>
               </div>
-              <button onClick={() => setAbonoClient(null)} className="btn btn-outline" style={{ padding: "4px 8px" }}>
-                ✕
+              <button onClick={() => setAbonoClient(null)} className="btn-modal-close-circle" title="Cerrar modal">
+                <X size={16} />
               </button>
             </div>
 

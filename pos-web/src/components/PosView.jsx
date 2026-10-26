@@ -1211,7 +1211,7 @@ export default function PosView({
             const bajoStockCount = products.filter(p => !p.stockIlimitado && p.categoria !== "Cintas" && getEffStock(p) > 0 && getEffStock(p) <= 3).length;
 
             return (
-              <div style={{ display: "flex", gap: "8px", overflowX: "auto", marginTop: "10px", paddingBottom: "4px" }}>
+              <div style={{ display: "flex", gap: "8px", overflowX: "auto", marginTop: "6px", paddingTop: "6px", paddingBottom: "6px", paddingLeft: "4px", paddingRight: "4px" }}>
                 {categoriesList.map(cat => {
                   const isSinStock = cat.includes("Sin Stock");
                   const isBajoStock = cat.includes("Bajo Stock");

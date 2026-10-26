@@ -180,7 +180,8 @@
   display: flex;
   gap: 8px;
   overflow-x: auto;
-  padding-bottom: 4px;
+  overflow-y: visible;
+  padding: 6px 4px 6px 4px;
   scrollbar-width: thin;
 }
 

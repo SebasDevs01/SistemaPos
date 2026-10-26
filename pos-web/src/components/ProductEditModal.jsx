@@ -1361,22 +1361,33 @@ export default function ProductEditModal({
           boxShadow: '0 25px 65px rgba(0, 0, 0, 0.75)'
         }}
       >
-        {/* Cabecera del Modal */}
+        {/* Cabecera del Modal Liquid Glass */}
         <div style={{
           padding: '16px 22px',
           borderBottom: '1px solid var(--border-color)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          background: 'var(--bg-tertiary)',
+          background: 'transparent',
           flexShrink: 0
         }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <span style={{ fontSize: '1.4rem' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{
+              width: '44px',
+              height: '44px',
+              borderRadius: '12px',
+              background: 'rgba(168, 85, 247, 0.16)',
+              border: '1px solid rgba(168, 85, 247, 0.3)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '1.4rem',
+              flexShrink: 0
+            }}>
               {isCinta ? '🎗️' : isBolsa ? '🎁' : isCordón ? '👟' : isEditing ? '✏️' : '✨'}
-            </span>
+            </div>
             <div>
-              <h2 style={{ fontSize: '1.15rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
+              <h2 style={{ fontSize: '1.18rem', fontWeight: 800, color: 'var(--text-main)', margin: 0 }}>
                 {isEditing ? `Editar: ${formData.nombre || 'Producto'}` : 'Crear Nuevo Producto'}
               </h2>
               <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>
@@ -1388,8 +1399,8 @@ export default function ProductEditModal({
           <button 
             type="button" 
             onClick={onClose} 
-            className="btn btn-outline"
-            style={{ padding: '6px 10px', borderRadius: '10px' }}
+            className="btn-modal-close-circle"
+            title="Cerrar modal"
           >
             <X size={16} />
           </button>
@@ -2745,7 +2756,7 @@ export default function ProductEditModal({
             <div style={{
               padding: '16px',
               borderRadius: '16px',
-              background: 'var(--bg-tertiary)',
+              background: 'rgba(255, 255, 255, 0.04)',
               border: '1px solid var(--border-color)'
             }}>
               <ImageUploader
@@ -2809,11 +2820,11 @@ export default function ProductEditModal({
             )}
           </div>
 
-          {/* Footer Fijo con Botones */}
+          {/* Footer Fijo Liquid Glass */}
           <div style={{
             padding: '14px 22px',
             borderTop: '1px solid var(--border-color)',
-            background: 'var(--bg-tertiary)',
+            background: 'transparent',
             display: 'flex',
             justifyContent: 'flex-end',
             gap: '12px',
@@ -2821,21 +2832,22 @@ export default function ProductEditModal({
           }}>
             <button 
               type="button" 
-              className="btn btn-outline" 
+              className="btn btn-modal-cancel" 
               onClick={onClose}
-              style={{ padding: '9px 20px', borderRadius: '12px', fontWeight: 700 }}
+              style={{ padding: '10px 22px', borderRadius: '12px', fontWeight: 700 }}
             >
               Cancelar
             </button>
             <button 
               type="submit" 
+              className="btn btn-primary btn-primary-action"
               style={{
-                padding: '9px 26px',
+                padding: '10px 26px',
                 background: isCinta 
                   ? 'linear-gradient(135deg, #059669, #047857)' 
                   : isBolsa 
                     ? 'linear-gradient(135deg, #db2777, #be185d)' 
-                    : 'linear-gradient(135deg, #2563eb, #1d4ed8)',
+                    : 'linear-gradient(135deg, #9333ea, #7c3aed)',
                 color: '#ffffff',
                 border: 'none',
                 borderRadius: '12px',
@@ -2849,7 +2861,7 @@ export default function ProductEditModal({
                   ? '0 4px 14px rgba(5, 150, 105, 0.4)' 
                   : isBolsa 
                     ? '0 4px 14px rgba(219, 39, 119, 0.4)' 
-                    : '0 4px 14px rgba(37, 99, 235, 0.4)'
+                    : '0 4px 18px rgba(147, 51, 234, 0.45)'
               }}
             >
               <Check size={16} />

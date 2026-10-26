@@ -1548,3 +1548,765 @@ tbody tr:hover {
 .modal-overlay > .modal-box {
   margin: auto !important;
 }
+
+/* ==========================================================================
+   23. SPLASH SCREEN — Apple-Style Preloader con Logo MJ (Liquid Glass)
+   ========================================================================== */
+.splash-overlay {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 99999 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: radial-gradient(ellipse 120% 120% at 50% 40%, #1A0840 0%, #070410 60%, #000000 100%) !important;
+  gap: 28px !important;
+  overflow: hidden !important;
+  /* Estado base: visible */
+  opacity: 1;
+  pointer-events: all;
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* FASE EXIT: desvanecer */
+.splash-overlay[data-phase="exit"] {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: scale(1.04) !important;
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1), transform 0.55s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Atmósfera de fondo con auroras */
+.splash-atmosphere {
+  position: absolute !important;
+  inset: 0 !important;
+  background:
+    radial-gradient(ellipse 70% 55% at 20% 15%, rgba(147, 51, 234, 0.40) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 80% 20%, rgba(236, 72, 153, 0.28) 0%, transparent 55%),
+    radial-gradient(ellipse 80% 60% at 50% 80%, rgba(124, 58, 237, 0.30) 0%, transparent 55%) !important;
+  animation: splashAurora 4s ease-in-out infinite alternate !important;
+  pointer-events: none !important;
+}
+
+@keyframes splashAurora {
+  0%   { opacity: 0.7; transform: scale(1);     }
+  100% { opacity: 1;   transform: scale(1.06);  }
+}
+
+/* Anillos orbitales que rotan alrededor del logo */
+.splash-rings {
+  position: absolute !important;
+  width: 320px !important;
+  height: 320px !important;
+  pointer-events: none !important;
+}
+
+.splash-ring {
+  position: absolute !important;
+  inset: 0 !important;
+  border-radius: 50% !important;
+  border: 1.5px solid transparent !important;
+}
+
+.splash-ring-1 {
+  border-color: rgba(192, 132, 252, 0.55) !important;
+  animation: splashOrbit1 3.5s linear infinite !important;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.35), inset 0 0 20px rgba(168, 85, 247, 0.12) !important;
+}
+
+.splash-ring-2 {
+  inset: 20px !important;
+  border-color: rgba(236, 72, 153, 0.45) !important;
+  animation: splashOrbit2 2.8s linear infinite reverse !important;
+  box-shadow: 0 0 16px rgba(236, 72, 153, 0.30) !important;
+}
+
+.splash-ring-3 {
+  inset: 40px !important;
+  border-color: rgba(216, 180, 254, 0.35) !important;
+  animation: splashOrbit1 4.5s linear infinite !important;
+}
+
+@keyframes splashOrbit1 {
+  from { transform: rotate(0deg) scaleX(1.1);   }
+  50%  { transform: rotate(180deg) scaleX(0.9); }
+  to   { transform: rotate(360deg) scaleX(1.1); }
+}
+
+@keyframes splashOrbit2 {
+  from { transform: rotate(0deg) scaleY(1.15);  }
+  50%  { transform: rotate(180deg) scaleY(0.85);}
+  to   { transform: rotate(360deg) scaleY(1.15);}
+}
+
+/* Logo MJ central grande */
+.splash-logo-wrap {
+  position: relative !important;
+  z-index: 2 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  animation: splashLogoEnter 0.80s cubic-bezier(0.34, 1.56, 0.64, 1) forwards !important;
+}
+
+@keyframes splashLogoEnter {
+  from {
+    opacity: 0;
+    transform: scale(0.55) translateY(20px);
+    filter: blur(18px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0px);
+  }
+}
+
+.splash-logo-img {
+  width: 160px !important;
+  height: 160px !important;
+  object-fit: contain !important;
+  filter: drop-shadow(0 0 40px rgba(168, 85, 247, 0.80)) drop-shadow(0 0 80px rgba(192, 132, 252, 0.45)) !important;
+  animation: splashLogoPulse 2.2s ease-in-out infinite alternate !important;
+}
+
+@keyframes splashLogoPulse {
+  0%   { filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.70)) drop-shadow(0 0 60px rgba(192, 132, 252, 0.35)); }
+  100% { filter: drop-shadow(0 0 55px rgba(192, 132, 252, 1.00)) drop-shadow(0 0 100px rgba(168, 85, 247, 0.65)); }
+}
+
+/* Reflejo del logo tipo Apple (espejo desvanecido hacia abajo) */
+.splash-logo-reflection {
+  width: 160px !important;
+  height: 60px !important;
+  overflow: hidden !important;
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, transparent 100%) !important;
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.35) 0%, transparent 100%) !important;
+  margin-top: 4px !important;
+}
+
+.splash-logo-mirror {
+  width: 160px !important;
+  height: 160px !important;
+  transform: scaleY(-1) !important;
+  opacity: 0.4 !important;
+  filter: blur(2px) !important;
+  animation: none !important;
+}
+
+/* Nombre de tienda */
+.splash-store-name {
+  position: relative !important;
+  z-index: 2 !important;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", sans-serif !important;
+  font-size: 1.55rem !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.03em !important;
+  background: linear-gradient(135deg, #FFFFFF 0%, #E9D5FF 55%, #C084FC 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  animation: splashTextEnter 0.9s 0.3s cubic-bezier(0.16, 1, 0.3, 1) both !important;
+}
+
+@keyframes splashTextEnter {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+/* Puntos de carga animados */
+.splash-loader-dots {
+  display: flex !important;
+  gap: 8px !important;
+  position: relative !important;
+  z-index: 2 !important;
+  animation: splashTextEnter 0.9s 0.5s cubic-bezier(0.16, 1, 0.3, 1) both !important;
+}
+
+.splash-loader-dots span {
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  background: rgba(216, 180, 254, 0.70) !important;
+  animation: splashDotBounce 1.2s ease-in-out infinite !important;
+}
+
+.splash-loader-dots span:nth-child(1) { animation-delay: 0s;    }
+.splash-loader-dots span:nth-child(2) { animation-delay: 0.18s; }
+.splash-loader-dots span:nth-child(3) { animation-delay: 0.36s; }
+
+@keyframes splashDotBounce {
+  0%, 60%, 100% { transform: translateY(0);   opacity: 0.5; }
+  30%            { transform: translateY(-7px); opacity: 1.0; }
+}
+
+/* ==========================================================================
+   24. LOGIN COMPLETO — Liquid Glass Total (Reemplaza sólidos de index.css)
+   ========================================================================== */
+
+/* ── Overlay del Login ── */
+.login-overlay {
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 10%, rgba(147, 51, 234, 0.28) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 55% at 85% 15%, rgba(236, 72, 153, 0.20) 0%, transparent 50%),
+    radial-gradient(ellipse 90% 70% at 50% 90%, rgba(124, 58, 237, 0.25) 0%, transparent 55%),
+    #070410 !important;
+  background-attachment: fixed !important;
+}
+
+/* ── QUITAR BORDE ROJO del icono del logo ── */
+.login-store-icon,
+.login-store-icon--liquid-glass {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* ── Título y Subtítulo ── */
+.login-title {
+  background: linear-gradient(135deg, #FFFFFF 0%, #E9D5FF 60%, #C084FC 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+[data-theme="light"] .login-title {
+  background: linear-gradient(135deg, #1E1035 0%, #581C87 60%, #9333EA 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+.login-subtitle {
+  color: rgba(216, 180, 254, 0.75) !important;
+}
+
+[data-theme="light"] .login-subtitle {
+  color: #7E22CE !important;
+}
+
+/* ── Tarjeta Principal del Login ── */
+.login-card {
+  background: linear-gradient(160deg, rgba(22, 12, 44, 0.72) 0%, rgba(14, 8, 30, 0.80) 100%) !important;
+  backdrop-filter: blur(44px) saturate(220%) contrast(108%) !important;
+  -webkit-backdrop-filter: blur(44px) saturate(220%) contrast(108%) !important;
+  border: 1.5px solid rgba(216, 180, 254, 0.38) !important;
+  border-radius: 28px !important;
+  box-shadow:
+    0 40px 100px -15px rgba(0, 0, 0, 0.85),
+    0 0 55px rgba(168, 85, 247, 0.38),
+    inset 0 2px 2px rgba(255, 255, 255, 0.40) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+/* Bisel superior especular */
+.login-card::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 8% !important;
+  right: 8% !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.70), transparent) !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+[data-theme="light"] .login-card {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.80) 0%, rgba(248, 244, 255, 0.72) 100%) !important;
+  backdrop-filter: blur(44px) saturate(220%) contrast(102%) !important;
+  -webkit-backdrop-filter: blur(44px) saturate(220%) contrast(102%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.98) !important;
+  box-shadow:
+    0 32px 80px -12px rgba(76, 29, 149, 0.22),
+    0 0 44px rgba(192, 132, 252, 0.30),
+    inset 0 2px 2px #FFFFFF !important;
+}
+
+/* ── Encabezado de Tarjeta ── */
+.login-card-header {
+  color: rgba(216, 180, 254, 0.90) !important;
+  border-bottom: 1px solid rgba(216, 180, 254, 0.18) !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .login-card-header {
+  color: #581C87 !important;
+  border-bottom-color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* ── Botones de Usuario ── */
+.login-user-btn {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(216, 180, 254, 0.20) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  transition: all 0.22s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.login-user-btn:hover {
+  background: rgba(168, 85, 247, 0.16) !important;
+  border-color: rgba(192, 132, 252, 0.50) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 20px rgba(168, 85, 247, 0.30) !important;
+}
+
+.login-user-btn--admin {
+  border-color: rgba(168, 85, 247, 0.30) !important;
+}
+
+.login-user-btn--admin:hover {
+  border-color: rgba(192, 132, 252, 0.65) !important;
+  box-shadow: 0 6px 20px rgba(168, 85, 247, 0.35) !important;
+}
+
+.login-user-btn--staff {
+  border-color: rgba(16, 185, 129, 0.25) !important;
+}
+
+.login-user-btn--staff:hover {
+  border-color: rgba(16, 185, 129, 0.55) !important;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.22) !important;
+}
+
+[data-theme="light"] .login-user-btn {
+  background: rgba(255, 255, 255, 0.72) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 2px 10px rgba(126, 34, 206, 0.06) !important;
+}
+
+[data-theme="light"] .login-user-btn:hover {
+  background: rgba(255, 255, 255, 0.95) !important;
+  box-shadow: 0 6px 20px rgba(126, 34, 206, 0.15) !important;
+  border-color: rgba(168, 85, 247, 0.40) !important;
+}
+
+/* Avatar de usuario */
+.login-user-avatar {
+  background: rgba(168, 85, 247, 0.15) !important;
+  border: 1px solid rgba(192, 132, 252, 0.30) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+[data-theme="light"] .login-user-avatar {
+  background: rgba(233, 213, 255, 0.60) !important;
+  border: 1px solid rgba(255, 255, 255, 0.90) !important;
+}
+
+/* Nombre y subtítulo de usuario */
+.login-user-name {
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+}
+
+[data-theme="light"] .login-user-name {
+  color: #1E1035 !important;
+}
+
+.login-user-sub {
+  color: rgba(216, 180, 254, 0.70) !important;
+}
+
+[data-theme="light"] .login-user-sub {
+  color: #7E22CE !important;
+}
+
+/* Badges de rol en login */
+.login-user-badge.badge-indigo {
+  background: rgba(168, 85, 247, 0.22) !important;
+  border: 1px solid rgba(192, 132, 252, 0.50) !important;
+  color: #E9D5FF !important;
+}
+
+.login-user-badge.badge-green {
+  background: rgba(16, 185, 129, 0.18) !important;
+  border: 1px solid rgba(16, 185, 129, 0.45) !important;
+  color: #6EE7B7 !important;
+}
+
+[data-theme="light"] .login-user-badge.badge-indigo {
+  background: rgba(168, 85, 247, 0.14) !important;
+  color: #581C87 !important;
+  border-color: rgba(147, 51, 234, 0.40) !important;
+}
+
+[data-theme="light"] .login-user-badge.badge-green {
+  background: rgba(16, 185, 129, 0.12) !important;
+  color: #065F46 !important;
+  border-color: rgba(16, 185, 129, 0.40) !important;
+}
+
+/* ── PIN Boxes ── */
+.login-pin-box {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 2px solid rgba(216, 180, 254, 0.28) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  transition: all 0.18s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.login-pin-box:hover {
+  border-color: rgba(192, 132, 252, 0.55) !important;
+}
+
+.login-pin-box--filled {
+  border-color: #C084FC !important;
+  background: rgba(168, 85, 247, 0.18) !important;
+  box-shadow: 0 0 16px rgba(168, 85, 247, 0.45), inset 0 1px 1px rgba(255,255,255,0.25) !important;
+}
+
+.login-pin-circle {
+  background: linear-gradient(135deg, #C084FC, #A855F7) !important;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.80) !important;
+}
+
+.login-pin-digit {
+  color: #FFFFFF !important;
+}
+
+.login-pin-empty {
+  background: rgba(216, 180, 254, 0.28) !important;
+}
+
+[data-theme="light"] .login-pin-box {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border: 2px solid rgba(192, 132, 252, 0.35) !important;
+}
+
+[data-theme="light"] .login-pin-box--filled {
+  border-color: #7E22CE !important;
+  background: rgba(168, 85, 247, 0.12) !important;
+  box-shadow: 0 0 14px rgba(126, 34, 206, 0.30) !important;
+}
+
+[data-theme="light"] .login-pin-digit {
+  color: #1E1035 !important;
+}
+
+[data-theme="light"] .login-pin-empty {
+  background: rgba(126, 34, 206, 0.22) !important;
+}
+
+/* ── Teclado Numérico ── */
+.login-numpad-key {
+  background: rgba(255, 255, 255, 0.07) !important;
+  border: 1px solid rgba(216, 180, 254, 0.22) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  color: #FFFFFF !important;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,0.15) !important;
+  transition: all 0.14s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+.login-numpad-key:hover {
+  background: rgba(168, 85, 247, 0.20) !important;
+  border-color: rgba(192, 132, 252, 0.55) !important;
+  transform: scale(1.04) translateY(-1px) !important;
+  box-shadow: 0 4px 14px rgba(168, 85, 247, 0.35), inset 0 1px 1px rgba(255,255,255,0.25) !important;
+}
+
+.login-numpad-key:active {
+  transform: scale(0.95) !important;
+  background: rgba(168, 85, 247, 0.30) !important;
+}
+
+.login-numpad-del {
+  color: #FCA5A5 !important;
+  border-color: rgba(244, 63, 94, 0.30) !important;
+}
+
+.login-numpad-del:hover {
+  background: rgba(244, 63, 94, 0.18) !important;
+  border-color: rgba(244, 63, 94, 0.55) !important;
+  color: #FFFFFF !important;
+}
+
+[data-theme="light"] .login-numpad-key {
+  background: rgba(255, 255, 255, 0.78) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+  color: #1E1035 !important;
+  box-shadow: 0 2px 8px rgba(126, 34, 206, 0.06) !important;
+}
+
+[data-theme="light"] .login-numpad-key:hover {
+  background: rgba(255, 255, 255, 0.98) !important;
+  border-color: rgba(168, 85, 247, 0.45) !important;
+  color: #1E1035 !important;
+  box-shadow: 0 4px 14px rgba(126, 34, 206, 0.15) !important;
+  transform: scale(1.04) translateY(-1px) !important;
+}
+
+[data-theme="light"] .login-numpad-del {
+  color: #BE123C !important;
+  border-color: rgba(244, 63, 94, 0.35) !important;
+}
+
+/* ── Botón Mostrar PIN ── */
+.login-show-pin {
+  color: rgba(216, 180, 254, 0.70) !important;
+}
+
+.login-show-pin:hover {
+  color: #E9D5FF !important;
+}
+
+[data-theme="light"] .login-show-pin {
+  color: #7E22CE !important;
+}
+
+[data-theme="light"] .login-show-pin:hover {
+  color: #1E1035 !important;
+}
+
+/* ── Error de PIN ── */
+.login-error {
+  background: rgba(244, 63, 94, 0.12) !important;
+  border: 1px solid rgba(244, 63, 94, 0.40) !important;
+  border-radius: 12px !important;
+  color: #FCA5A5 !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+[data-theme="light"] .login-error {
+  background: rgba(255, 255, 255, 0.80) !important;
+  border: 1px solid rgba(244, 63, 94, 0.45) !important;
+  color: #9F1239 !important;
+}
+
+/* ── Pie del Login ── */
+.login-footer {
+  color: rgba(216, 180, 254, 0.40) !important;
+}
+
+[data-theme="light"] .login-footer {
+  color: rgba(126, 34, 206, 0.45) !important;
+}
+
+/* ── Light overlay para login ── */
+[data-theme="light"] .login-overlay {
+  background:
+    radial-gradient(ellipse 80% 65% at 10% 10%, rgba(216, 180, 254, 0.50) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 55% at 90% 15%, rgba(244, 114, 182, 0.28) 0%, transparent 50%),
+    radial-gradient(ellipse 90% 70% at 50% 90%, rgba(196, 181, 253, 0.40) 0%, transparent 55%),
+    #F8F6FF !important;
+}
+
+/* ==========================================================================
+   25. PRODUCT EDIT MODAL — Override inline backgrounds (Liquid Glass)
+   ========================================================================== */
+
+/* Override del fondo del modal-card con inline style var(--bg-secondary) */
+.modal-card[style*="var(--bg-secondary"],
+.modal-card[style*="#111827"],
+.modal-card[style*="680px"] {
+  background: linear-gradient(160deg, rgba(20, 10, 42, 0.78) 0%, rgba(12, 6, 28, 0.85) 100%) !important;
+  backdrop-filter: blur(44px) saturate(220%) contrast(108%) !important;
+  -webkit-backdrop-filter: blur(44px) saturate(220%) contrast(108%) !important;
+  border: 1.5px solid rgba(216, 180, 254, 0.38) !important;
+  box-shadow:
+    0 40px 100px -15px rgba(0, 0, 0, 0.90),
+    0 0 55px rgba(168, 85, 247, 0.40),
+    inset 0 2px 2px rgba(255, 255, 255, 0.38) !important;
+}
+
+[data-theme="light"] .modal-card[style*="var(--bg-secondary"],
+[data-theme="light"] .modal-card[style*="#111827"],
+[data-theme="light"] .modal-card[style*="680px"] {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.82) 0%, rgba(248, 244, 255, 0.72) 100%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.98) !important;
+  box-shadow:
+    0 32px 80px -12px rgba(76, 29, 149, 0.22),
+    0 0 44px rgba(192, 132, 252, 0.28),
+    inset 0 2px 2px #FFFFFF !important;
+}
+
+/* Encabezado del ProductEditModal */
+.modal-card[style*="680px"] > div[style*="var(--bg-tertiary"],
+.modal-card[style*="680px"] > div:first-child {
+  background: rgba(14, 8, 28, 0.70) !important;
+  border-bottom: 1px solid rgba(216, 180, 254, 0.22) !important;
+}
+
+[data-theme="light"] .modal-card[style*="680px"] > div[style*="var(--bg-tertiary"],
+[data-theme="light"] .modal-card[style*="680px"] > div:first-child {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.95) !important;
+}
+
+/* Área de variantes/tallas dentro del ProductEditModal (beige/crema) */
+.modal-card div[style*="rgba(245, 158, 11, 0.08)"],
+.modal-card div[style*="rgba(139, 92, 246, 0.08)"],
+.modal-card div[style*="rgba(16, 185, 129, 0.08)"],
+.modal-card div[style*="rgba(236, 72, 153, 0.08)"],
+.modal-card div[style*="rgba(59, 130, 246, 0.1)"] {
+  background: rgba(168, 85, 247, 0.10) !important;
+  border: 1px solid rgba(192, 132, 252, 0.32) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+}
+
+[data-theme="light"] .modal-card div[style*="rgba(245, 158, 11, 0.08)"],
+[data-theme="light"] .modal-card div[style*="rgba(139, 92, 246, 0.08)"],
+[data-theme="light"] .modal-card div[style*="rgba(16, 185, 129, 0.08)"],
+[data-theme="light"] .modal-card div[style*="rgba(236, 72, 153, 0.08)"],
+[data-theme="light"] .modal-card div[style*="rgba(59, 130, 246, 0.1)"] {
+  background: rgba(255, 255, 255, 0.70) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.92) !important;
+  box-shadow: 0 4px 14px rgba(126, 34, 206, 0.07) !important;
+}
+
+/* Card de variante individual (Talla 30 con STOCK y PRECIO) */
+.modal-card div[style*="var(--bg-card, #1f2937)"],
+.modal-card div[style*="rgba(255, 255, 255, 0.05)"] {
+  background: rgba(168, 85, 247, 0.10) !important;
+  border: 1px solid rgba(192, 132, 252, 0.28) !important;
+  backdrop-filter: blur(14px) !important;
+  border-radius: 14px !important;
+}
+
+[data-theme="light"] .modal-card div[style*="var(--bg-card, #1f2937)"],
+[data-theme="light"] .modal-card div[style*="rgba(255, 255, 255, 0.05)"] {
+  background: rgba(255, 255, 255, 0.72) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.92) !important;
+  box-shadow: 0 3px 10px rgba(126, 34, 206, 0.07) !important;
+}
+
+/* Sección de añadir talla individual (gris oscuro) */
+.modal-card div[style*="rgba(255, 255, 255, 0.04)"],
+.modal-card div[style*="rgba(255, 255, 255, 0.06)"],
+.modal-card div[style*="rgba(255, 255, 255, 0.07)"] {
+  background: rgba(168, 85, 247, 0.08) !important;
+  border-color: rgba(192, 132, 252, 0.25) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+[data-theme="light"] .modal-card div[style*="rgba(255, 255, 255, 0.04)"],
+[data-theme="light"] .modal-card div[style*="rgba(255, 255, 255, 0.06)"],
+[data-theme="light"] .modal-card div[style*="rgba(255, 255, 255, 0.07)"] {
+  background: rgba(233, 213, 255, 0.30) !important;
+  border-color: rgba(255, 255, 255, 0.90) !important;
+}
+
+/* ==========================================================================
+   26. CATEGORY FILTER TABS (Sin Stock, Bajo Stock, etc.) — Active State
+   ========================================================================== */
+
+/* Tab de categoría activo — más prominente con gradiente violeta */
+.category-tab.active,
+.category-tab-btn.active,
+.category-pill-active,
+[class*="category"][class*="active"] {
+  background: linear-gradient(135deg, #A855F7 0%, #7E22CE 100%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.50) !important;
+  color: #FFFFFF !important;
+  font-weight: 700 !important;
+  box-shadow:
+    0 4px 18px rgba(168, 85, 247, 0.55),
+    inset 0 1px 1px rgba(255, 255, 255, 0.55) !important;
+  transform: translateY(-1px) !important;
+  position: relative !important;
+}
+
+/* Tab Sin Stock — tono rojo cristal */
+[class*="sin-stock"].active,
+button[class*="active"][title*="Sin Stock"] {
+  background: linear-gradient(135deg, rgba(244, 63, 94, 0.80) 0%, rgba(190, 18, 60, 0.90) 100%) !important;
+  box-shadow: 0 4px 18px rgba(244, 63, 94, 0.50) !important;
+}
+
+/* Tab Bajo Stock — tono ámbar cristal */
+[class*="bajo-stock"].active,
+button[class*="active"][title*="Bajo Stock"] {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.85) 0%, rgba(217, 119, 6, 0.90) 100%) !important;
+  box-shadow: 0 4px 18px rgba(245, 158, 11, 0.45) !important;
+}
+
+/* En modo claro, mantener colores vibrantes pero con glass */
+[data-theme="light"] .category-tab.active,
+[data-theme="light"] .category-tab-btn.active,
+[data-theme="light"] .category-pill-active {
+  background: linear-gradient(135deg, #A855F7 0%, #7E22CE 100%) !important;
+  color: #FFFFFF !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.70) !important;
+  box-shadow:
+    0 4px 18px rgba(126, 34, 206, 0.40),
+    inset 0 1.5px 2px rgba(255, 255, 255, 0.60) !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Scrollbar de la barra de categorías */
+.category-tabs-scroll::-webkit-scrollbar,
+[class*="category-scroll"]::-webkit-scrollbar {
+  height: 3px !important;
+}
+
+.category-tabs-scroll::-webkit-scrollbar-thumb,
+[class*="category-scroll"]::-webkit-scrollbar-thumb {
+  background: rgba(168, 85, 247, 0.35) !important;
+  border-radius: 9999px !important;
+}
+
+/* ==========================================================================
+   27. VARIANT SELECTION MODAL & PRODUCT DETAIL — Liquid Glass
+   ========================================================================== */
+.variant-selection-modal,
+[class*="variant-modal"],
+[class*="product-detail"] {
+  background: linear-gradient(160deg, rgba(20, 10, 42, 0.78) 0%, rgba(12, 6, 28, 0.85) 100%) !important;
+  backdrop-filter: blur(42px) saturate(220%) !important;
+  -webkit-backdrop-filter: blur(42px) saturate(220%) !important;
+  border: 1.5px solid rgba(216, 180, 254, 0.38) !important;
+}
+
+[data-theme="light"] .variant-selection-modal,
+[data-theme="light"] [class*="variant-modal"],
+[data-theme="light"] [class*="product-detail"] {
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.82) 0%, rgba(248, 244, 255, 0.72) 100%) !important;
+  border: 1.5px solid rgba(255, 255, 255, 0.98) !important;
+}
+
+/* ==========================================================================
+   28. BOTÓN X DE CERRAR — Universal Liquid Glass
+   ========================================================================== */
+button[class*="close"],
+button[title="Cerrar"],
+button[aria-label*="Cerrar"],
+button[aria-label*="cerrar"],
+.btn-close,
+[class*="btn-close"],
+[class*="close-btn"] {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border: 1px solid rgba(216, 180, 254, 0.28) !important;
+  color: #D8B4FE !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border-radius: 50% !important;
+  transition: all 0.18s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+button[class*="close"]:hover,
+button[title="Cerrar"]:hover,
+.btn-close:hover,
+[class*="close-btn"]:hover {
+  background: rgba(244, 63, 94, 0.22) !important;
+  border-color: rgba(244, 63, 94, 0.55) !important;
+  color: #FCA5A5 !important;
+  transform: rotate(90deg) scale(1.08) !important;
+}
+
+[data-theme="light"] button[class*="close"],
+[data-theme="light"] button[title="Cerrar"],
+[data-theme="light"] .btn-close {
+  background: rgba(255, 255, 255, 0.80) !important;
+  border: 1px solid rgba(255, 255, 255, 0.95) !important;
+  color: #7E22CE !important;
+}
+
+[data-theme="light"] button[class*="close"]:hover,
+[data-theme="light"] .btn-close:hover {
+  background: rgba(244, 63, 94, 0.15) !important;
+  border-color: rgba(244, 63, 94, 0.45) !important;
+  color: #9F1239 !important;
+}

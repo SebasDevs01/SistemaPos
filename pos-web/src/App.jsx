@@ -12,6 +12,7 @@ import InventoryView from "./components/InventoryView";
 import TicketPrintModal from "./components/TicketPrintModal";
 import KeyboardModal from "./components/KeyboardModal";
 import LoginView from "./components/LoginView";
+import SplashScreen from "./components/SplashScreen";
 import ShiftBlockedModal from "./components/ShiftBlockedModal";
 
 // Vistas y modales secundarios cargados bajo demanda (Code-Splitting de alto rendimiento)
@@ -246,6 +247,10 @@ export default function App() {
   }, [currentUser]);
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return !!loadStoredSession(loadUsers());
+  });
+  // Splash screen: show once per browser session (not per React re-render)
+  const [showSplash, setShowSplash] = useState(() => {
+    try { return !sessionStorage.getItem("mj_splash_done"); } catch { return true; }
   });
 
   // Modales y utilidades
@@ -1400,6 +1405,19 @@ export default function App() {
       }
     }
   };
+
+  // ── Splash screen (once per browser session) ──
+  if (showSplash) {
+    return (
+      <SplashScreen
+        storeName={storeConfig?.nombre || "Miscelánea María José"}
+        onComplete={() => {
+          try { sessionStorage.setItem("mj_splash_done", "1"); } catch {}
+          setShowSplash(false);
+        }}
+      />
+    );
+  }
 
   // ── Show login screen if not authenticated ──
   if (!isLoggedIn) {

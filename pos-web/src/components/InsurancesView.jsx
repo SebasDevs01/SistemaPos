@@ -1307,16 +1307,20 @@ export default function InsurancesView({
                       {editingInsurance ? "Editar Seguro Escolar" : "Registrar Seguro Escolar"}
                     </h3>
                     <span style={{
-                      padding: "2px 8px",
-                      borderRadius: "6px",
-                      fontSize: "0.7rem",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "4px",
+                      padding: "4px 10px",
+                      borderRadius: "8px",
+                      fontSize: "0.76rem",
                       fontWeight: 800,
-                      background: "rgba(139, 92, 246, 0.18)",
-                      color: "#c4b5fd",
-                      border: "1px solid rgba(139, 92, 246, 0.35)",
+                      background: "linear-gradient(135deg, #7c3aed 0%, #6d28d9 100%)",
+                      color: "#ffffff",
+                      boxShadow: "0 2px 10px rgba(109, 40, 217, 0.4)",
+                      letterSpacing: "0.02em",
                       fontFamily: "var(--font-mono)"
                     }}>
-                      Póliza #{editingInsurance ? (globalSequenceMap[editingInsurance.id] || "—") : (totalVendidos + 1)} de {MAX_POLIZAS}
+                      🛡️ Póliza #{editingInsurance ? (globalSequenceMap[editingInsurance.id] || "—") : (totalVendidos + 1)} de {MAX_POLIZAS}
                     </span>
                   </div>
                   <span style={{ fontSize: "0.74rem", color: "var(--text-muted)", display: "block", marginTop: "2px" }}>
@@ -1446,23 +1450,25 @@ export default function InsurancesView({
                     </div>
                   </div>
 
-                  {/* Fila Sexo, Tipo de Documento y Número */}
-                  <div style={{ display: "grid", gridTemplateColumns: "110px 140px 1fr", gap: "10px", marginBottom: "10px" }}>
+                  {/* Fila Sexo, Tipo de Documento y Número con espaciado amplio y padding anticolisión */}
+                  <div style={{ display: "grid", gridTemplateColumns: "105px 190px 1fr", gap: "10px", marginBottom: "10px" }}>
                     <div>
                       <label style={{ display: "block", fontSize: "0.74rem", fontWeight: 700, color: "var(--text-muted)", marginBottom: "4px" }}>
                         Sexo *:
                       </label>
                       <select
+                        className="form-select"
                         value={formData.sexo}
                         onChange={(e) => setFormData({ ...formData, sexo: e.target.value })}
                         style={{
                           width: "100%",
-                          padding: "9px 8px",
+                          padding: "9px 28px 9px 10px",
                           borderRadius: "10px",
                           border: "1px solid var(--border-color)",
                           background: "var(--bg-tertiary)",
                           color: "var(--text-main)",
-                          fontSize: "0.84rem"
+                          fontSize: "0.84rem",
+                          cursor: "pointer"
                         }}
                       >
                         <option value="M">M - Masc</option>
@@ -1475,23 +1481,25 @@ export default function InsurancesView({
                         Tipo Documento *:
                       </label>
                       <select
+                        className="form-select"
                         value={formData.tipoDocumento}
                         onChange={(e) => setFormData({ ...formData, tipoDocumento: e.target.value })}
                         style={{
                           width: "100%",
-                          padding: "9px 8px",
+                          padding: "9px 34px 9px 12px",
                           borderRadius: "10px",
                           border: "1px solid var(--border-color)",
                           background: "var(--bg-tertiary)",
                           color: "var(--text-main)",
-                          fontSize: "0.84rem"
+                          fontSize: "0.84rem",
+                          cursor: "pointer"
                         }}
                       >
-                        <option value="TI">TI (Tarjeta Identidad)</option>
-                        <option value="RC">RC (Registro Civil)</option>
-                        <option value="CC">CC (Cédula)</option>
-                        <option value="PPT">PPT (Permiso Protecc)</option>
-                        <option value="NES">NES (Número Secretar)</option>
+                        <option value="TI">TI — Tarjeta Id.</option>
+                        <option value="RC">RC — Registro Civil</option>
+                        <option value="CC">CC — Cédula</option>
+                        <option value="PPT">PPT — Permiso Prot.</option>
+                        <option value="NES">NES — Núm. Secret.</option>
                       </select>
                     </div>
 
@@ -1546,17 +1554,19 @@ export default function InsurancesView({
                         Curso Escolar (0 a 11) *:
                       </label>
                       <select
+                        className="form-select"
                         value={formData.curso}
                         onChange={(e) => setFormData({ ...formData, curso: e.target.value })}
                         style={{
                           width: "100%",
-                          padding: "8px 10px",
+                          padding: "8px 32px 8px 12px",
                           borderRadius: "10px",
                           border: "1px solid var(--border-color)",
                           background: "var(--bg-tertiary)",
                           color: "var(--text-main)",
                           fontSize: "0.84rem",
-                          fontWeight: 700
+                          fontWeight: 700,
+                          cursor: "pointer"
                         }}
                       >
                         <option value="0">0 — Transición / Preescolar</option>
@@ -1659,16 +1669,18 @@ export default function InsurancesView({
                         Inclusión:
                       </label>
                       <select
+                        className="form-select"
                         value={formData.inclusion}
                         onChange={(e) => setFormData({ ...formData, inclusion: e.target.value })}
                         style={{
                           width: "100%",
-                          padding: "8px 10px",
+                          padding: "8px 28px 8px 10px",
                           borderRadius: "10px",
                           border: "1px solid var(--border-color)",
                           background: "var(--bg-tertiary)",
                           color: "var(--text-main)",
-                          fontSize: "0.84rem"
+                          fontSize: "0.84rem",
+                          cursor: "pointer"
                         }}
                       >
                         <option value="NO">NO (Normal)</option>
@@ -1743,16 +1755,18 @@ export default function InsurancesView({
                         Método de Pago:
                       </label>
                       <select
+                        className="form-select"
                         value={formData.metodoPago}
                         onChange={(e) => setFormData({ ...formData, metodoPago: e.target.value })}
                         style={{
                           width: "100%",
-                          padding: "8px 10px",
+                          padding: "8px 30px 8px 10px",
                           borderRadius: "10px",
                           border: "1px solid var(--border-color)",
                           background: "var(--bg-tertiary)",
                           color: "var(--text-main)",
-                          fontSize: "0.84rem"
+                          fontSize: "0.84rem",
+                          cursor: "pointer"
                         }}
                       >
                         <option value="Efectivo">Efectivo</option>

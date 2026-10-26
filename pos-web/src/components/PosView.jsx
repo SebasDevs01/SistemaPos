@@ -1998,13 +1998,16 @@ export default function PosView({
       {isCheckoutOpen && (
         <div className="modal-overlay" onClick={() => setIsCheckoutOpen(false)}>
           <div
-            className="modal-content modal-card"
+            className="modal-content modal-card checkout-modal-card"
             style={{
               maxWidth: "520px",
               width: "94%",
+              maxHeight: "92vh",
+              overflowY: "auto",
+              overscrollBehavior: "contain",
               background: "var(--bg-secondary, #111827)",
               border: "1px solid var(--border-strong)",
-              borderRadius: "20px",
+              borderRadius: "24px",
               padding: "24px",
               boxShadow: "0 25px 65px -10px rgba(0,0,0,0.8)"
             }}

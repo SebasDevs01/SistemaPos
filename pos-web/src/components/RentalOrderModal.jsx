@@ -259,22 +259,38 @@ export default function RentalOrderModal({
   return (
     <div className="modal-overlay" onClick={onClose} style={{ zIndex: 1200 }}>
       <div
-        className="modal-content modal-card"
+        className="modal-content modal-card rental-order-modal-card"
         style={{
-          maxWidth: "600px",
-          width: "95%",
-          maxHeight: "92vh",
+          maxWidth: "620px",
+          width: "100%",
+          maxHeight: "min(92vh, 880px)",
           overflowY: "auto",
+          overflowX: "hidden",
+          overscrollBehavior: "contain",
           padding: "24px",
-          background: "var(--bg-secondary, #111827)",
-          border: "1px solid var(--border-strong)",
-          borderRadius: "20px",
-          boxShadow: "0 25px 65px -10px rgba(0,0,0,0.85)"
+          borderRadius: "24px",
+          display: "flex",
+          flexDirection: "column",
+          position: "relative"
         }}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Cabecera */}
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px" }}>
+        {/* Cabecera Sticky */}
+        <div style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "16px",
+          position: "sticky",
+          top: "-24px",
+          paddingTop: "6px",
+          paddingBottom: "12px",
+          background: "inherit",
+          backdropFilter: "blur(24px)",
+          WebkitBackdropFilter: "blur(24px)",
+          zIndex: 10,
+          borderBottom: "1px solid var(--border-color)"
+        }}>
           <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
             <div style={{
               width: "40px",
@@ -289,15 +305,15 @@ export default function RentalOrderModal({
               <Armchair size={22} />
             </div>
             <div>
-              <h2 style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--text-main)" }}>
+              <h2 style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--text-main)", margin: 0 }}>
                 Facturación y Alquiler de Sillas
               </h2>
-              <p style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
+              <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", margin: "2px 0 0" }}>
                 Salida inmediata o apartados para fechas especiales (Diciembre)
               </p>
             </div>
           </div>
-          <button onClick={onClose} className="btn btn-outline" style={{ padding: "6px 10px" }}>
+          <button onClick={onClose} className="btn btn-outline" style={{ padding: "6px 10px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }} title="Cerrar modal">
             <X size={16} />
           </button>
         </div>

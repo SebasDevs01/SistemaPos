@@ -691,9 +691,34 @@ body {
 .reports-modal-overlay,
 .price-audit-overlay,
 [class*="modal-overlay"] {
+  position: fixed !important;
+  inset: 0 !important;
+  z-index: 1200 !important;
   background: rgba(0, 0, 0, 0.65) !important;
   backdrop-filter: blur(24px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(24px) saturate(180%) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 20px 16px !important;
+  box-sizing: border-box !important;
+  /* ✅ El overlay NO hace scroll — el scroll lo maneja el modal card internamente */
+  overflow: hidden !important;
+  overscroll-behavior: contain !important;
+}
+
+/* En pantallas pequeñas, el overlay permite scroll y el modal se alinea arriba */
+@media (max-height: 800px) {
+  .modal-overlay,
+  .reports-modal-overlay,
+  .price-audit-overlay,
+  [class*="modal-overlay"] {
+    align-items: flex-start !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding-top: 16px !important;
+    padding-bottom: 24px !important;
+  }
 }
 
 [data-theme="light"] .modal-overlay,
@@ -723,35 +748,60 @@ body {
     inset 0 1px 1px rgba(255, 255, 255, 0.20) !important;
   color: #FFFFFF !important;
   position: relative !important;
+  /* ✅ SCROLL CORRECTO: max-height + overflow-y:auto hace que el scroll quede DENTRO del border-radius */
   max-height: min(92vh, 880px) !important;
+  width: 100% !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
   overscroll-behavior: contain !important;
   -webkit-overflow-scrolling: touch !important;
+  /* ✅ Scrollbar reserva espacio interno para que no se salga del borde */
+  scrollbar-gutter: stable !important;
 }
 
-/* Scrollbar ultrafino estilo iOS para modales */
+/* Scrollbar ultrafino estilo iOS para modales — queda DENTRO del border-radius */
 .modal-content::-webkit-scrollbar,
 .modal-card::-webkit-scrollbar,
 .reports-modal-container::-webkit-scrollbar,
 .price-audit-modal::-webkit-scrollbar,
 [class*="modal-card"]::-webkit-scrollbar,
 [class*="modal-container"]::-webkit-scrollbar {
-  width: 6px !important;
+  width: 5px !important;
 }
 
 .modal-content::-webkit-scrollbar-track,
 .modal-card::-webkit-scrollbar-track,
-[class*="modal-card"]::-webkit-scrollbar-track {
+[class*="modal-card"]::-webkit-scrollbar-track,
+[class*="modal-container"]::-webkit-scrollbar-track {
   background: transparent !important;
+  /* Márgenes para que el track no llegue a las esquinas redondeadas */
+  margin-block: 20px !important;
+  border-radius: 9999px !important;
 }
 
 .modal-content::-webkit-scrollbar-thumb,
 .modal-card::-webkit-scrollbar-thumb,
-[class*="modal-card"]::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.24) !important;
+[class*="modal-card"]::-webkit-scrollbar-thumb,
+[class*="modal-container"]::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.22) !important;
   border-radius: 9999px !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
 }
+
+.modal-content::-webkit-scrollbar-thumb:hover,
+.modal-card::-webkit-scrollbar-thumb:hover,
+[class*="modal-card"]::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.38) !important;
+}
+
+/* El overlay no debe mostrar scrollbar (el scroll lo maneja el modal card) */
+.modal-overlay::-webkit-scrollbar,
+.reports-modal-overlay::-webkit-scrollbar,
+[class*="modal-overlay"]::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+}
+
 
 .modal-content::before,
 .modal-card::before,
@@ -773,7 +823,7 @@ body {
 [data-theme="light"] .price-audit-modal,
 [data-theme="light"] [class*="modal-card"],
 [data-theme="light"] [class*="modal-container"] {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(246, 249, 253, 0.92) 100%) !important;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.97) 0%, rgba(245, 248, 255, 0.94) 100%) !important;
   backdrop-filter: blur(44px) saturate(200%) !important;
   -webkit-backdrop-filter: blur(44px) saturate(200%) !important;
   border: 1px solid rgba(255, 255, 255, 1) !important;
@@ -786,12 +836,20 @@ body {
   overflow-y: auto !important;
   overflow-x: hidden !important;
   overscroll-behavior: contain !important;
+  scrollbar-gutter: stable !important;
 }
 
 [data-theme="light"] .modal-content::-webkit-scrollbar-thumb,
 [data-theme="light"] .modal-card::-webkit-scrollbar-thumb,
 [data-theme="light"] [class*="modal-card"]::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.20) !important;
+  background: rgba(0, 0, 0, 0.16) !important;
+  border: 1px solid rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="light"] .modal-content::-webkit-scrollbar-thumb:hover,
+[data-theme="light"] .modal-card::-webkit-scrollbar-thumb:hover,
+[data-theme="light"] [class*="modal-card"]::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.28) !important;
 }
 
 [data-theme="light"] .modal-content::before,
@@ -1683,3 +1741,247 @@ button:not(:disabled):active {
   border-radius: 12px !important;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15) !important;
 }
+
+/* ==========================================================================
+   23. CORRECCIONES MODO CLARO — VISTAS PRINCIPALES Y PANELES
+   ========================================================================== */
+
+/* ── Main content backgrounds ── */
+[data-theme="light"] .main-content,
+[data-theme="light"] .view-container,
+[data-theme="light"] .page-container,
+[data-theme="light"] main {
+  background: transparent !important;
+  color: #0F172A !important;
+}
+
+/* ── Paneles y secciones generales con fondos oscuros ── */
+[data-theme="light"] [style*="background: var(--bg-secondary)"],
+[data-theme="light"] [style*="background: var(--bg-base)"],
+[data-theme="light"] [style*="background: var(--bg-card)"],
+[data-theme="light"] [style*="background: var(--bg-tertiary)"] {
+  background: rgba(255, 255, 255, 0.80) !important;
+  color: #0F172A !important;
+}
+
+/* ── Todos los textos oscuros en modo claro ── */
+[data-theme="light"] [style*="color: var(--text-main)"],
+[data-theme="light"] [style*="color: var(--text-heading)"] {
+  color: #0F172A !important;
+}
+
+[data-theme="light"] [style*="color: var(--text-muted)"],
+[data-theme="light"] [style*="color: var(--text-dim)"] {
+  color: #475569 !important;
+}
+
+/* ── Bordes en modo claro ── */
+[data-theme="light"] [style*="border: 1px solid var(--border-color)"],
+[data-theme="light"] [style*="border-color: var(--border-color)"],
+[data-theme="light"] [style*="borderColor: var(--border-color)"] {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* ── Inputs globales en modo claro (que usan var(--bg-input) o var(--bg-glass)) ── */
+[data-theme="light"] [style*="background: var(--bg-input)"],
+[data-theme="light"] [style*="background: var(--bg-glass)"],
+[data-theme="light"] [style*="backgroundColor: var(--bg-input)"],
+[data-theme="light"] [style*="backgroundColor: var(--bg-glass)"] {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border-color: rgba(0, 0, 0, 0.10) !important;
+  color: #0F172A !important;
+}
+
+/* ── Select desplegables en modo claro ── */
+[data-theme="light"] select {
+  background: rgba(255, 255, 255, 0.92) !important;
+  color: #0F172A !important;
+  border: 1px solid rgba(0, 0, 0, 0.12) !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 10px center !important;
+  background-size: 18px !important;
+}
+
+/* ── Badges de inventario con mejor contraste en modo claro ── */
+[data-theme="light"] .badge,
+[data-theme="light"] [class*="badge"] {
+  font-weight: 700 !important;
+}
+
+/* Badges rojos (sin stock, urgente) */
+[data-theme="light"] .badge-red,
+[data-theme="light"] [style*="background: rgba(239, 68, 68"],
+[data-theme="light"] [style*="background: rgba(220, 38, 38"] {
+  background: rgba(239, 68, 68, 0.12) !important;
+  color: #B91C1C !important;
+  border: 1px solid rgba(239, 68, 68, 0.30) !important;
+}
+
+/* Badges verdes (en stock, activo) */
+[data-theme="light"] .badge-green,
+[data-theme="light"] [style*="background: rgba(16, 185, 129"],
+[data-theme="light"] [style*="background: rgba(5, 150, 105"] {
+  background: rgba(16, 185, 129, 0.12) !important;
+  color: #065F46 !important;
+  border: 1px solid rgba(16, 185, 129, 0.28) !important;
+}
+
+/* Badges amarillos (bajo stock, advertencia) */
+[data-theme="light"] .badge-yellow,
+[data-theme="light"] .badge-amber,
+[data-theme="light"] [style*="background: rgba(245, 158, 11"],
+[data-theme="light"] [style*="background: rgba(251, 191, 36"] {
+  background: rgba(245, 158, 11, 0.12) !important;
+  color: #92400E !important;
+  border: 1px solid rgba(245, 158, 11, 0.28) !important;
+}
+
+/* Badges azules (información) */
+[data-theme="light"] .badge-blue,
+[data-theme="light"] [style*="background: rgba(59, 130, 246"],
+[data-theme="light"] [style*="background: rgba(37, 99, 235"] {
+  background: rgba(37, 99, 235, 0.10) !important;
+  color: #1D4ED8 !important;
+  border: 1px solid rgba(37, 99, 235, 0.24) !important;
+}
+
+/* Badges violetas (especial, premium) */
+[data-theme="light"] .badge-purple,
+[data-theme="light"] [style*="background: rgba(139, 92, 246"],
+[data-theme="light"] [style*="background: rgba(124, 58, 237"] {
+  background: rgba(139, 92, 246, 0.10) !important;
+  color: #5B21B6 !important;
+  border: 1px solid rgba(139, 92, 246, 0.24) !important;
+}
+
+/* ── Textos de código monospace en modo claro ── */
+[data-theme="light"] code,
+[data-theme="light"] .code,
+[data-theme="light"] [style*="font-family: monospace"],
+[data-theme="light"] [style*="fontFamily: monospace"] {
+  background: rgba(0, 0, 0, 0.06) !important;
+  color: #0F172A !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* ── Líneas divisoras en modo claro ── */
+[data-theme="light"] hr {
+  border-color: rgba(0, 0, 0, 0.08) !important;
+}
+
+/* ── Cards con estilos inline en modo claro (sin clase CSS) ── */
+[data-theme="light"] div[style*="border-radius"][style*="background: rgba(0, 0, 0, 0.3)"],
+[data-theme="light"] div[style*="border-radius"][style*="background: rgba(0,0,0,0.3)"],
+[data-theme="light"] div[style*="border-radius"][style*="background: rgba(0, 0, 0, 0.4)"],
+[data-theme="light"] div[style*="border-radius"][style*="background: rgba(0,0,0,0.4)"],
+[data-theme="light"] div[style*="border-radius"][style*="background: rgba(0, 0, 0, 0.5)"],
+[data-theme="light"] div[style*="border-radius"][style*="background: rgba(17, 24, 39"] {
+  background: rgba(255, 255, 255, 0.85) !important;
+  border-color: rgba(0, 0, 0, 0.07) !important;
+  color: #0F172A !important;
+}
+
+/* ── Información de "Nota de Disponibilidad" y alertas info en modo claro ── */
+[data-theme="light"] [style*="background: rgba(37, 99, 235, 0.12)"],
+[data-theme="light"] [style*="background: rgba(37,99,235,0.12)"] {
+  background: rgba(37, 99, 235, 0.08) !important;
+  color: #1E3A8A !important;
+  border-color: rgba(37, 99, 235, 0.25) !important;
+}
+
+/* ── Panel lateral del POS (carrito) en modo claro ── */
+[data-theme="light"] .pos-cart-panel,
+[data-theme="light"] .cart-panel {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96) 0%, rgba(246, 249, 253, 0.92) 100%) !important;
+  border-left: 1px solid rgba(0, 0, 0, 0.06) !important;
+}
+
+/* ── Panel de productos POS en modo claro ── */
+[data-theme="light"] .pos-products-panel {
+  background: transparent !important;
+}
+
+/* ── Encabezados de sección (SalesView, InventoryView, etc.) ── */
+[data-theme="light"] .section-header,
+[data-theme="light"] .view-header {
+  color: #0F172A !important;
+}
+
+/* ── Scroll general de la página en modo claro ── */
+[data-theme="light"] ::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.16) !important;
+}
+
+[data-theme="light"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.28) !important;
+}
+
+/* ── Tooltip y popover en modo claro ── */
+[data-theme="light"] [class*="tooltip"],
+[data-theme="light"] [class*="popover"] {
+  background: rgba(255, 255, 255, 0.97) !important;
+  color: #0F172A !important;
+  border: 1px solid rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12) !important;
+}
+
+/* ── Overlay de carga (LoadingSpinner) en modo claro ── */
+[data-theme="light"] [class*="loading"],
+[data-theme="light"] [class*="spinner"] {
+  color: #0F172A !important;
+}
+
+/* ==========================================================================
+   24. CORRECCIONES FINALES — MODO CLARO: TEXTO EN ELEMENTOS SIN CLASE
+   ========================================================================== */
+
+/* Cualquier span/p/div que tenga color blanco explícito en modo claro */
+[data-theme="light"] [style*="color: #ffffff"],
+[data-theme="light"] [style*="color: #FFFFFF"],
+[data-theme="light"] [style*="color: white"],
+[data-theme="light"] [style*="color: rgb(255, 255, 255)"] {
+  /* Sólo aplicar cuando NO esté dentro de un botón primario o elemento con fondo azul/verde oscuro */
+  color: #0F172A !important;
+}
+
+/* Excluir botones primarios, elementos de acción y el header nav del override anterior */
+[data-theme="light"] .btn-primary [style*="color: #ffffff"],
+[data-theme="light"] .btn-primary [style*="color: white"],
+[data-theme="light"] .btn-success [style*="color: white"],
+[data-theme="light"] .btn-checkout [style*="color: white"],
+[data-theme="light"] .nav-tab--active [style*="color: white"],
+[data-theme="light"] .nav-tab--active * {
+  color: #FFFFFF !important;
+}
+
+/* ==========================================================================
+   25. SCROLL MEJORADO — CORRECCIÓN BARRA FUERA DEL CONTENEDOR
+   ========================================================================== */
+
+/* Asegurar que todos los contenedores con overflow y border-radius contengan el scroll */
+.modal-overlay,
+.reports-modal-overlay,
+[class*="modal-overlay"] {
+  /* Ocultar scrollbar propio del overlay (el modal card hace el scroll) */
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE/Edge */
+}
+
+.modal-content,
+.modal-card,
+.modal-box,
+[class*="modal-card"],
+[class*="modal-container"] {
+  /* Firefox scrollbar fino */
+  scrollbar-width: thin !important;
+  scrollbar-color: rgba(255, 255, 255, 0.22) transparent !important;
+}
+
+[data-theme="light"] .modal-content,
+[data-theme="light"] .modal-card,
+[data-theme="light"] .modal-box,
+[data-theme="light"] [class*="modal-card"] {
+  scrollbar-color: rgba(0, 0, 0, 0.16) transparent !important;
+}
+

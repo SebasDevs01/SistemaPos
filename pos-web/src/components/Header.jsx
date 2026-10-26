@@ -85,7 +85,30 @@ export default function Header({
       <div className="header-inner">
         {/* ── LOGO ── */}
         <div className="header-logo">
-          <div className="logo-icon">🏪</div>
+          <div 
+            className="logo-icon logo-icon--liquid-glass"
+            style={{
+              background: "transparent",
+              boxShadow: "none",
+              width: "44px",
+              height: "44px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+          >
+            <img
+              src="/logo-liquidglass-mj.png"
+              alt="Logo Miscelánea María José"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
+                filter: "drop-shadow(0 4px 14px rgba(168, 85, 247, 0.45))"
+              }}
+              className="logo-mj-img"
+            />
+          </div>
           <div className="logo-text">
             <h1>{storeConfig.nombre || "Miscelánea María José"}</h1>
             <div className="logo-meta">

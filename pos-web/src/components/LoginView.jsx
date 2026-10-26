@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ShieldCheck, UserCheck, Eye, EyeOff, LogIn, Lock, Store } from "lucide-react";
+import GradientWaves from "./GradientWaves";
 
 export default function LoginView({ users = [], onLogin, storeConfig = {} }) {
   const [selectedUser, setSelectedUser] = useState(null);
@@ -78,17 +79,49 @@ export default function LoginView({ users = [], onLogin, storeConfig = {} }) {
 
   return (
     <div className="login-overlay">
-      <div className="login-bg">
-        <div className="login-orb login-orb-1" />
-        <div className="login-orb login-orb-2" />
-        <div className="login-orb login-orb-3" />
+      <div className="login-bg" style={{ position: "absolute", inset: 0, overflow: "hidden", zIndex: 0 }}>
+        <GradientWaves
+          horizonColor="#240a5e"
+          waveColor="#ff9ffc"
+          crestColor="#ffffff"
+          backgroundColor="#080711"
+          amplitude={2.5}
+          swell={35}
+          lightAngle={120}
+          speed={0.4}
+          grain={0.15}
+          parallaxStrength={0.4}
+          mouseStrength={0.5}
+          swellOnClick={true}
+        />
       </div>
 
-      <div className="login-container">
+      <div className="login-container" style={{ position: "relative", zIndex: 1 }}>
         {/* Marca y encabezado */}
         <div className="login-brand">
-          <div className="login-store-icon">
-            <Store size={28} color="#DC2626" />
+          <div 
+            className="login-store-icon login-store-icon--liquid-glass"
+            style={{
+              background: "transparent",
+              boxShadow: "none",
+              width: "88px",
+              height: "88px",
+              margin: "0 auto 12px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+          >
+            <img
+              src="/logo-liquidglass-mj.png"
+              alt="Miscelánea María José Logo"
+              style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "contain",
+                filter: "drop-shadow(0 10px 25px rgba(168, 85, 247, 0.6))"
+              }}
+            />
           </div>
           <h1 className="login-title">{storeConfig?.nombre || "Miscelánea María José"}</h1>
           <p className="login-subtitle">Sistema POS · Selecciona tu perfil para ingresar</p>

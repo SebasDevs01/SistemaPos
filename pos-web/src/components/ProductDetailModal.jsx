@@ -69,7 +69,7 @@ export default function ProductDetailModal({
               justifyContent: 'center',
               fontSize: '20px'
             }}>
-              🏪
+              <img src="/logo-liquidglass-mj.png" alt="MJ" style={{ width: '28px', height: '28px', objectFit: 'contain' }} />
             </div>
             <div>
               <h2 style={{

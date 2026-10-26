@@ -1,0 +1,86 @@
+/**
+ * LIQUID GLASS DESIGN TOKENS
+ * Sistema de diseño de cristal líquido translúcido con reflejos especulares,
+ * bordes luminosos y profundidad inspirado en Apple Liquid Glass y React Bits.
+ */
+
+:root {
+  /* Desenfoques de lente */
+  --lg-blur-xs: blur(6px);
+  --lg-blur-sm: blur(12px);
+  --lg-blur-md: blur(20px);
+  --lg-blur-lg: blur(32px);
+  --lg-blur-xl: blur(48px);
+
+  /* Transición óptica */
+  --lg-transition-smooth: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  --lg-transition-bounce: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* MODO OSCURO (POR DEFECTO - LIQUID GLASS OBSIDIAN & DUSK) */
+  --lg-surface-lowest: rgba(13, 14, 24, 0.45);
+  --lg-surface-base: rgba(18, 20, 32, 0.68);
+  --lg-surface-raised: rgba(26, 28, 44, 0.78);
+  --lg-surface-overlay: rgba(15, 17, 28, 0.88);
+  --lg-surface-highlight: rgba(255, 255, 255, 0.08);
+
+  /* Bordes de refracción y reflejo especular */
+  --lg-border-subtle: rgba(255, 255, 255, 0.10);
+  --lg-border-specular: rgba(255, 255, 255, 0.22);
+  --lg-border-glow-purple: rgba(192, 132, 252, 0.35);
+  --lg-border-glow-cyan: rgba(56, 189, 248, 0.35);
+
+  /* Sombras y profundidad */
+  --lg-shadow-sm: 0 4px 16px -2px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  --lg-shadow-md: 0 10px 30px -4px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.20);
+  --lg-shadow-lg: 0 20px 50px -10px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.12), inset 0 1px 2px rgba(255, 255, 255, 0.25);
+  --lg-shadow-glow: 0 0 35px -5px rgba(168, 85, 247, 0.28), 0 15px 35px -5px rgba(0, 0, 0, 0.5);
+
+  /* Reflejo especular superior (sheen de cristal líquido) */
+  --lg-sheen-gradient: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.24) 0%,
+    rgba(255, 255, 255, 0.06) 40%,
+    rgba(255, 255, 255, 0.0) 70%,
+    rgba(192, 132, 252, 0.12) 100%
+  );
+
+  /* Acentos Liquid Dusk */
+  --lg-dusk-purple: #c084fc;
+  --lg-dusk-wave: #ff9ffc;
+  --lg-dusk-horizon: #5227ff;
+}
+
+/* MODO CLARO (CRISTAL PERLADO TRASLÚCIDO) */
+[data-theme="light"] {
+  --lg-surface-lowest: rgba(255, 255, 255, 0.60);
+  --lg-surface-base: rgba(255, 255, 255, 0.82);
+  --lg-surface-raised: rgba(255, 255, 255, 0.92);
+  --lg-surface-overlay: rgba(255, 255, 255, 0.96);
+  --lg-surface-highlight: rgba(255, 255, 255, 0.98);
+
+  --lg-border-subtle: rgba(0, 0, 0, 0.08);
+  --lg-border-specular: rgba(255, 255, 255, 0.85);
+  --lg-border-glow-purple: rgba(147, 51, 234, 0.25);
+  --lg-border-glow-cyan: rgba(14, 165, 233, 0.25);
+
+  --lg-shadow-sm: 0 4px 16px -2px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  --lg-shadow-md: 0 10px 30px -4px rgba(15, 23, 42, 0.12), inset 0 1px 1px rgba(255, 255, 255, 0.95);
+  --lg-shadow-lg: 0 20px 45px -10px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.06), inset 0 1px 2px rgba(255, 255, 255, 1);
+  --lg-shadow-glow: 0 0 35px -5px rgba(168, 85, 247, 0.20), 0 12px 28px -4px rgba(15, 23, 42, 0.12);
+
+  --lg-sheen-gradient: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.70) 0%,
+    rgba(255, 255, 255, 0.35) 40%,
+    rgba(255, 255, 255, 0.0) 70%,
+    rgba(192, 132, 252, 0.15) 100%
+  );
+}
+
+/* Soporte para preferencias de movimiento reducido */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --lg-transition-smooth: none;
+    --lg-transition-bounce: none;
+  }
+}

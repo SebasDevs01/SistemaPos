@@ -1426,7 +1426,7 @@ export default function ProductEditModal({
                         border: isSelected ? '2px solid var(--accent-blue, #3b82f6)' : '1px solid var(--border-color)',
                         background: isSelected 
                           ? (c === 'Cintas' ? 'rgba(16, 185, 129, 0.22)' : c === 'Bolsas de Regalo' ? 'rgba(236, 72, 153, 0.22)' : c === 'Cordones' ? 'rgba(251, 146, 60, 0.22)' : c === 'Bisutería' ? 'rgba(234, 179, 8, 0.22)' : c === 'Seguros' ? 'rgba(20, 184, 166, 0.25)' : 'rgba(59, 130, 246, 0.22)')
-                          : 'rgba(255, 255, 255, 0.04)',
+                          : 'var(--bg-glass, rgba(255, 255, 255, 0.04))',
                         color: isSelected 
                           ? (c === 'Cintas' ? '#6ee7b7' : c === 'Bolsas de Regalo' ? '#f472b6' : c === 'Cordones' ? '#fb923c' : c === 'Bisutería' ? '#facc15' : c === 'Seguros' ? '#2dd4bf' : '#93c5fd')
                           : 'var(--text-muted)',
@@ -2518,17 +2518,19 @@ export default function ProductEditModal({
                     Precio de Compra / Costo Proveedor ($ COP):
                   </label>
                   <div style={{ display: 'flex', gap: '6px' }}>
-                    <MathPriceInput
-                      value={formData.precioCosto ?? ''}
-                      onChange={(val) => handleCostChange(String(val))}
-                      placeholder="Ej: 2000 o 2465"
-                      className="input-field"
-                      style={{ fontWeight: 800, fontSize: '0.95rem', color: '#34d399', paddingRight: '45px' }}
-                      min={0}
-                    />
-                    <span style={{ position: 'absolute', right: '10px', top: '50%', transform: 'translateY(-50%)', fontSize: '0.72rem', color: '#34d399', fontWeight: 800, pointerEvents: 'none' }}>
-                      COP
-                    </span>
+                    <div style={{ position: 'relative', width: '100%' }}>
+                      <MathPriceInput
+                        value={formData.precioCosto ?? ''}
+                        onChange={(val) => handleCostChange(String(val))}
+                        placeholder="Ej: 2000 o 2465"
+                        className="input-field"
+                        style={{ fontWeight: 800, fontSize: '0.95rem', color: '#34d399', paddingRight: '45px', width: '100%' }}
+                        min={0}
+                      />
+                      <span style={{ position: 'absolute', right: '12px', top: '50%', transform: 'translateY(-50%)', fontSize: '0.72rem', color: '#34d399', fontWeight: 800, pointerEvents: 'none' }}>
+                        COP
+                      </span>
+                    </div>
                   </div>
                 </div>
 
@@ -2602,8 +2604,8 @@ export default function ProductEditModal({
                   justifyContent: 'space-between',
                   padding: '8px 12px',
                   borderRadius: '10px',
-                  background: 'rgba(0, 0, 0, 0.28)',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  background: 'var(--bg-tertiary, rgba(0, 0, 0, 0.28))',
+                  border: '1px solid var(--border-color, rgba(255, 255, 255, 0.08))',
                   fontSize: '0.76rem',
                   flexWrap: 'wrap',
                   gap: '6px'

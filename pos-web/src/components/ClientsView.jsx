@@ -223,7 +223,7 @@ export default function ClientsView({
       {/* Cabecera y Botones de Acción */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "20px", flexWrap: "wrap", gap: "14px" }}>
         <div>
-          <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "#ffffff", display: "flex", alignItems: "center", gap: "10px" }}>
+          <h2 style={{ fontSize: "1.4rem", fontWeight: 800, color: "var(--text-main)", display: "flex", alignItems: "center", gap: "10px" }}>
             <Users size={26} color="var(--accent-blue)" />
             Directorio y Cartera de Clientes
           </h2>
@@ -371,7 +371,7 @@ export default function ClientsView({
                     {c.nombre ? c.nombre.charAt(0).toUpperCase() : "C"}
                   </div>
                   <div>
-                    <h3 style={{ fontSize: "1.05rem", fontWeight: 700, color: "#ffffff", margin: 0 }}>
+                    <h3 style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--text-main)", margin: 0 }}>
                       {c.nombre}
                     </h3>
                     <span className="badge badge-blue" style={{ fontSize: "0.68rem", marginTop: "2px" }}>

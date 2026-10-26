@@ -31,6 +31,7 @@ import RentalTicketModal from "./RentalTicketModal";
 import RentalOrderModal from "./RentalOrderModal";
 import PaymentEvidenceUploader from "./PaymentEvidenceUploader";
 import MathPriceInput from "./MathPriceInput";
+import { getRentalAlertInfo, isRentalOverdue } from "../utils/rentalUtils";
 
 export default function RentalsView({ 
   rentals = [], 
@@ -144,100 +145,35 @@ export default function RentalsView({
   const apartadosRentals = rentals.filter(r => r.estado === "reservado" || r.tipoOperacion === "reserva" || r.esApartado);
   const apartadosCount = apartadosRentals.length;
 
-  // Calcular horas transcurridas y estado de alerta de 24h
-  const getRentalAlertInfo = (rental) => {
-    if (rental.estado === "devuelto") {
-      return { 
-        status: "devuelto", 
-        badgeText: "Devuelto",
-        label: "Devuelto", 
-        color: "badge-green", 
-        elapsedHours: 0, 
-        isOverdue: false 
-      };
-    }
+  // Wrapper local para pasar el timestamp reactivo "now"
+  const getAlertInfo = (rental) => getRentalAlertInfo(rental, now);
 
-    // Alquiler apartado / reservado para fecha especial
-    if (rental.estado === "reservado" || rental.tipoOperacion === "reserva" || rental.esApartado) {
-      let diasFaltantes = null;
-      let evDate = null;
-      if (rental.fechaEvento) {
-        evDate = new Date(rental.fechaEvento + (rental.horaEvento ? `T${rental.horaEvento}` : "T12:00:00"));
-        diasFaltantes = Math.ceil((evDate.getTime() - now) / (1000 * 60 * 60 * 24));
-      }
-      // Mostrar emoji según mes del evento
-      const evMonth = evDate ? evDate.getMonth() : -1; // 11 = diciembre
-      const eventEmoji = evMonth === 11 ? "🎄" : evMonth === 0 ? "🎉" : "📅";
-      const eventDateShort = evDate
-        ? evDate.toLocaleDateString("es-CO", { day: "numeric", month: "short" })
-        : "";
-      const badgeTxt = diasFaltantes !== null
-        ? (diasFaltantes > 0
-            ? `${eventEmoji} ${eventDateShort} · Faltan ${diasFaltantes} días`
-            : diasFaltantes === 0
-              ? "🎉 ¡EVENTO HOY!"
-              : `⚠️ ${eventDateShort} · Pasado`)
-        : `${eventEmoji} Apartado`;
-      return {
-        status: "reservado",
-        badgeText: badgeTxt,
-        label: `Apartado: ${rental.fechaEvento || "Fecha especial"}`,
-        color: diasFaltantes === 0 ? "badge-green" : "badge-purple",
-        elapsedHours: 0,
-        isOverdue: false,
-        isReserva: true,
-        diasFaltantes
-      };
-    }
-
-    const start = new Date(rental.fechaInicio).getTime();
-    const elapsedMs = now - start;
-    const elapsedHours = Math.floor(elapsedMs / (1000 * 60 * 60));
-    const elapsedMinutes = Math.floor((elapsedMs % (1000 * 60 * 60)) / (1000 * 60));
-    const maxHours = rental.duracionHoras || 24;
-
-    if (elapsedHours >= maxHours) {
-      const extraHours = elapsedHours - maxHours;
-      return {
-        status: "vencido",
-        badgeText: `¡Vencido (+${extraHours}h)!`,
-        label: `¡ALERTA 24H VENCIDA! (+${extraHours}h ${elapsedMinutes}m de retraso)`,
-        extraHours,
-        elapsedMinutes,
-        color: "badge-red",
-        elapsedText: `${elapsedHours}h ${elapsedMinutes}m transcurridas`,
-        isOverdue: true,
-        hoursDiff: extraHours
-      };
-    } else if (elapsedHours >= maxHours - 4) {
-      const remainingHours = maxHours - elapsedHours;
-      return {
-        status: "por_vencer",
-        badgeText: `Por vencer (${remainingHours}h)`,
-        label: `Por vencer (Quedan ${remainingHours}h)`,
-        remainingHours,
-        color: "badge-amber",
-        elapsedText: `${elapsedHours}h ${elapsedMinutes}m transcurridas`,
-        isOverdue: false
-      };
-    } else {
-      return {
-        status: "activo",
-        badgeText: `En Plazo (${elapsedHours}/${maxHours}h)`,
-        label: `En Plazo (${elapsedHours}h de ${maxHours}h)`,
-        color: "badge-blue",
-        elapsedText: `${elapsedHours}h ${elapsedMinutes}m transcurridas`,
-        isOverdue: false
-      };
-    }
-  };
-
-  // Abrir WhatsApp con mensaje pre-redactado
+  // Abrir WhatsApp con mensaje pre-redactado inteligente
   const handleOpenWhatsApp = (rental, alertInfo) => {
     const cleanPhone = String(rental.clienteTelefono || "").replace(/\D/g, "");
     const phoneWithCountry = cleanPhone.startsWith("57") ? cleanPhone : `57${cleanPhone}`;
-    
-    const message = `Hola ${rental.clienteNombre}, cordial saludo de *${storeConfig.nombre || "Miscelánea María José"}*. 🪑\n\nLe recordamos amablemente que el alquiler de las *${rental.cantidad} ${rental.item}* ha cumplido el plazo acordado de 24 horas.\n\nPor favor confírmenos si pasará a entregarlas hoy o si desea extender el alquiler por 24 horas más.\n\n¡Quedamos muy atentos, muchas gracias!`;
+    const storeName = storeConfig?.nombre || "Miscelánea María José";
+
+    let message = "";
+    if (alertInfo.isReserva) {
+      if (alertInfo.isOverdue) {
+        const delayStr = alertInfo.diasAtraso > 0
+          ? `${alertInfo.diasAtraso} día(s)${alertInfo.horasRestantes > 0 ? ` y ${alertInfo.horasRestantes} hora(s)` : ""}`
+          : `${alertInfo.extraHours || 0} hora(s)`;
+        message = `Hola ${rental.clienteNombre}, cordial saludo de *${storeName}*. 🪑\n\nLe contactamos amablemente para informarle que la reserva de *${rental.cantidad} ${rental.item}* pactada para el *${rental.fechaEvento}* presenta un retraso de *${delayStr}* sin registrar entrega o devolución.\n\nPor favor contáctenos a la mayor brevedad para coordinar la entrega o devolución del mobiliario.\n\n¡Quedamos muy atentos, muchas gracias!`;
+      } else {
+        const saldoStr = Number(rental.saldoPendiente || 0) > 0
+          ? `\n\nSaldo pendiente por cancelar: *$${Number(rental.saldoPendiente).toLocaleString("es-CO")} COP*.`
+          : "";
+        message = `Hola ${rental.clienteNombre}, cordial saludo de *${storeName}*. 🪑\n\nLe recordamos amablemente su reserva de *${rental.cantidad} ${rental.item}* para el evento del día *${rental.fechaEvento}*${rental.horaEvento ? ` a las ${rental.horaEvento}` : ""}.${saldoStr}\n\n¡Cualquier duda o ajuste estamos a su disposición, muchas gracias!`;
+      }
+    } else {
+      if (alertInfo.isOverdue) {
+        message = `Hola ${rental.clienteNombre}, cordial saludo de *${storeName}*. 🪑\n\nLe recordamos amablemente que el alquiler de las *${rental.cantidad} ${rental.item}* ha cumplido el plazo acordado de ${rental.duracionHoras || 24} horas (+${alertInfo.diasAtraso > 0 ? `${alertInfo.diasAtraso}d ` : ""}${alertInfo.horasRestantes || alertInfo.extraHours}h de retraso).\n\nPor favor confírmenos si pasará a entregarlas hoy o si desea extender el alquiler por 24 horas más.\n\n¡Quedamos muy atentos, muchas gracias!`;
+      } else {
+        message = `Hola ${rental.clienteNombre}, cordial saludo de *${storeName}*. 🪑\n\nLe saludamos para consultarle sobre el alquiler de las *${rental.cantidad} ${rental.item}*. Recuerde que el plazo acordado es de ${rental.duracionHoras || 24} horas.\n\n¡Quedamos a su disposición!`;
+      }
+    }
     
     const encoded = encodeURIComponent(message);
     window.open(`https://wa.me/${phoneWithCountry}?text=${encoded}`, "_blank");
@@ -361,11 +297,12 @@ export default function RentalsView({
 
   // Filtrar lista por estado, fechas y texto
   const filteredRentals = rentals.filter(r => {
-    const alertInfo = getRentalAlertInfo(r);
+    const alertInfo = getAlertInfo(r);
 
     // 1. Filtro de estado
-    if (filterStatus === "apartados" && alertInfo.status !== "reservado") return false;
-    if (filterStatus === "vencidos" && alertInfo.status !== "vencido") return false;
+    if (filterStatus === "apartados" && !alertInfo.isReserva) return false;
+    if (filterStatus === "vencidos" && !alertInfo.isOverdue && alertInfo.status !== "vencido") return false;
+    if (filterStatus === "activos" && alertInfo.isReserva) return false;
     if (filterStatus === "activos" && (alertInfo.status !== "activo" && alertInfo.status !== "por_vencer")) return false;
     if (filterStatus === "devueltos" && alertInfo.status !== "devuelto") return false;
 
@@ -408,7 +345,7 @@ export default function RentalsView({
     return true;
   });
 
-  const overdueCount = rentals.filter(r => getRentalAlertInfo(r).status === "vencido").length;
+  const overdueCount = rentals.filter(r => isRentalOverdue(r, now)).length;
 
   // Ejecutar limpieza de alquileres devueltos
   const handleExecuteClear = async () => {
@@ -693,8 +630,8 @@ export default function RentalsView({
             {[
               { id: "todos", label: `Todos (${rentals.length})` },
               { id: "apartados", label: `🎄 Apartados / Diciembre (${apartadosCount})` },
-              { id: "vencidos", label: `⚠️ Vencidos (>24h) (${overdueCount})` },
-              { id: "activos", label: `🟢 Activos (${rentals.filter(r => r.estado !== "devuelto" && r.estado !== "reservado").length})` },
+              { id: "vencidos", label: `⚠️ Vencidos / Retraso (${overdueCount})` },
+              { id: "activos", label: `🟢 Activos (${rentals.filter(r => r.estado !== "devuelto" && !r.esApartado && r.tipoOperacion !== "reserva" && !r.fechaEvento).length})` },
               { id: "devueltos", label: `✅ Devueltos (${returnedCount})` }
             ].map(f => (
               <button
@@ -863,7 +800,7 @@ export default function RentalsView({
           </div>
         ) : (
           filteredRentals.map(rental => {
-            const alertInfo = getRentalAlertInfo(rental);
+            const alertInfo = getAlertInfo(rental);
             const startDate = new Date(rental.fechaInicio);
 
             return (
@@ -925,7 +862,7 @@ export default function RentalsView({
                     </div>
                   </div>
 
-                  {/* Banner Alerta de Retraso de 24h (se ajusta al 100% del contenedor sin desbordarse) */}
+                  {/* Banner Alerta de Retraso (se ajusta al 100% del contenedor sin desbordarse) */}
                   {alertInfo.status === "vencido" && (
                     <div style={{
                       background: "rgba(244, 63, 94, 0.12)",
@@ -944,10 +881,10 @@ export default function RentalsView({
                       <AlertTriangle size={16} style={{ flexShrink: 0, color: "var(--neon-rose, #f43f5e)", marginTop: "2px", alignSelf: "flex-start" }} />
                       <div style={{ wordBreak: "break-word", overflowWrap: "anywhere", flex: 1, minWidth: 0, display: "flex", flexWrap: "wrap", alignItems: "baseline", gap: "4px" }}>
                         <strong style={{ color: "var(--neon-rose, #f43f5e)", letterSpacing: "0.2px" }}>
-                          ¡ALERTA 24H VENCIDA!
+                          {alertInfo.isReserva ? "¡ALERTA DE EVENTO / ENTREGA VENCIDA!" : "¡ALERTA 24H VENCIDA!"}
                         </strong>
                         <span style={{ color: "var(--text-main)", fontWeight: 600, fontSize: "0.78rem" }}>
-                          (+{alertInfo.extraHours}h {alertInfo.elapsedMinutes}m de retraso)
+                          (+{alertInfo.diasAtraso > 0 ? `${alertInfo.diasAtraso}d ` : ""}{alertInfo.horasRestantes !== undefined ? alertInfo.horasRestantes : alertInfo.extraHours}h {alertInfo.elapsedMinutes}m de retraso)
                         </span>
                       </div>
                     </div>

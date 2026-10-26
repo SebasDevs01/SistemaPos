@@ -14,6 +14,7 @@ import KeyboardModal from "./components/KeyboardModal";
 import LoginView from "./components/LoginView";
 import SplashScreen from "./components/SplashScreen";
 import ShiftBlockedModal from "./components/ShiftBlockedModal";
+import { isRentalOverdue } from "./utils/rentalUtils";
 
 // Vistas y modales secundarios cargados bajo demanda (Code-Splitting de alto rendimiento)
 const RentalsView = lazy(() => import("./components/RentalsView"));
@@ -614,13 +615,8 @@ export default function App() {
     };
   }, []);
 
-  // Cantidad de alquileres vencidos (>24 horas)
-  const overdueRentalsCount = rentals.filter(r => {
-    if (r.estado === "devuelto") return false;
-    const start = new Date(r.fechaInicio).getTime();
-    const elapsedHours = (Date.now() - start) / (1000 * 60 * 60);
-    return elapsedHours >= (r.duracionHoras || 24);
-  }).length;
+  // Cantidad de alquileres vencidos o con retraso (>24 horas o evento vencido)
+  const overdueRentalsCount = rentals.filter(r => isRentalOverdue(r)).length;
 
   // Registrar Venta y Descontar Stock Estricto
   const handleCompleteSale = async (saleRecord) => {

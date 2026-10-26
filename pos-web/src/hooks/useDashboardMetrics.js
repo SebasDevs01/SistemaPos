@@ -6,6 +6,7 @@
  */
 
 import { useMemo } from "react";
+import { isRentalOverdue } from "../utils/rentalUtils";
 
 /**
  * @param {object} params
@@ -104,12 +105,7 @@ export function useDashboardMetrics({
 
     // ─── Alquileres ─────────────────────────────────────────────────
     const rentasActivas = rentals.filter((r) => r?.estado === "activo");
-    const rentasVencidas = rentals.filter((r) => {
-      if (r?.estado === "devuelto") return false;
-      const start = new Date(r?.fechaInicio).getTime();
-      const elapsedH = (Date.now() - start) / (1000 * 60 * 60);
-      return elapsedH >= (r?.duracionHoras || 24);
-    });
+    const rentasVencidas = rentals.filter((r) => isRentalOverdue(r));
     const ingresoRentasHoy = salesHoy
       .filter((s) => String(s.tipoVenta || "").startsWith("alquiler"))
       .reduce((sum, s) => sum + (Number(s.total) || 0), 0);

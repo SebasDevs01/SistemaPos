@@ -415,7 +415,7 @@ export default function RentalOrderModal({
 
           {/* Información del Cliente */}
           <div className="rental-section-card">
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px", gap: "8px", flexWrap: "wrap" }}>
               <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--text-main)" }}>
                 👤 Información del Cliente
               </span>
@@ -423,8 +423,8 @@ export default function RentalOrderModal({
                 <select
                   value={selectedClientId}
                   onChange={(e) => handleClientSelect(e.target.value)}
-                  className="input-field rental-input-field"
-                  style={{ width: "auto", padding: "3px 8px", fontSize: "0.75rem", height: "28px" }}
+                  className="input-field rental-input-field rental-client-select"
+                  title="Cargar datos de cliente frecuente registrado"
                 >
                   <option value="">-- Cargar cliente registrado --</option>
                   {clients.map(c => (

@@ -284,7 +284,11 @@ export default function UserManagementView({ users, onSaveUsers, currentUser }) 
               <p>No se encontraron terminales registradas aún. Al abrir el sistema se registrarán aquí.</p>
             </div>
           ) : (
-            <div className="users-grid">
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))",
+              gap: "16px"
+            }}>
               {devices.map((dev) => {
                 const diffSec = dev.ultimoLatido ? (now - new Date(dev.ultimoLatido).getTime()) / 1000 : 9999;
                 const isLive = diffSec < 75 && dev.online !== false;
@@ -294,28 +298,44 @@ export default function UserManagementView({ users, onSaveUsers, currentUser }) 
                 return (
                   <div
                     key={dev.id}
-                    className="user-card"
                     style={{
                       border: isLive ? "1.5px solid rgba(16, 185, 129, 0.4)" : "1px solid var(--border-color)",
                       background: isLive ? "rgba(16, 185, 129, 0.03)" : "var(--bg-glass)",
-                      position: "relative"
+                      borderRadius: "18px",
+                      padding: "16px",
+                      position: "relative",
+                      overflow: "hidden",
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: "10px",
+                      minWidth: 0
                     }}
                   >
+                    {/* Badge Este Equipo */}
                     {isThisDevice && (
-                      <div className="user-card-self-badge" style={{ background: "var(--accent-blue)" }}>
+                      <div style={{
+                        position: "absolute", top: "10px", right: "10px",
+                        background: "var(--accent-blue, #3b82f6)", color: "#fff",
+                        fontSize: "0.68rem", fontWeight: 800,
+                        padding: "3px 9px", borderRadius: "20px"
+                      }}>
                         ⭐ Este Equipo
                       </div>
                     )}
 
-                    {/* Icono del tipo de dispositivo */}
-                    <div className="user-card-avatar" style={{
-                      background: isLive ? "rgba(16, 185, 129, 0.18)" : "rgba(148, 163, 184, 0.12)",
-                      color: isLive ? "#10b981" : "var(--text-muted)"
-                    }}>
-                      {isMobile ? <Smartphone size={22} /> : <Laptop size={22} />}
-                    </div>
+                    {/* Cabecera: icono + estado + nombre */}
+                    <div style={{ display: "flex", alignItems: "flex-start", gap: "12px" }}>
+                      <div style={{
+                        width: "44px", height: "44px", borderRadius: "12px",
+                        background: isLive ? "rgba(16, 185, 129, 0.18)" : "rgba(148, 163, 184, 0.12)",
+                        color: isLive ? "#10b981" : "var(--text-muted)",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        flexShrink: 0
+                      }}>
+                        {isMobile ? <Smartphone size={22} /> : <Laptop size={22} />}
+                      </div>
 
-                    <div className="user-card-body" style={{ flex: 1 }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
                       {/* Estado En Línea / Desconectado */}
                       <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "4px" }}>
                         <span style={{
@@ -373,57 +393,79 @@ export default function UserManagementView({ users, onSaveUsers, currentUser }) 
                         </div>
                       )}
 
-                      {/* Marca, Modelo y Tipo */}
-                      <div style={{ fontSize: "0.78rem", color: "var(--neon-purple, #c084fc)", fontWeight: 700, marginTop: "2px", display: "flex", alignItems: "center", gap: "4px", flexWrap: "wrap" }}>
-                        <span>📱 {dev.marca ? `${dev.marca} ${dev.modelo && dev.modelo !== dev.marca ? `(${dev.modelo})` : ""}` : (dev.sistemaOperativo || "Terminal")}</span>
+                      {/* Marca / Tipo */}
+                      <div style={{ display: "flex", alignItems: "center", gap: "5px", marginTop: "3px", flexWrap: "wrap" }}>
+                        <span style={{ fontSize: "0.74rem", color: "var(--neon-purple, #c084fc)", fontWeight: 700 }}>
+                          📱 {dev.marca ? `${dev.marca}${dev.modelo && dev.modelo !== dev.marca ? ` (${dev.modelo})` : ""}` : (dev.sistemaOperativo || "Terminal")}
+                        </span>
                         {dev.tipoDispositivo && (
-                          <span className="badge badge-indigo" style={{ fontSize: "0.62rem", padding: "1px 6px" }}>
+                          <span className="badge badge-indigo" style={{ fontSize: "0.6rem", padding: "1px 6px" }}>
                             {dev.tipoDispositivo}
                           </span>
                         )}
                       </div>
+                    </div>{/* end flex-col header body */}
+                    </div>{/* end flex-row header */}
 
-                      {/* IP Pública y Proveedor ISP */}
-                      <div style={{ fontSize: "0.75rem", color: "var(--text-main)", marginTop: "4px", display: "flex", alignItems: "center", gap: "5px" }}>
-                        <Globe size={12} color="var(--accent-blue, #60a5fa)" />
-                        <span>IP: <strong>{dev.ip || "Detectando..."}</strong></span>
-                        {dev.isp && dev.isp !== "—" && (
-                          <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", opacity: 0.85 }}>({dev.isp})</span>
-                        )}
+                    {/* Bloque de detalles */}
+                    <div style={{
+                      background: "rgba(255,255,255,0.03)",
+                      border: "1px solid rgba(255,255,255,0.07)",
+                      borderRadius: "12px",
+                      padding: "10px 12px",
+                      display: "flex", flexDirection: "column", gap: "6px"
+                    }}>
+                      {/* IP + ISP */}
+                      <div style={{ display: "flex", alignItems: "flex-start", gap: "6px", fontSize: "0.75rem", color: "var(--text-main)" }}>
+                        <Globe size={13} color="var(--accent-blue, #60a5fa)" style={{ flexShrink: 0, marginTop: "2px" }} />
+                        <div style={{ minWidth: 0 }}>
+                          <span>IP: <strong style={{ wordBreak: "break-all" }}>{dev.ip || "Detectando..."}</strong></span>
+                          {dev.isp && dev.isp !== "—" && (
+                            <div style={{ fontSize: "0.68rem", color: "var(--text-muted)", marginTop: "1px", wordBreak: "break-word" }}>
+                              {dev.isp
+                                .replace(/COLOMBIA TELECOMUNICACIONES S\.A\. ESP BIC/i, "Movistar")
+                                .replace(/COMUNICACION CELULAR S\.A\. COMCEL S\.A\./i, "Claro Móvil")
+                                .replace(/COLOMBIA TELECOMUNICACIONES S\.A\./i, "Movistar")
+                                .replace(/TELMEX COLOMBIA S\.A\./i, "Telmex Colombia")
+                                .replace(/ETB - EMPRESA DE TELECOMUNICACIONES DE BOGOTA/i, "ETB")}
+                            </div>
+                          )}
+                        </div>
                       </div>
 
-                      {/* Ubicación Geográfica en Tiempo Real */}
-                      <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "2px", display: "flex", alignItems: "center", gap: "5px" }}>
-                        <MapPin size={12} color="#f59e0b" />
-                        <span>
-                          {dev.ciudad && dev.ciudad !== "—" ? `${dev.ciudad}, ` : ""}
-                          {dev.departamento && dev.departamento !== "—" ? `${dev.departamento}, ` : ""}
-                          {dev.pais || "Colombia"} 🇨🇴
+                      {/* Ubicación */}
+                      <div style={{ display: "flex", alignItems: "flex-start", gap: "6px", fontSize: "0.75rem", color: "var(--text-muted)" }}>
+                        <MapPin size={13} color="#f59e0b" style={{ flexShrink: 0, marginTop: "2px" }} />
+                        <span style={{ wordBreak: "break-word" }}>
+                          {[dev.ciudad && dev.ciudad !== "—" ? dev.ciudad : null,
+                            dev.departamento && dev.departamento !== "—" ? dev.departamento.replace(/^Departamento de\s+/i, "") : null,
+                            dev.pais || "Colombia"
+                          ].filter(Boolean).join(", ")} 🇨🇴
                         </span>
                       </div>
 
-                      {/* Datos del usuario activo en esa terminal */}
-                      <div style={{ fontSize: "0.78rem", color: "var(--text-main)", marginTop: "4px" }}>
-                        👤 Usuario: <strong>{dev.usuarioNombre || "Sin usuario"}</strong> ({dev.usuarioRol || "Asistente"})
+                      {/* Usuario */}
+                      <div style={{ fontSize: "0.75rem", color: "var(--text-main)" }}>
+                        👤 Usuario: <strong>{dev.usuarioNombre || "Sin usuario"}</strong>
+                        <span style={{ fontSize: "0.68rem", color: "var(--text-muted)" }}> ({dev.usuarioRol || "Asistente"})</span>
                       </div>
 
-                      {/* Sistema, Navegador y Pantalla */}
-                      <div style={{ fontSize: "0.73rem", color: "var(--text-muted)", marginTop: "2px" }}>
-                        🖥️ {dev.sistemaOperativo || "PC"} · {dev.navegador || "Navegador"}
-                        {dev.resolucionPantalla ? ` · ${dev.resolucionPantalla}` : ""}
+                      {/* OS · Navegador · Resolución */}
+                      <div style={{ fontSize: "0.71rem", color: "var(--text-muted)", wordBreak: "break-word" }}>
+                        🖥️ {dev.sistemaOperativo || "PC"} · {dev.navegador || "Navegador"}{dev.resolucionPantalla ? ` · ${dev.resolucionPantalla}` : ""}
                       </div>
 
-                      {/* Último latido */}
-                      <div style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginTop: "4px" }}>
+                      {/* Última señal */}
+                      <div style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>
                         🕒 Última señal: {dev.ultimoLatido ? new Date(dev.ultimoLatido).toLocaleTimeString("es-CO", { hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: true }) : "—"}
                       </div>
                     </div>
 
-                    {/* Acciones: Cerrar sesión remota */}
-                    <div className="user-card-actions">
+                    {/* Footer: desconectar */}
+                    <div style={{ display: "flex", justifyContent: "flex-end" }}>
                       <button
                         className="btn btn-danger btn-sm"
-                        style={{ padding: "5px 10px", fontSize: "0.75rem", display: "flex", alignItems: "center", gap: "4px" }}
+                        style={{ padding: "6px 14px", fontSize: "0.75rem", display: "flex", alignItems: "center", gap: "5px" }}
                         title="Desconectar y cerrar sesión de este dispositivo"
                         onClick={() => setConfirmDisconnect(dev)}
                       >

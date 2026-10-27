@@ -1628,34 +1628,200 @@ export const getDeviceId = () => {
   return id;
 };
 
-export const getDeviceInfo = () => {
+// ── Geolocalización IP en tiempo real (ipwho.is con caché en sessionStorage) ──
+let _cachedGeoInfo = null;
+let _geoFetchPromise = null;
+
+export const fetchDeviceGeoAndIP = async () => {
+  if (_cachedGeoInfo) return _cachedGeoInfo;
+
+  try {
+    const stored = sessionStorage.getItem("pos_device_geo");
+    if (stored) {
+      _cachedGeoInfo = JSON.parse(stored);
+      return _cachedGeoInfo;
+    }
+  } catch (_) {}
+
+  if (_geoFetchPromise) return _geoFetchPromise;
+
+  _geoFetchPromise = (async () => {
+    try {
+      const res = await fetch("https://ipwho.is/", { cache: "force-cache" });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success !== false) {
+          _cachedGeoInfo = {
+            ip: data.ip || "—",
+            ciudad: data.city || "—",
+            departamento: data.region || "—",
+            pais: data.country || "Colombia",
+            paisCodigo: data.country_code || "CO",
+            isp: data.connection?.isp || data.connection?.org || "—",
+            lat: data.latitude,
+            lon: data.longitude
+          };
+          try { sessionStorage.setItem("pos_device_geo", JSON.stringify(_cachedGeoInfo)); } catch (_) {}
+          return _cachedGeoInfo;
+        }
+      }
+    } catch (_) {}
+
+    // Fallback: ipify
+    try {
+      const res = await fetch("https://api.ipify.org?format=json");
+      if (res.ok) {
+        const data = await res.json();
+        _cachedGeoInfo = {
+          ip: data.ip || "—",
+          ciudad: "Colombia",
+          departamento: "—",
+          pais: "Colombia",
+          paisCodigo: "CO",
+          isp: "—"
+        };
+        try { sessionStorage.setItem("pos_device_geo", JSON.stringify(_cachedGeoInfo)); } catch (_) {}
+        return _cachedGeoInfo;
+      }
+    } catch (_) {}
+
+    _cachedGeoInfo = {
+      ip: "Local",
+      ciudad: "Colombia",
+      departamento: "—",
+      pais: "Colombia",
+      paisCodigo: "CO",
+      isp: "—"
+    };
+    return _cachedGeoInfo;
+  })();
+
+  return _geoFetchPromise;
+};
+
+// ── Detección detallada de tipo, marca, modelo y navegador ──
+export const getDetailedDeviceInfo = () => {
   const ua = (typeof navigator !== "undefined" && navigator.userAgent) ? navigator.userAgent : "";
+
+  // 1. Tipo de Dispositivo
+  let tipoDispositivo = "Computador (PC / Laptop)";
+  const isMobile = /Android|webOS|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+  const isTablet = /(iPad|Tablet|(Android(?!.*Mobile)))/i.test(ua);
+  if (isTablet) {
+    tipoDispositivo = "Tablet";
+  } else if (isMobile) {
+    tipoDispositivo = "Celular Móvil";
+  }
+
+  // 2. Sistema Operativo
   let os = "Dispositivo Web";
-  if (ua.includes("Windows")) os = "PC Windows";
-  else if (ua.includes("Android")) os = "Móvil Android";
-  else if (ua.includes("iPhone") || ua.includes("iPad")) os = "Apple iOS";
-  else if (ua.includes("Mac")) os = "Apple Mac";
+  if (ua.includes("Windows NT 10.0") || ua.includes("Windows NT 11.0")) os = "PC Windows 10/11";
+  else if (ua.includes("Windows")) os = "PC Windows";
+  else if (ua.includes("Android")) os = "Android";
+  else if (ua.includes("iPhone")) os = "Apple iPhone (iOS)";
+  else if (ua.includes("iPad")) os = "Apple iPad (iPadOS)";
+  else if (ua.includes("Macintosh") || ua.includes("Mac OS")) os = "Apple Mac (macOS)";
   else if (ua.includes("Linux")) os = "Linux";
+  else if (ua.includes("CrOS")) os = "ChromeOS";
 
+  // 3. Marca y Modelo específico
+  let marca = "PC";
+  let modelo = "";
+
+  if (/iPhone/i.test(ua)) {
+    marca = "Apple";
+    modelo = "iPhone";
+  } else if (/iPad/i.test(ua)) {
+    marca = "Apple";
+    modelo = "iPad";
+  } else if (/Macintosh/i.test(ua)) {
+    marca = "Apple";
+    modelo = "MacBook / Mac";
+  } else if (/Samsung|SM-[A-Za-z0-9]+/i.test(ua)) {
+    marca = "Samsung";
+    const smMatch = ua.match(/SM-([A-Za-z0-9]+)/i);
+    modelo = smMatch ? `Galaxy (${smMatch[0]})` : "Galaxy";
+  } else if (/Xiaomi|Redmi|POCO/i.test(ua)) {
+    marca = "Xiaomi";
+    const miMatch = ua.match(/(Redmi [A-Za-z0-9 ]+|POCO [A-Za-z0-9 ]+|Mi [A-Za-z0-9 ]+)/i);
+    modelo = miMatch ? miMatch[0] : "Redmi / Xiaomi";
+  } else if (/Motorola|Moto/i.test(ua)) {
+    marca = "Motorola";
+    const motoMatch = ua.match(/Moto[A-Za-z0-9 -]+/i);
+    modelo = motoMatch ? motoMatch[0] : "Moto";
+  } else if (/Huawei|Honor/i.test(ua)) {
+    marca = "Huawei";
+    modelo = "Huawei";
+  } else if (/Windows/i.test(ua)) {
+    marca = "PC Windows";
+    modelo = isMobile ? "Portátil" : "Escritorio / Laptop";
+  }
+
+  // 4. Navegador
   let browser = "Navegador";
-  if (ua.includes("Edg")) browser = "Edge";
-  else if (ua.includes("Chrome")) browser = "Chrome";
-  else if (ua.includes("Firefox")) browser = "Firefox";
-  else if (ua.includes("Safari") && !ua.includes("Chrome")) browser = "Safari";
+  if (ua.includes("Edg/")) browser = "Microsoft Edge";
+  else if (ua.includes("Chrome/") && !ua.includes("Edg/")) browser = "Google Chrome";
+  else if (ua.includes("Firefox/")) browser = "Mozilla Firefox";
+  else if (ua.includes("Safari/") && !ua.includes("Chrome/")) browser = "Apple Safari";
+  else if (ua.includes("Opera") || ua.includes("OPR/")) browser = "Opera";
 
-  const savedName = localStorage.getItem("pos_device_alias") || `${os} · ${browser}`;
+  const screenRes = typeof window !== "undefined" ? `${window.screen?.width || 0}x${window.screen?.height || 0}` : "";
+  const savedName = localStorage.getItem("pos_device_alias") || `${marca} · ${browser}`;
 
   return {
+    tipoDispositivo,
     os,
+    marca,
+    modelo: modelo || os,
     browser,
+    screenRes,
     defaultName: savedName
   };
 };
 
+export const getDeviceInfo = getDetailedDeviceInfo;
+
+// ── Limpieza periódica de dispositivos desconectados (+15 minutos sin señal) ──
+export const cleanupOldDisconnectedDevices = async () => {
+  try {
+    const colRef = collection(db, DEVICES_COLLECTION);
+    const snapshot = await getDocs(colRef);
+    const now = Date.now();
+    const fifteenMinutesMs = 15 * 60 * 1000;
+
+    const deletePromises = [];
+    snapshot.docs.forEach(docSnap => {
+      const data = docSnap.data();
+      const lastBeat = data.ultimoLatido ? new Date(data.ultimoLatido).getTime() : 0;
+      const diffMs = now - lastBeat;
+
+      // Si lleva más de 15 minutos sin latido o está explícitamente desconectado por más de 5 minutos
+      if (diffMs > fifteenMinutesMs || (data.online === false && diffMs > 5 * 60 * 1000)) {
+        deletePromises.push(deleteDoc(doc(db, DEVICES_COLLECTION, docSnap.id)));
+      }
+    });
+
+    if (deletePromises.length > 0) {
+      await Promise.all(deletePromises);
+    }
+  } catch (err) {
+    console.warn("Limpieza de terminales desconectadas:", err);
+  }
+};
+
 export const initDevicePresence = (currentUser, onForceLogout) => {
   const deviceId = getDeviceId();
-  const info = getDeviceInfo();
+  const info = getDetailedDeviceInfo();
   const docRef = doc(db, DEVICES_COLLECTION, deviceId);
+
+  let geoData = { ip: "Detectando...", ciudad: "Colombia", departamento: "—", pais: "Colombia", isp: "—" };
+
+  fetchDeviceGeoAndIP().then(geo => {
+    if (geo) {
+      geoData = geo;
+      updatePresence();
+    }
+  });
 
   const updatePresence = async () => {
     try {
@@ -1663,8 +1829,18 @@ export const initDevicePresence = (currentUser, onForceLogout) => {
       await setDoc(docRef, {
         id: deviceId,
         nombreDispositivo: alias,
+        tipoDispositivo: info.tipoDispositivo,
         sistemaOperativo: info.os,
+        marca: info.marca,
+        modelo: info.modelo,
         navegador: info.browser,
+        resolucionPantalla: info.screenRes,
+        ip: geoData.ip || "—",
+        ciudad: geoData.ciudad || "Colombia",
+        departamento: geoData.departamento || "—",
+        pais: geoData.pais || "Colombia",
+        paisCodigo: geoData.paisCodigo || "CO",
+        isp: geoData.isp || "—",
         usuarioId: currentUser?.id || null,
         usuarioNombre: currentUser?.nombre || "Cajero Mostrador",
         usuarioRol: currentUser?.rol || "Asistente",
@@ -1677,6 +1853,10 @@ export const initDevicePresence = (currentUser, onForceLogout) => {
 
   updatePresence();
   const interval = setInterval(updatePresence, 25000);
+
+  // Limpieza periódica de dispositivos desconectados cada 15 minutos
+  cleanupOldDisconnectedDevices();
+  const cleanupInterval = setInterval(cleanupOldDisconnectedDevices, 15 * 60 * 1000);
 
   const unsub = onSnapshot(docRef, (docSnap) => {
     if (docSnap.exists()) {
@@ -1699,6 +1879,7 @@ export const initDevicePresence = (currentUser, onForceLogout) => {
 
   return () => {
     clearInterval(interval);
+    clearInterval(cleanupInterval);
     unsub();
     window.removeEventListener("beforeunload", handleUnload);
   };

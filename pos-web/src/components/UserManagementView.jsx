@@ -18,12 +18,16 @@ import {
   WifiOff,
   LogOut,
   Check,
-  AlertCircle
+  AlertCircle,
+  Globe,
+  MapPin,
+  RotateCw
 } from "lucide-react";
 import {
   subscribeToDevices,
   updateDeviceName,
   disconnectDevice,
+  cleanupOldDisconnectedDevices,
   getDeviceId
 } from "../services/firestoreService";
 
@@ -43,15 +47,27 @@ export default function UserManagementView({ users, onSaveUsers, currentUser }) 
   const [editingDevice, setEditingDevice] = useState(null); // deviceId
   const [editingDeviceName, setEditingDeviceName] = useState("");
   const [confirmDisconnect, setConfirmDisconnect] = useState(null);
+  const [isCleaningDevices, setIsCleaningDevices] = useState(false);
 
   const currentDeviceId = getDeviceId();
 
   useEffect(() => {
+    cleanupOldDisconnectedDevices();
     const unsub = subscribeToDevices((list) => {
       setDevices(list);
     });
     return () => unsub && unsub();
   }, []);
+
+  const handleManualCleanup = async () => {
+    try {
+      setIsCleaningDevices(true);
+      await cleanupOldDisconnectedDevices();
+    } catch (_) {
+    } finally {
+      setIsCleaningDevices(false);
+    }
+  };
 
   const [editing, setEditing] = useState(null); // null | user object (with id or without = new)
   const [showPass, setShowPass] = useState(false);
@@ -162,12 +178,13 @@ export default function UserManagementView({ users, onSaveUsers, currentUser }) 
           <Monitor size={16} />
           <span>Dispositivos Conectados</span>
           <span style={{
-            background: onlineDevicesCount > 0 ? "rgba(16, 185, 129, 0.25)" : "rgba(148, 163, 184, 0.2)",
-            color: onlineDevicesCount > 0 ? "#10b981" : "var(--text-muted)",
-            padding: "2px 8px",
+            background: onlineDevicesCount > 0 ? "#10b981" : "rgba(148, 163, 184, 0.25)",
+            color: "#ffffff",
+            padding: "3px 9px",
             borderRadius: "12px",
             fontSize: "0.75rem",
-            fontWeight: 800
+            fontWeight: 800,
+            boxShadow: onlineDevicesCount > 0 ? "0 2px 8px rgba(16, 185, 129, 0.45)" : "none"
           }}>
             {onlineDevicesCount} en línea
           </span>
@@ -240,12 +257,25 @@ export default function UserManagementView({ users, onSaveUsers, currentUser }) 
             <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <Wifi size={18} color="var(--neon-blue)" />
               <span style={{ fontSize: "0.85rem", color: "var(--text-main)" }}>
-                Aquí ves todas las computadoras, portátiles o celulares que tienen el sistema POS abierto en la miscelánea o remotamente.
+                Aquí ves todas las terminales conectadas con rastreo de IP, ubicación en tiempo real y marca de equipo.
               </span>
             </div>
-            <span style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
-              Actualización en tiempo real cada 25s
-            </span>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+              <span style={{ fontSize: "0.76rem", color: "var(--text-muted)" }}>
+                Auto-limpieza cada 15m
+              </span>
+              <button
+                type="button"
+                onClick={handleManualCleanup}
+                className="btn btn-outline btn-sm"
+                style={{ padding: "4px 10px", fontSize: "0.75rem", display: "flex", alignItems: "center", gap: "5px" }}
+                title="Eliminar de la lista los equipos que llevan más de 15 minutos desconectados"
+                disabled={isCleaningDevices}
+              >
+                <Trash2 size={12} />
+                <span>{isCleaningDevices ? "Limpiando..." : "Limpiar Desconectados"}</span>
+              </button>
+            </div>
           </div>
 
           {devices.length === 0 ? (
@@ -343,14 +373,44 @@ export default function UserManagementView({ users, onSaveUsers, currentUser }) 
                         </div>
                       )}
 
+                      {/* Marca, Modelo y Tipo */}
+                      <div style={{ fontSize: "0.78rem", color: "var(--neon-purple, #c084fc)", fontWeight: 700, marginTop: "2px", display: "flex", alignItems: "center", gap: "4px", flexWrap: "wrap" }}>
+                        <span>📱 {dev.marca ? `${dev.marca} ${dev.modelo && dev.modelo !== dev.marca ? `(${dev.modelo})` : ""}` : (dev.sistemaOperativo || "Terminal")}</span>
+                        {dev.tipoDispositivo && (
+                          <span className="badge badge-indigo" style={{ fontSize: "0.62rem", padding: "1px 6px" }}>
+                            {dev.tipoDispositivo}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* IP Pública y Proveedor ISP */}
+                      <div style={{ fontSize: "0.75rem", color: "var(--text-main)", marginTop: "4px", display: "flex", alignItems: "center", gap: "5px" }}>
+                        <Globe size={12} color="var(--accent-blue, #60a5fa)" />
+                        <span>IP: <strong>{dev.ip || "Detectando..."}</strong></span>
+                        {dev.isp && dev.isp !== "—" && (
+                          <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", opacity: 0.85 }}>({dev.isp})</span>
+                        )}
+                      </div>
+
+                      {/* Ubicación Geográfica en Tiempo Real */}
+                      <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "2px", display: "flex", alignItems: "center", gap: "5px" }}>
+                        <MapPin size={12} color="#f59e0b" />
+                        <span>
+                          {dev.ciudad && dev.ciudad !== "—" ? `${dev.ciudad}, ` : ""}
+                          {dev.departamento && dev.departamento !== "—" ? `${dev.departamento}, ` : ""}
+                          {dev.pais || "Colombia"} 🇨🇴
+                        </span>
+                      </div>
+
                       {/* Datos del usuario activo en esa terminal */}
-                      <div style={{ fontSize: "0.8rem", color: "var(--text-main)", marginTop: "4px" }}>
+                      <div style={{ fontSize: "0.78rem", color: "var(--text-main)", marginTop: "4px" }}>
                         👤 Usuario: <strong>{dev.usuarioNombre || "Sin usuario"}</strong> ({dev.usuarioRol || "Asistente"})
                       </div>
 
-                      {/* Sistema y Navegador */}
-                      <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "2px" }}>
+                      {/* Sistema, Navegador y Pantalla */}
+                      <div style={{ fontSize: "0.73rem", color: "var(--text-muted)", marginTop: "2px" }}>
                         🖥️ {dev.sistemaOperativo || "PC"} · {dev.navegador || "Navegador"}
+                        {dev.resolucionPantalla ? ` · ${dev.resolucionPantalla}` : ""}
                       </div>
 
                       {/* Último latido */}

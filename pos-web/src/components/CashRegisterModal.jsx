@@ -1085,19 +1085,10 @@ export default function CashRegisterModal({
 
               {/* Alerta de Turno de Fecha Anterior */}
               {isShiftFromPreviousDay && (
-                <div style={{
-                  background: "rgba(245, 158, 11, 0.12)",
-                  border: "1.5px solid rgba(245, 158, 11, 0.5)",
-                  borderRadius: "14px",
-                  padding: "14px 16px",
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "12px",
-                  color: "#fde68a"
-                }}>
-                  <AlertCircle size={24} style={{ flexShrink: 0, color: "#fbbf24" }} />
-                  <div style={{ fontSize: "0.85rem", lineHeight: 1.4 }}>
-                    <strong>⚠️ Turno de fecha anterior detectado:</strong><br />
+                <div className="pos-shift-alert" style={{ padding: "14px 16px", borderRadius: "14px" }}>
+                  <AlertCircle size={22} className="alert-icon" />
+                  <div style={{ fontSize: "0.85rem", lineHeight: 1.45 }}>
+                    <strong>Turno de fecha anterior detectado:</strong><br />
                     Este turno fue abierto el {new Date(activeShift.fechaApertura).toLocaleString("es-CO", { dateStyle: "short", timeStyle: "short" })}. Para iniciar correctamente la jornada de hoy a las 5:00 AM, realiza el arqueo y cierre del turno anterior.
                   </div>
                 </div>

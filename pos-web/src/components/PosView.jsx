@@ -1024,22 +1024,9 @@ export default function PosView({
       <div className="pos-catalog-column">
         {/* Aviso de Horario y Caja (Abre 5:00 AM, Cierra 10:00 PM Colombia) */}
         {!activeShift ? (
-          <div style={{
-            background: "rgba(245, 158, 11, 0.08)",
-            border: "1px solid rgba(245, 158, 11, 0.3)",
-            borderRadius: "12px",
-            padding: "8px 14px",
-            marginBottom: "10px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            fontSize: "0.82rem",
-            color: "#fde68a",
-            gap: "10px",
-            flexWrap: "wrap"
-          }}>
+          <div className="pos-shift-alert">
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <Clock size={16} color="#fbbf24" style={{ flexShrink: 0 }} />
+              <Clock size={16} className="alert-icon" />
               <span>
                 <strong>Caja Cerrada:</strong> Horario oficial: <strong>5:00 AM a 10:00 PM (Hora Colombia)</strong>.
               </span>
@@ -1049,61 +1036,34 @@ export default function PosView({
                 type="button"
                 onClick={onOpenCashRegister}
                 className="btn btn-outline"
-                style={{ padding: "4px 10px", fontSize: "0.76rem", borderColor: "rgba(245, 158, 11, 0.5)", color: "#fbbf24" }}
+                style={{ padding: "4px 10px", fontSize: "0.76rem" }}
               >
                 Abrir Turno de Caja
               </button>
             )}
           </div>
         ) : Boolean(activeShift?.fechaApertura && getColombiaTimeInfo(activeShift.fechaApertura).dateStr !== getColombiaTimeInfo().dateStr) ? (
-          <div style={{
-            background: "rgba(245, 158, 11, 0.16)",
-            border: "1.5px solid rgba(245, 158, 11, 0.6)",
-            borderRadius: "12px",
-            padding: "10px 14px",
-            marginBottom: "10px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            fontSize: "0.84rem",
-            color: "#fde68a",
-            gap: "10px",
-            flexWrap: "wrap"
-          }}>
+          <div className="pos-shift-alert">
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <AlertTriangle size={18} color="#fbbf24" style={{ flexShrink: 0 }} />
+              <AlertTriangle size={18} className="alert-icon" />
               <span>
-                <strong>⚠️ Turno del Día Anterior Abierto:</strong> Esta caja fue abierta en una fecha anterior. Para que las ventas de hoy cuadren en la caja actual, realiza el cierre del turno anterior.
+                <strong>Turno del Día Anterior Abierto:</strong> Esta caja fue abierta en una fecha anterior. Para que las ventas de hoy cuadren en la caja actual, realiza el cierre del turno anterior.
               </span>
             </div>
             {onOpenCashRegister && (
               <button
                 type="button"
                 onClick={onOpenCashRegister}
-                className="btn btn-warning"
-                style={{ padding: "5px 12px", fontSize: "0.8rem", fontWeight: 700 }}
+                className="btn-close-prev-shift"
               >
                 Cerrar Turno de Ayer
               </button>
             )}
           </div>
         ) : !isShiftOwner(activeShift, currentUser) ? (
-          <div style={{
-            background: "rgba(245, 158, 11, 0.12)",
-            border: "1.5px solid rgba(245, 158, 11, 0.5)",
-            borderRadius: "12px",
-            padding: "8px 14px",
-            marginBottom: "10px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            fontSize: "0.82rem",
-            color: "#fde68a",
-            gap: "10px",
-            flexWrap: "wrap"
-          }}>
+          <div className="pos-shift-alert">
             <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <Lock size={16} color="#fbbf24" style={{ flexShrink: 0 }} />
+              <Lock size={16} className="alert-icon" />
               <span>
                 <strong>Caja en Uso ({activeShift.cajero}):</strong> Turno abierto en la sesión de <strong>{activeShift.cajero}</strong>.
               </span>
@@ -1113,7 +1073,7 @@ export default function PosView({
                 type="button"
                 onClick={onOpenCashRegister}
                 className="btn btn-outline"
-                style={{ padding: "4px 10px", fontSize: "0.76rem", borderColor: "rgba(245, 158, 11, 0.6)", color: "#fbbf24" }}
+                style={{ padding: "4px 10px", fontSize: "0.76rem" }}
               >
                 Ver Estado de Caja
               </button>

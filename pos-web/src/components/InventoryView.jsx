@@ -531,9 +531,9 @@ export default function InventoryView({
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="input-field"
+              className="input-field select-with-arrow"
               style={{
-                padding: "8px 12px",
+                padding: "8px 36px 8px 12px",
                 fontSize: "0.82rem",
                 borderRadius: "10px",
                 minWidth: "250px",

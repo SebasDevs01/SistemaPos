@@ -940,6 +940,7 @@ select,
 }
 
 [data-theme="light"] select,
+[data-theme="light"] select.input-field,
 [data-theme="light"] .form-select,
 [data-theme="light"] .select-with-arrow {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236d28d9' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") !important;
@@ -949,6 +950,7 @@ select,
 }
 
 [data-theme="dark"] select,
+[data-theme="dark"] select.input-field,
 [data-theme="dark"] .form-select,
 [data-theme="dark"] .select-with-arrow {
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23c084fc' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") !important;
@@ -4022,4 +4024,75 @@ main > * {
   .colombia-time-chip {
     display: none;
   }
+}
+
+/* ================================================================
+   BANNERS DE ALERTA DE TURNO Y CAJA (ALTO CONTRASTE Y ARMONÍA)
+================================================================ */
+.pos-shift-alert {
+  background: rgba(245, 158, 11, 0.12);
+  border: 1.5px solid rgba(245, 158, 11, 0.45);
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+  color: #fef08a; /* Legible en tema oscuro */
+  backdrop-filter: blur(8px);
+}
+
+.pos-shift-alert strong {
+  color: #fde047;
+  font-weight: 700;
+}
+
+.pos-shift-alert .alert-icon {
+  flex-shrink: 0;
+  color: #fbbf24;
+}
+
+/* Modo claro: Contraste óptimo (WCAG AAA) - Sin texto amarillo pálido */
+[data-theme="light"] .pos-shift-alert {
+  background: rgba(254, 243, 199, 0.88) !important;
+  border: 1.5px solid rgba(217, 119, 6, 0.4) !important;
+  color: #78350f !important; /* Ámbar oscuro/marrón cálido legible */
+  box-shadow: 0 2px 10px rgba(217, 119, 6, 0.08) !important;
+}
+
+[data-theme="light"] .pos-shift-alert strong {
+  color: #92400e !important; /* Ámbar 800 de alto contraste */
+}
+
+[data-theme="light"] .pos-shift-alert .alert-icon {
+  color: #d97706 !important;
+}
+
+/* Botón cerrar turno anterior: Estética integrada sin halo amarillo sucio */
+.btn-close-prev-shift {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.3) !important;
+  border-radius: 10px !important;
+  padding: 6px 14px !important;
+  font-size: 0.8rem !important;
+  font-weight: 700 !important;
+  cursor: pointer !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.14) !important;
+  transition: all 0.2s ease !important;
+}
+
+.btn-close-prev-shift:hover {
+  transform: translateY(-1px) !important;
+  filter: brightness(1.1) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.22) !important;
+}
+
+[data-theme="light"] .btn-close-prev-shift {
+  background: linear-gradient(135deg, #b45309 0%, #78350f 100%) !important;
+  color: #ffffff !important;
+  border: none !important;
+  box-shadow: 0 2px 6px rgba(120, 53, 15, 0.25) !important;
 }

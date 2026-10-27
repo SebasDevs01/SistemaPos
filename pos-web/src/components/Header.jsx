@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { 
   ShoppingCart, 
   Package, 
@@ -15,16 +15,36 @@ import {
   ChevronDown,
   AlertTriangle,
   Bell,
-  Zap,
   LogOut,
   UserCog,
   Settings,
   DollarSign,
   Clock,
   Wifi,
-  WifiOff
+  WifiOff,
+  Menu,
+  X as XIcon
 } from "lucide-react";
 import { getColombiaTimeInfo, isShiftOwner } from "../services/firestoreService";
+
+// ── Reloj Colombia aislado — solo este subcomponente se re-renderiza cada 15s ──
+function ColombiaTimeClock() {
+  const [time, setTime] = useState(() => getColombiaTimeInfo());
+  useEffect(() => {
+    const timer = setInterval(() => setTime(getColombiaTimeInfo()), 15000);
+    return () => clearInterval(timer);
+  }, []);
+  return (
+    <div
+      className="colombia-time-chip"
+      title="Horario Oficial de Caja: 5:00 AM a 10:00 PM (Hora Colombia, UTC-5)"
+    >
+      <Clock size={12} color={time.isOperatingHours ? "var(--neon-emerald, #34d399)" : "#94a3b8"} />
+      <span style={{ color: "var(--text-main)", fontWeight: 700 }}>{time.timeShort}</span>
+      <span style={{ fontSize: "0.65rem", opacity: 0.7 }}>COL</span>
+    </div>
+  );
+}
 
 export default function Header({ 
   currentTab, 
@@ -48,14 +68,20 @@ export default function Header({
   onCheckConnection
 }) {
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const [colombiaTime, setColombiaTime] = useState(() => getColombiaTimeInfo());
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+  const mobileNavRef = useRef(null);
 
+  // Cerrar nav mobile al hacer clic fuera
   useEffect(() => {
-    const timer = setInterval(() => {
-      setColombiaTime(getColombiaTimeInfo());
-    }, 15000); // Actualiza cada 15 segundos
-    return () => clearInterval(timer);
-  }, []);
+    if (!isMobileNavOpen) return;
+    function handleClick(e) {
+      if (mobileNavRef.current && !mobileNavRef.current.contains(e.target)) {
+        setIsMobileNavOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, [isMobileNavOpen]);
 
   const isAdmin = currentUser?.rol === "Administrador";
 
@@ -120,7 +146,7 @@ export default function Header({
           </div>
         </div>
 
-        {/* ── NAVEGACIÓN ── */}
+        {/* ── NAVEGACIÓN DESKTOP ── */}
         <nav className="header-nav">
           {tabs.map(tab => {
             const locked = tab.adminOnly && !isAdmin;
@@ -158,6 +184,51 @@ export default function Header({
             );
           })}
         </nav>
+
+        {/* ── BOTÓN HAMBURGUESA (SOLO MÓVIL/TABLET) ── */}
+        <button
+          className="btn btn-outline btn-icon header-hamburger"
+          onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
+          title="Menú de navegación"
+          aria-label="Abrir menú"
+        >
+          {isMobileNavOpen ? <XIcon size={18} /> : <Menu size={18} />}
+        </button>
+
+        {/* ── NAV MOBILE DESPLEGABLE ── */}
+        {isMobileNavOpen && (
+          <div className="mobile-nav-overlay" ref={mobileNavRef}>
+            {tabs.map(tab => {
+              const locked = tab.adminOnly && !isAdmin;
+              const isActive = currentTab === tab.id;
+              const hasAlert = tab.alert > 0 || tab.badge > 0;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => {
+                    if (locked) { alert("🔒 Acceso Restringido."); return; }
+                    setCurrentTab(tab.id);
+                    setIsMobileNavOpen(false);
+                  }}
+                  className={[
+                    "mobile-nav-item",
+                    isActive ? "mobile-nav-item--active" : "",
+                    locked ? "nav-tab--locked" : ""
+                  ].filter(Boolean).join(" ")}
+                >
+                  {tab.icon}
+                  <span>{tab.label}</span>
+                  {locked && <Lock size={11} className="nav-lock-icon" />}
+                  {(tab.alert > 0 || tab.badge > 0) && (
+                    <span className="nav-badge" style={tab.badge > 0 ? { background: "var(--accent-teal)" } : {}}>
+                      {tab.alert || tab.badge}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         {/* ── ACCIONES HEADER ── */}
         <div className="header-actions">
@@ -261,28 +332,8 @@ export default function Header({
             );
           })()}
 
-          {/* Reloj Oficial Colombia con Indicador de Horario */}
-          <div
-            className="colombia-time-chip"
-            title="Horario Oficial de Caja: 5:00 AM a 10:00 PM (Hora Colombia, UTC-5)"
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "6px",
-              padding: "5px 10px",
-              borderRadius: "10px",
-              background: "rgba(255, 255, 255, 0.03)",
-              border: "1px solid var(--border-color)",
-              fontSize: "0.75rem",
-              color: "var(--text-muted)",
-              fontWeight: 600,
-              userSelect: "none"
-            }}
-          >
-            <Clock size={12} color={colombiaTime.isOperatingHours ? "var(--neon-emerald, #34d399)" : "#94a3b8"} />
-            <span style={{ color: "var(--text-main)", fontWeight: 700 }}>{colombiaTime.timeShort}</span>
-            <span style={{ fontSize: "0.65rem", opacity: 0.7 }}>COL</span>
-          </div>
+          {/* Reloj Colombia aislado (no provoca re-render del Header) */}
+          <ColombiaTimeClock />
 
           {/* ── BADGE DE CONEXIÓN A INTERNET (ONLINE / OFFLINE) ── */}
           <div

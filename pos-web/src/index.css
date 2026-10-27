@@ -3877,3 +3877,149 @@ input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
   padding: 20px 0;
   font-size: 0.82rem;
 }
+
+/* ================================================================
+   UX & PERFORMANCE ENHANCEMENTS
+================================================================ */
+
+/* ── Skeleton Loader Shimmer ── */
+@keyframes skeleton-shimmer {
+  0% { background-position: -400px 0; }
+  100% { background-position: 400px 0; }
+}
+
+.tab-skeleton-wrap {
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.tab-skeleton-header {
+  height: 44px;
+  border-radius: 14px;
+  background: linear-gradient(90deg, var(--bg-tertiary) 25%, var(--bg-secondary) 50%, var(--bg-tertiary) 75%);
+  background-size: 800px 100%;
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+  width: 60%;
+}
+
+.tab-skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 14px;
+}
+
+.tab-skeleton-card {
+  height: 160px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, var(--bg-tertiary) 25%, var(--bg-secondary) 50%, var(--bg-tertiary) 75%);
+  background-size: 800px 100%;
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+}
+
+/* ── Fade-in transition for tab content ── */
+@keyframes tabFadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+main > * {
+  animation: tabFadeIn 0.22s var(--ease-smooth);
+}
+
+/* ── Colombia Time Chip ── */
+.colombia-time-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  user-select: none;
+}
+
+/* ── Mobile Hamburger ── */
+.header-hamburger {
+  display: none !important;
+}
+
+/* ── Mobile Nav Overlay ── */
+.mobile-nav-overlay {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90vw;
+  max-width: 420px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl), 0 0 40px rgba(99,102,241,0.12);
+  padding: 10px;
+  z-index: 600;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  animation: fadeSlideIn 0.18s var(--ease-smooth);
+}
+
+.mobile-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: all var(--t-base);
+}
+
+.mobile-nav-item:hover {
+  background: var(--bg-glass-hover);
+  color: var(--text-main);
+}
+
+.mobile-nav-item--active {
+  background: var(--grad-primary);
+  color: #fff;
+  box-shadow: var(--glow-primary);
+}
+
+/* ── Responsive breakpoint ── */
+@media (max-width: 900px) {
+  .header-nav {
+    display: none !important;
+  }
+  .header-hamburger {
+    display: inline-flex !important;
+  }
+  .header-inner {
+    position: relative;
+  }
+}
+
+@media (max-width: 600px) {
+  .header-logo .logo-text h1 {
+    font-size: 0.85rem;
+  }
+  .logo-meta {
+    display: none;
+  }
+  .colombia-time-chip {
+    display: none;
+  }
+}

@@ -7,8 +7,6 @@ import {
   sendWelcomeNotification,
 } from "./services/notificationService";
 import Header from "./components/Header";
-import PosView from "./components/PosView";
-import InventoryView from "./components/InventoryView";
 import TicketPrintModal from "./components/TicketPrintModal";
 import KeyboardModal from "./components/KeyboardModal";
 import LoginView from "./components/LoginView";
@@ -16,7 +14,10 @@ import SplashScreen from "./components/SplashScreen";
 import ShiftBlockedModal from "./components/ShiftBlockedModal";
 import { isRentalOverdue } from "./utils/rentalUtils";
 
-// Vistas y modales secundarios cargados bajo demanda (Code-Splitting de alto rendimiento)
+// ─ Code-splitting: todas las vistas cargadas bajo demanda (incluyendo POS e Inventario)
+const PosView = lazy(() => import("./components/PosView"));
+const InventoryView = lazy(() => import("./components/InventoryView"));
+
 const RentalsView = lazy(() => import("./components/RentalsView"));
 const BarcodeGeneratorView = lazy(() => import("./components/BarcodeGeneratorView"));
 const SalesView = lazy(() => import("./components/SalesView"));
@@ -26,19 +27,15 @@ const UserManagementView = lazy(() => import("./components/UserManagementView"))
 const StoreConfigModal = lazy(() => import("./components/StoreConfigModal"));
 const CashRegisterModal = lazy(() => import("./components/CashRegisterModal"));
 
+// ─ Skeleton loader con shimmer para cualquier módulo en carga ─
 const TabLoadingFallback = () => (
-  <div style={{
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    minHeight: "350px",
-    gap: "12px",
-    color: "var(--text-muted)",
-    fontSize: "0.95rem",
-    fontWeight: 600
-  }}>
-    <span style={{ fontSize: "1.6rem" }}>⚡</span>
-    <span>Cargando módulo...</span>
+  <div className="tab-skeleton-wrap">
+    <div className="tab-skeleton-header" />
+    <div className="tab-skeleton-grid">
+      {Array.from({ length: 8 }).map((_, i) => (
+        <div key={i} className="tab-skeleton-card" style={{ animationDelay: `${i * 0.06}s` }} />
+      ))}
+    </div>
   </div>
 );
 import { 
@@ -1456,40 +1453,40 @@ export default function App() {
           paddingBottom: currentTab === "pos" ? "0" : "40px"
         }}
       >
-        {currentTab === "pos" && (
-          <PosView
-            products={products}
-            clients={clients}
-            onCompleteSale={handleCompleteSale}
-            onPrintTicket={(sale) => setActivePrintTicket(sale)}
-            storeConfig={storeConfig}
-            currentUser={currentUser}
-            onSaveProduct={handleSaveProduct}
-            onDeleteProduct={handleDeleteProduct}
-            onSaveClient={handleSaveClient}
-            activeShift={activeShift}
-            onOpenCashRegister={handleOpenCashRegister}
-            onSaveRental={handleSaveRental}
-            rentals={rentals}
-            insurances={insurances}
-          />
-        )}
-
-        {currentTab === "inventory" && (
-          <InventoryView
-            products={products}
-            onSaveProduct={handleSaveProduct}
-            onDeleteProduct={handleDeleteProduct}
-            onSelectForBarcode={(prod) => {
-              setBarcodeTargetProduct(prod);
-              setCurrentTab("barcodes");
-            }}
-            currentUser={currentUser}
-            storeConfig={storeConfig}
-          />
-        )}
-
         <Suspense fallback={<TabLoadingFallback />}>
+          {currentTab === "pos" && (
+            <PosView
+              products={products}
+              clients={clients}
+              onCompleteSale={handleCompleteSale}
+              onPrintTicket={(sale) => setActivePrintTicket(sale)}
+              storeConfig={storeConfig}
+              currentUser={currentUser}
+              onSaveProduct={handleSaveProduct}
+              onDeleteProduct={handleDeleteProduct}
+              onSaveClient={handleSaveClient}
+              activeShift={activeShift}
+              onOpenCashRegister={handleOpenCashRegister}
+              onSaveRental={handleSaveRental}
+              rentals={rentals}
+              insurances={insurances}
+            />
+          )}
+
+          {currentTab === "inventory" && (
+            <InventoryView
+              products={products}
+              onSaveProduct={handleSaveProduct}
+              onDeleteProduct={handleDeleteProduct}
+              onSelectForBarcode={(prod) => {
+                setBarcodeTargetProduct(prod);
+                setCurrentTab("barcodes");
+              }}
+              currentUser={currentUser}
+              storeConfig={storeConfig}
+            />
+          )}
+
           {currentTab === "rentals" && (
             <RentalsView
               rentals={rentals}

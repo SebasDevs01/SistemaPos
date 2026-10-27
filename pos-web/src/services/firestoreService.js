@@ -18,6 +18,7 @@ import {
 } from "firebase/firestore";
 import { db } from "../firebase/config";
 import { INITIAL_CLIENTS, STORE_CONFIG, INITIAL_USERS } from "../data/initialData";
+import { isUserSebastian } from "../utils/userUtils";
 
 // INITIAL_PRODUCTS se carga desde /products.json en runtime (no en el bundle)
 // Esto reduce el bundle de build de ~2.5MB a ~1MB y evita crashes de memoria al compilar
@@ -1533,6 +1534,12 @@ export const saveUsersList = async (users) => {
 
 export const deleteUserFromFirestore = async (userId) => {
   try {
+    const local = getLocal("pos_users_v1", []);
+    const target = local.find(u => String(u.id) === String(userId));
+    if (target && isUserSebastian(target)) {
+      console.warn("deleteUserFromFirestore: no se puede eliminar a Sebastian");
+      return;
+    }
     const docRef = doc(db, USERS_COLLECTION, String(userId));
     await deleteDoc(docRef);
   } catch (err) {
@@ -1543,10 +1550,15 @@ export const deleteUserFromFirestore = async (userId) => {
 // ── Bloqueo / Desbloqueo de usuarios (solo Administrador "Sebastian") ──
 export const blockUser = async (userId, bloqueado = true) => {
   try {
+    const local = getLocal("pos_users_v1", []);
+    const target = local.find(u => String(u.id) === String(userId));
+    if (target && isUserSebastian(target)) {
+      console.warn("blockUser: no se puede bloquear a Sebastian");
+      return;
+    }
     const docRef = doc(db, USERS_COLLECTION, String(userId));
     await updateDoc(docRef, { bloqueado });
     // Actualizar también localStorage para coherencia offline
-    const local = getLocal("pos_users_v1", []);
     const updated = local.map(u => String(u.id) === String(userId) ? { ...u, bloqueado } : u);
     setLocal("pos_users_v1", updated);
   } catch (err) {

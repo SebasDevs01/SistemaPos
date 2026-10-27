@@ -91,6 +91,7 @@ import {
   reassignShiftOwner,
   initDevicePresence
 } from "./services/firestoreService";
+import { isUserSebastian } from "./utils/userUtils";
 import { STORE_CONFIG, INITIAL_USERS } from "./data/initialData";
 
 // ──────────────────────────────────────────────
@@ -397,6 +398,15 @@ export default function App() {
 
   // ── User management (admin) ─────────────────
   const handleSaveUsers = async (updatedUsers, deletedUserId = null) => {
+    // Protección contra eliminación del Super Administrador (Sebastian)
+    if (deletedUserId) {
+      const userToDelete = users.find((u) => u.id === deletedUserId);
+      if (userToDelete && isUserSebastian(userToDelete)) {
+        console.warn("⛔ Intento de eliminar al Super Administrador bloqueado.");
+        alert("⛔ Acción denegada: El Super Administrador (Sebastian) no puede ser eliminado.");
+        return;
+      }
+    }
     setUsers(updatedUsers);
     persistUsers(updatedUsers);
     try {
@@ -491,9 +501,8 @@ export default function App() {
       if (activeUser) {
         const refreshed = updatedUsers.find((u) => u.id === activeUser.id);
         if (refreshed) {
-          // ── Detección de bloqueo en tiempo real ──
-          // Si Sebastian bloqueó a este usuario mientras tenía sesión activa
-          if (refreshed.bloqueado === true) {
+          // Si Sebastian bloqueó a este usuario mientras tenía sesión activa (Sebastian nunca puede ser bloqueado)
+          if (refreshed.bloqueado === true && !isUserSebastian(refreshed)) {
             setTimeout(() => {
               alert("🔒 Tu acceso ha sido bloqueado por el Administrador. Contacta a Sebastian.");
               setCurrentUser(null);

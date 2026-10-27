@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { ShieldCheck, UserCheck, Eye, EyeOff, LogIn, Lock, Store } from "lucide-react";
 import GradientWaves from "./GradientWaves";
+import { isUserSebastian } from "../utils/userUtils";
 
 export default function LoginView({ users = [], onLogin, storeConfig = {} }) {
   const [selectedUser, setSelectedUser] = useState(null);
@@ -30,8 +31,8 @@ export default function LoginView({ users = [], onLogin, storeConfig = {} }) {
   }, [step]);
 
   const handleSelectUser = (user) => {
-    // ── Verificar bloqueo antes de mostrar el PIN ──
-    if (user.bloqueado === true) {
+    // ── Verificar bloqueo antes de mostrar el PIN (Super Admin nunca se bloquea) ──
+    if (user.bloqueado === true && !isUserSebastian(user)) {
       setError(`🔒 "${user.nombre}" está bloqueado. Contacta al Administrador (Sebastian).`);
       return;
     }
@@ -171,7 +172,7 @@ export default function LoginView({ users = [], onLogin, storeConfig = {} }) {
             <div className="login-user-grid">
               {users.map((user) => {
                 const isAdmin = user.rol === "Administrador";
-                const isBloqueado = user.bloqueado === true;
+                const isBloqueado = user.bloqueado === true && !isUserSebastian(user);
                 return (
                   <button
                     key={user.id}

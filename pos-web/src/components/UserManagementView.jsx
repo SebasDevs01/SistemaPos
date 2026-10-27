@@ -23,7 +23,8 @@ import {
   MapPin,
   RotateCw,
   Lock,
-  Unlock
+  Unlock,
+  Crown
 } from "lucide-react";
 import {
   subscribeToDevices,
@@ -32,6 +33,7 @@ import {
   cleanupOldDisconnectedDevices,
   getDeviceId
 } from "../services/firestoreService";
+import { isUserSebastian } from "../utils/userUtils";
 
 const ROLES = ["Administrador", "Asistente"];
 
@@ -77,8 +79,8 @@ export default function UserManagementView({ users, onSaveUsers, currentUser, on
   const [confirmBlock, setConfirmBlock] = useState(null); // null | user object
   const [isBlocking, setIsBlocking] = useState(false);
 
-  // Solo el administrador con nombre "Sebastian" puede bloquear usuarios
-  const isSebastian = currentUser?.nombre?.toLowerCase().startsWith("sebastian");
+  // Solo el administrador con nombre "Sebastian" (o con tilde "Sebastián") puede bloquear usuarios
+  const isSebastian = isUserSebastian(currentUser);
 
   const isNew = editing && !editing.id;
 
@@ -101,6 +103,14 @@ export default function UserManagementView({ users, onSaveUsers, currentUser, on
     if (!editing.nombre.trim()) return alert("El nombre es obligatorio.");
     if (!editing.pass || editing.pass.length < 4) return alert("El PIN debe tener al menos 4 dígitos.");
 
+    // Proteger contra modificación del Super Admin por parte de otros administradores
+    if (!isNew && !isSebastian) {
+      const existingUser = users.find((u) => u.id === editing.id);
+      if (existingUser && isUserSebastian(existingUser)) {
+        return alert("⛔ Acción denegada: Solo Sebastian puede modificar los datos de su propia cuenta de Super Administrador.");
+      }
+    }
+
     let updated;
     if (isNew) {
       const newId = Math.max(0, ...users.map((u) => u.id || 0)) + 1;
@@ -115,6 +125,10 @@ export default function UserManagementView({ users, onSaveUsers, currentUser, on
   const handleDelete = (userId) => {
     if (userId === currentUser?.id) {
       return alert("No puedes eliminar tu propio usuario activo.");
+    }
+    const targetUser = users.find((u) => u.id === userId);
+    if (targetUser && isUserSebastian(targetUser)) {
+      return alert("⛔ Acción denegada: El Super Administrador (Sebastian) es el propietario del sistema y no puede ser eliminado por ningún usuario.");
     }
     const updated = users.filter((u) => u.id !== userId);
     onSaveUsers(updated, userId);
@@ -225,6 +239,7 @@ export default function UserManagementView({ users, onSaveUsers, currentUser, on
             const isAdmin = user.rol === "Administrador";
             const isSelf = user.id === currentUser?.id;
             const isBloqueado = user.bloqueado === true;
+            const isTargetSuperAdmin = isUserSebastian(user);
             return (
               <div
                 key={user.id}
@@ -251,23 +266,35 @@ export default function UserManagementView({ users, onSaveUsers, currentUser, on
                   <span>{getInitials(user.nombre)}</span>
                 </div>
                 <div className="user-card-body">
-                  <div className="user-card-name">{user.nombre}</div>
+                  <div className="user-card-name" style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                    <span>{user.nombre}</span>
+                    {isTargetSuperAdmin && <Crown size={14} color="#f59e0b" title="Super Administrador / Propietario" />}
+                  </div>
                   <div className="user-card-correo">{user.correo || "—"}</div>
-                  <span className={`badge ${isAdmin ? "badge-indigo" : "badge-green"}`} style={{ fontSize: "0.65rem" }}>
-                    {isAdmin ? <ShieldCheck size={10} style={{ marginRight: 3 }} /> : <UserCheck size={10} style={{ marginRight: 3 }} />}
-                    {user.rol}
-                  </span>
+                  {isTargetSuperAdmin ? (
+                    <span className="badge" style={{ fontSize: "0.65rem", background: "linear-gradient(135deg, #7c3aed, #4f46e5)", color: "#fff", fontWeight: 700, border: "none" }}>
+                      <Crown size={10} style={{ marginRight: 3 }} />
+                      Super Admin
+                    </span>
+                  ) : (
+                    <span className={`badge ${isAdmin ? "badge-indigo" : "badge-green"}`} style={{ fontSize: "0.65rem" }}>
+                      {isAdmin ? <ShieldCheck size={10} style={{ marginRight: 3 }} /> : <UserCheck size={10} style={{ marginRight: 3 }} />}
+                      {user.rol}
+                    </span>
+                  )}
                 </div>
                 <div className="user-card-actions">
                   <button
                     className="btn btn-outline btn-icon btn-sm"
-                    title="Editar usuario"
+                    title={!isSelf && isTargetSuperAdmin && !isSebastian ? "Solo el Super Admin puede editar su propia cuenta" : "Editar usuario"}
+                    disabled={!isSelf && isTargetSuperAdmin && !isSebastian}
                     onClick={() => openEdit(user)}
+                    style={!isSelf && isTargetSuperAdmin && !isSebastian ? { opacity: 0.4, cursor: "not-allowed" } : {}}
                   >
                     <Pencil size={13} />
                   </button>
-                  {/* Botón de bloqueo — EXCLUSIVO para Sebastian */}
-                  {isSebastian && !isSelf && (
+                  {/* Botón de bloqueo — EXCLUSIVO para Sebastian (nunca se puede bloquear a Sebastian) */}
+                  {isSebastian && !isSelf && !isTargetSuperAdmin && (
                     <button
                       className="btn btn-icon btn-sm"
                       title={isBloqueado ? "Desbloquear acceso de este usuario" : "Bloquear acceso de este usuario"}
@@ -287,11 +314,25 @@ export default function UserManagementView({ users, onSaveUsers, currentUser, on
                       {isBloqueado ? <Unlock size={13} /> : <Lock size={13} />}
                     </button>
                   )}
+                  {/* Botón de eliminación — Deshabilitado e intocable para el Super Admin */}
                   <button
                     className="btn btn-danger btn-icon btn-sm"
-                    title={isSelf ? "No puedes eliminarte" : "Eliminar usuario"}
-                    disabled={isSelf}
-                    onClick={() => setConfirmDelete(user)}
+                    title={
+                      isSelf
+                        ? "No puedes eliminarte"
+                        : isTargetSuperAdmin
+                        ? "El Super Administrador no puede ser eliminado por nadie"
+                        : "Eliminar usuario"
+                    }
+                    disabled={isSelf || isTargetSuperAdmin}
+                    onClick={() => {
+                      if (isTargetSuperAdmin) {
+                        alert("⛔ Acción denegada: El Super Administrador (Sebastian) no puede ser eliminado.");
+                        return;
+                      }
+                      setConfirmDelete(user);
+                    }}
+                    style={isTargetSuperAdmin ? { opacity: 0.3, cursor: "not-allowed" } : {}}
                   >
                     <Trash2 size={13} />
                   </button>

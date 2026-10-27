@@ -85,6 +85,15 @@ export default function Header({
 
   const isAdmin = currentUser?.rol === "Administrador";
 
+  const [colombiaTime, setColombiaTime] = useState(() => getColombiaTimeInfo());
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setColombiaTime(getColombiaTimeInfo());
+    }, 15000);
+    return () => clearInterval(timer);
+  }, []);
+
 
   const tabs = [
     { id: "pos",        label: "Caja POS",      icon: <ShoppingCart size={15} />, everyone: true },

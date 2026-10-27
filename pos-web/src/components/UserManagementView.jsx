@@ -21,7 +21,9 @@ import {
   AlertCircle,
   Globe,
   MapPin,
-  RotateCw
+  RotateCw,
+  Lock,
+  Unlock
 } from "lucide-react";
 import {
   subscribeToDevices,
@@ -41,7 +43,7 @@ function getInitials(nombre) {
     .join("");
 }
 
-export default function UserManagementView({ users, onSaveUsers, currentUser }) {
+export default function UserManagementView({ users, onSaveUsers, currentUser, onBlockUser }) {
   const [activeSubTab, setActiveSubTab] = useState("users"); // "users" | "devices"
   const [devices, setDevices] = useState([]);
   const [editingDevice, setEditingDevice] = useState(null); // deviceId
@@ -72,6 +74,11 @@ export default function UserManagementView({ users, onSaveUsers, currentUser }) 
   const [editing, setEditing] = useState(null); // null | user object (with id or without = new)
   const [showPass, setShowPass] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [confirmBlock, setConfirmBlock] = useState(null); // null | user object
+  const [isBlocking, setIsBlocking] = useState(false);
+
+  // Solo el administrador con nombre "Sebastian" puede bloquear usuarios
+  const isSebastian = currentUser?.nombre?.toLowerCase().startsWith("sebastian");
 
   const isNew = editing && !editing.id;
 
@@ -112,6 +119,26 @@ export default function UserManagementView({ users, onSaveUsers, currentUser }) 
     const updated = users.filter((u) => u.id !== userId);
     onSaveUsers(updated, userId);
     setConfirmDelete(null);
+  };
+
+  // ── Handler de bloqueo / desbloqueo (exclusivo Sebastian) ──
+  const handleConfirmBlock = async () => {
+    if (!confirmBlock || !onBlockUser) return;
+    if (confirmBlock.id === currentUser?.id) {
+      alert("No puedes bloquearte a ti mismo.");
+      setConfirmBlock(null);
+      return;
+    }
+    try {
+      setIsBlocking(true);
+      const nuevoEstado = !confirmBlock.bloqueado;
+      await onBlockUser(confirmBlock.id, nuevoEstado);
+    } catch (err) {
+      console.warn("Error al cambiar estado de bloqueo:", err);
+    } finally {
+      setIsBlocking(false);
+      setConfirmBlock(null);
+    }
   };
 
   const now = Date.now();
@@ -197,15 +224,30 @@ export default function UserManagementView({ users, onSaveUsers, currentUser }) 
           {users.map((user) => {
             const isAdmin = user.rol === "Administrador";
             const isSelf = user.id === currentUser?.id;
+            const isBloqueado = user.bloqueado === true;
             return (
               <div
                 key={user.id}
                 className={`user-card ${isAdmin ? "user-card--admin" : "user-card--staff"} ${isSelf ? "user-card--self" : ""}`}
+                style={isBloqueado ? { opacity: 0.65, border: "1.5px solid rgba(239,68,68,0.35)", background: "rgba(239,68,68,0.04)" } : {}}
               >
                 {isSelf && (
                   <div className="user-card-self-badge">Tú</div>
                 )}
-                <div className="user-card-avatar">
+                {/* Badge de bloqueado */}
+                {isBloqueado && (
+                  <div style={{
+                    position: "absolute", top: "10px", left: "10px",
+                    background: "rgba(239,68,68,0.15)", color: "#ef4444",
+                    fontSize: "0.62rem", fontWeight: 800,
+                    padding: "3px 8px", borderRadius: "20px",
+                    display: "flex", alignItems: "center", gap: "4px",
+                    border: "1px solid rgba(239,68,68,0.3)"
+                  }}>
+                    <Lock size={9} /> Bloqueado
+                  </div>
+                )}
+                <div className="user-card-avatar" style={isBloqueado ? { filter: "grayscale(70%)" } : {}}>
                   <span>{getInitials(user.nombre)}</span>
                 </div>
                 <div className="user-card-body">
@@ -224,6 +266,27 @@ export default function UserManagementView({ users, onSaveUsers, currentUser }) 
                   >
                     <Pencil size={13} />
                   </button>
+                  {/* Botón de bloqueo — EXCLUSIVO para Sebastian */}
+                  {isSebastian && !isSelf && (
+                    <button
+                      className="btn btn-icon btn-sm"
+                      title={isBloqueado ? "Desbloquear acceso de este usuario" : "Bloquear acceso de este usuario"}
+                      onClick={() => setConfirmBlock(user)}
+                      style={{
+                        background: isBloqueado ? "rgba(16,185,129,0.12)" : "rgba(239,68,68,0.10)",
+                        border: `1px solid ${isBloqueado ? "rgba(16,185,129,0.35)" : "rgba(239,68,68,0.35)"}`,
+                        color: isBloqueado ? "#10b981" : "#ef4444",
+                        borderRadius: "8px",
+                        padding: "5px 7px",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center"
+                      }}
+                    >
+                      {isBloqueado ? <Unlock size={13} /> : <Lock size={13} />}
+                    </button>
+                  )}
                   <button
                     className="btn btn-danger btn-icon btn-sm"
                     title={isSelf ? "No puedes eliminarte" : "Eliminar usuario"}
@@ -238,6 +301,7 @@ export default function UserManagementView({ users, onSaveUsers, currentUser }) 
           })}
         </div>
       )}
+
 
       {/* ── PESTAÑA 2: DISPOSITIVOS CONECTADOS EN VIVO ── */}
       {activeSubTab === "devices" && (
@@ -771,6 +835,121 @@ export default function UserManagementView({ users, onSaveUsers, currentUser }) 
               <button className="btn btn-danger" onClick={() => handleDelete(confirmDelete.id)} style={{ padding: "8px 20px", borderRadius: "10px", fontWeight: 700, display: "flex", alignItems: "center", gap: "6px" }}>
                 <Trash2 size={14} />
                 <span>Eliminar</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── Modal de Confirmación de Bloqueo / Desbloqueo (Exclusivo Sebastian) ── */}
+      {confirmBlock && (
+        <div className="modal-overlay" onClick={() => setConfirmBlock(null)}>
+          <div
+            className="modal-card modal-box"
+            style={{
+              maxWidth: 420,
+              width: "92%",
+              borderRadius: "24px",
+              overflow: "hidden",
+              display: "flex",
+              flexDirection: "column"
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div
+              className="modal-header"
+              style={{
+                padding: "16px 20px",
+                background: "transparent",
+                borderBottom: "1px solid var(--border-color)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between"
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <div style={{
+                  width: "36px",
+                  height: "36px",
+                  borderRadius: "10px",
+                  background: confirmBlock.bloqueado ? "rgba(16,185,129,0.16)" : "rgba(239,68,68,0.16)",
+                  border: `1px solid ${confirmBlock.bloqueado ? "rgba(16,185,129,0.3)" : "rgba(239,68,68,0.3)"}`,
+                  color: confirmBlock.bloqueado ? "#10b981" : "#f87171",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}>
+                  {confirmBlock.bloqueado ? <Unlock size={18} /> : <Lock size={18} />}
+                </div>
+                <h3 className="modal-title" style={{
+                  color: confirmBlock.bloqueado ? "#10b981" : "#f87171",
+                  margin: 0, fontSize: "1.1rem", fontWeight: 800
+                }}>
+                  {confirmBlock.bloqueado ? "Desbloquear usuario" : "Bloquear usuario"}
+                </h3>
+              </div>
+              <button className="btn-modal-close-circle" onClick={() => setConfirmBlock(null)} title="Cerrar modal">
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="modal-body" style={{ padding: "20px", background: "transparent" }}>
+              {confirmBlock.bloqueado ? (
+                <p style={{ color: "var(--text-muted)", lineHeight: 1.6, margin: 0, fontSize: "0.88rem" }}>
+                  ¿Deseas <strong style={{ color: "#10b981" }}>restaurar el acceso</strong> de{" "}
+                  <strong style={{ color: "var(--text-main)" }}>{confirmBlock.nombre}</strong>?{" "}
+                  Podrá iniciar sesión nuevamente con su PIN.
+                </p>
+              ) : (
+                <p style={{ color: "var(--text-muted)", lineHeight: 1.6, margin: 0, fontSize: "0.88rem" }}>
+                  ¿Deseas <strong style={{ color: "#ef4444" }}>bloquear el acceso</strong> de{" "}
+                  <strong style={{ color: "var(--text-main)" }}>{confirmBlock.nombre}</strong>?{" "}
+                  No podrá iniciar sesión hasta que lo desbloquees. Si tiene sesión activa, será expulsado automáticamente.
+                </p>
+              )}
+            </div>
+
+            {/* Footer */}
+            <div
+              className="modal-footer"
+              style={{
+                padding: "14px 20px",
+                background: "transparent",
+                borderTop: "1px solid var(--border-color)",
+                display: "flex",
+                justifyContent: "flex-end",
+                gap: "10px"
+              }}
+            >
+              <button
+                className="btn btn-modal-cancel"
+                onClick={() => setConfirmBlock(null)}
+                style={{ padding: "8px 18px", borderRadius: "10px" }}
+                disabled={isBlocking}
+              >
+                Cancelar
+              </button>
+              <button
+                className="btn"
+                onClick={handleConfirmBlock}
+                disabled={isBlocking}
+                style={{
+                  padding: "8px 20px",
+                  borderRadius: "10px",
+                  fontWeight: 700,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  background: confirmBlock.bloqueado ? "rgba(16,185,129,0.18)" : "rgba(239,68,68,0.18)",
+                  border: `1px solid ${confirmBlock.bloqueado ? "rgba(16,185,129,0.45)" : "rgba(239,68,68,0.45)"}`,
+                  color: confirmBlock.bloqueado ? "#10b981" : "#ef4444",
+                  cursor: isBlocking ? "not-allowed" : "pointer"
+                }}
+              >
+                {confirmBlock.bloqueado ? <Unlock size={14} /> : <Lock size={14} />}
+                <span>{isBlocking ? "Aplicando..." : (confirmBlock.bloqueado ? "Desbloquear" : "Bloquear")}</span>
               </button>
             </div>
           </div>

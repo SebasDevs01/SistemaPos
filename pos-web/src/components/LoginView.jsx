@@ -30,6 +30,11 @@ export default function LoginView({ users = [], onLogin, storeConfig = {} }) {
   }, [step]);
 
   const handleSelectUser = (user) => {
+    // ── Verificar bloqueo antes de mostrar el PIN ──
+    if (user.bloqueado === true) {
+      setError(`🔒 "${user.nombre}" está bloqueado. Contacta al Administrador (Sebastian).`);
+      return;
+    }
     setSelectedUser(user);
     setPin("");
     setError("");
@@ -166,30 +171,47 @@ export default function LoginView({ users = [], onLogin, storeConfig = {} }) {
             <div className="login-user-grid">
               {users.map((user) => {
                 const isAdmin = user.rol === "Administrador";
+                const isBloqueado = user.bloqueado === true;
                 return (
                   <button
                     key={user.id}
                     className={`login-user-btn ${isAdmin ? "login-user-btn--admin" : "login-user-btn--staff"}`}
                     onClick={() => handleSelectUser(user)}
                     type="button"
+                    style={isBloqueado ? { opacity: 0.5, cursor: "not-allowed", filter: "grayscale(60%)" } : {}}
+                    title={isBloqueado ? "Usuario bloqueado por el Administrador" : undefined}
                   >
                     <div className="login-user-avatar">
-                      {isAdmin
-                        ? <ShieldCheck size={24} color="#818cf8" />
-                        : <UserCheck size={24} color="#34d399" />
+                      {isBloqueado
+                        ? <Lock size={24} color="#ef4444" />
+                        : isAdmin
+                          ? <ShieldCheck size={24} color="#818cf8" />
+                          : <UserCheck size={24} color="#34d399" />
                       }
                     </div>
                     <div className="login-user-info">
                       <span className="login-user-name">{user.nombre}</span>
-                      <span className="login-user-sub">{isAdmin ? "Acceso Total · Administrador" : "Caja & Ventas · Asistente"}</span>
+                      <span className="login-user-sub">
+                        {isBloqueado
+                          ? "🔒 Acceso bloqueado"
+                          : isAdmin ? "Acceso Total · Administrador" : "Caja & Ventas · Asistente"
+                        }
+                      </span>
                     </div>
-                    <span className={`badge ${isAdmin ? "badge-indigo" : "badge-green"} login-user-badge`}>
-                      {user.rol}
-                    </span>
+                    {isBloqueado
+                      ? <span className="badge" style={{ background: "rgba(239,68,68,0.2)", color: "#ef4444", fontSize: "0.6rem" }}>Bloqueado</span>
+                      : <span className={`badge ${isAdmin ? "badge-indigo" : "badge-green"} login-user-badge`}>{user.rol}</span>
+                    }
                   </button>
                 );
               })}
             </div>
+            {/* Error de bloqueo visible en la grilla */}
+            {error && (
+              <div className="login-error" style={{ marginTop: "12px" }}>
+                <Lock size={13} /> {error}
+              </div>
+            )}
           </div>
         )}
 

@@ -58,3 +58,4 @@ Thumbs.db
 test_orion.txt
 pos-web/*test*.xlsx
 pos-web/fix_*.py
+.agents/mcp_config.json

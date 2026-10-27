@@ -1540,6 +1540,20 @@ export const deleteUserFromFirestore = async (userId) => {
   }
 };
 
+// ── Bloqueo / Desbloqueo de usuarios (solo Administrador "Sebastian") ──
+export const blockUser = async (userId, bloqueado = true) => {
+  try {
+    const docRef = doc(db, USERS_COLLECTION, String(userId));
+    await updateDoc(docRef, { bloqueado });
+    // Actualizar también localStorage para coherencia offline
+    const local = getLocal("pos_users_v1", []);
+    const updated = local.map(u => String(u.id) === String(userId) ? { ...u, bloqueado } : u);
+    setLocal("pos_users_v1", updated);
+  } catch (err) {
+    console.warn("Error actualizando estado de bloqueo en Firestore:", err);
+  }
+};
+
 // ------------------- HORARIO DE CAJA Y TIEMPO COLOMBIA -------------------
 // La caja abre a las 5:00 AM y cierra a las 10:00 PM hora Colombia (America/Bogota, UTC-5)
 export const CASH_SCHEDULE = {

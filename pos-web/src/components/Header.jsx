@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
-import { 
-  ShoppingCart, 
-  Package, 
-  Armchair, 
-  Barcode, 
-  BarChart3, 
-  Users, 
-  Sun, 
-  Moon, 
-  ShieldCheck, 
-  UserCheck, 
-  Keyboard, 
+import {
+  ShoppingCart,
+  Package,
+  Armchair,
+  Barcode,
+  BarChart3,
+  Users,
+  Sun,
+  Moon,
+  ShieldCheck,
+  UserCheck,
+  Keyboard,
   Lock,
   ChevronDown,
   AlertTriangle,
@@ -46,14 +46,14 @@ function ColombiaTimeClock() {
   );
 }
 
-export default function Header({ 
-  currentTab, 
-  setCurrentTab, 
-  overdueRentalsCount, 
+export default function Header({
+  currentTab,
+  setCurrentTab,
+  overdueRentalsCount,
   pendingInsurancesCount = 0,
   outOfStockCount,
   onOpenStockAlerts,
-  storeConfig, 
+  storeConfig,
   onOpenStoreConfig,
   onOpenKeyboardModal,
   productsCount,
@@ -96,14 +96,14 @@ export default function Header({
 
 
   const tabs = [
-    { id: "pos",        label: "Caja POS",      icon: <ShoppingCart size={15} />, everyone: true },
-    { id: "inventory",  label: "Inventario",     icon: <Package size={15} />,      adminOnly: true },
-    { id: "rentals",    label: "Alquiler",       icon: <Armchair size={15} />,     everyone: true,  alert: overdueRentalsCount },
-    { id: "insurances", label: "Seguros",        icon: <ShieldCheck size={15} />,  everyone: true,  badge: pendingInsurancesCount },
-    { id: "barcodes",   label: "Stickers",       icon: <Barcode size={15} />,      everyone: true },
-    { id: "sales",      label: "Ventas",         icon: <BarChart3 size={15} />,    everyone: true },
-    { id: "clients",    label: "Clientes",       icon: <Users size={15} />,        everyone: true },
-    { id: "users",      label: "Usuarios",       icon: <UserCog size={15} />,      adminOnly: true },
+    { id: "pos", label: "Caja POS", icon: <ShoppingCart size={15} />, everyone: true },
+    { id: "inventory", label: "Inventario", icon: <Package size={15} />, adminOnly: true },
+    { id: "rentals", label: "Alquiler", icon: <Armchair size={15} />, everyone: true, alert: overdueRentalsCount },
+    { id: "insurances", label: "Seguros", icon: <ShieldCheck size={15} />, everyone: true, badge: pendingInsurancesCount },
+    { id: "barcodes", label: "Stickers", icon: <Barcode size={15} />, everyone: true },
+    { id: "sales", label: "Ventas", icon: <BarChart3 size={15} />, everyone: true },
+    { id: "clients", label: "Clientes", icon: <Users size={15} />, everyone: true },
+    { id: "users", label: "Usuarios", icon: <UserCog size={15} />, adminOnly: true },
   ];
 
   return (
@@ -120,7 +120,7 @@ export default function Header({
       <div className="header-inner">
         {/* ── LOGO ── */}
         <div className="header-logo">
-          <div 
+          <div
             className="logo-icon logo-icon--liquid-glass"
             style={{
               background: "transparent",
@@ -346,11 +346,10 @@ export default function Header({
 
           {/* ── BADGE DE CONEXIÓN A INTERNET (ONLINE / OFFLINE) ── */}
           <div
-            className={`network-badge ${
-              !isOnline 
-                ? "network-badge--offline" 
+            className={`network-badge ${!isOnline
+                ? "network-badge--offline"
                 : (pendingOpsCount > 0 ? "network-badge--syncing" : "network-badge--online")
-            }`}
+              }`}
             onClick={async () => {
               const currentStatus = onCheckConnection ? await onCheckConnection() : isOnline;
               if (!currentStatus) {
@@ -362,11 +361,11 @@ export default function Header({
               }
             }}
             title={
-              !isOnline 
+              !isOnline
                 ? `Sin conexión a internet — Modo offline activo${pendingOpsCount > 0 ? ` (${pendingOpsCount} pendientes)` : ""}. Clic para más información.`
-                : (pendingOpsCount > 0 
-                    ? `Sincronizando ${pendingOpsCount} operaciones pendientes con Firebase...` 
-                    : "Conexión a internet activa — Firebase sincronizado en tiempo real.")
+                : (pendingOpsCount > 0
+                  ? `Sincronizando ${pendingOpsCount} operaciones pendientes con Firebase...`
+                  : "Conexión a internet activa — Firebase sincronizado en tiempo real.")
             }
           >
             {isOnline ? (
@@ -375,17 +374,16 @@ export default function Header({
               <WifiOff size={13} />
             )}
             <span>
-              {!isOnline 
+              {!isOnline
                 ? (pendingOpsCount > 0 ? `Sin Red (${pendingOpsCount})` : "Sin Conexión")
                 : (pendingOpsCount > 0 ? `Sincronizando (${pendingOpsCount})` : "En Línea")
               }
             </span>
-            <span 
-              className={`network-dot ${
-                !isOnline 
-                  ? "network-dot--offline" 
+            <span
+              className={`network-dot ${!isOnline
+                  ? "network-dot--offline"
                   : (pendingOpsCount > 0 ? "network-dot--syncing" : "network-dot--online")
-              }`} 
+                }`}
             />
           </div>
 
@@ -406,13 +404,13 @@ export default function Header({
                   {currentUser?.rol || "Asistente"}
                 </div>
               </div>
-              <ChevronDown 
-                size={13} 
-                color="var(--text-muted)" 
-                style={{ 
-                  transform: isUserMenuOpen ? "rotate(180deg)" : "none", 
-                  transition: "transform 0.2s ease" 
-                }} 
+              <ChevronDown
+                size={13}
+                color="var(--text-muted)"
+                style={{
+                  transform: isUserMenuOpen ? "rotate(180deg)" : "none",
+                  transition: "transform 0.2s ease"
+                }}
               />
             </button>
 
@@ -445,7 +443,7 @@ export default function Header({
                 </div>
 
                 <div style={{ fontSize: "0.74rem", color: "var(--text-muted)", marginBottom: "10px", padding: "0 4px", lineHeight: 1.4 }}>
-                  {isAdmin 
+                  {isAdmin
                     ? "Permisos completos de administrador (Inventario, Usuarios, Finanzas y Cierres)."
                     : "Permisos de asistente (Facturación POS, Ventas y Alquileres)."
                   }

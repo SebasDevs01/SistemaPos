@@ -82,6 +82,7 @@ import {
   fetchUsers,
   saveUsersList,
   deleteUserFromFirestore,
+  blockUser,
   onBroadcastSync,
   flushPendingOps,
   getPendingOpsCount,
@@ -490,6 +491,18 @@ export default function App() {
       if (activeUser) {
         const refreshed = updatedUsers.find((u) => u.id === activeUser.id);
         if (refreshed) {
+          // ── Detección de bloqueo en tiempo real ──
+          // Si Sebastian bloqueó a este usuario mientras tenía sesión activa
+          if (refreshed.bloqueado === true) {
+            setTimeout(() => {
+              alert("🔒 Tu acceso ha sido bloqueado por el Administrador. Contacta a Sebastian.");
+              setCurrentUser(null);
+              setIsLoggedIn(false);
+              localStorage.removeItem("pos_user");
+              setCurrentTab("pos");
+            }, 300);
+            return;
+          }
           setCurrentUser(refreshed);
           localStorage.setItem("pos_user", JSON.stringify(refreshed));
         }
@@ -1561,6 +1574,7 @@ export default function App() {
               users={users}
               onSaveUsers={handleSaveUsers}
               currentUser={currentUser}
+              onBlockUser={blockUser}
             />
           )}
         </Suspense>

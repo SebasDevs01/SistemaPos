@@ -863,6 +863,7 @@ tbody tr:hover {
   border-color: rgba(216, 180, 254, 0.55) !important;
   color: #E9D5FF !important;
   backdrop-filter: blur(10px) !important;
+  box-shadow: none !important;
 }
 
 [data-theme="light"] .pos-catalog-column > div[style*="rgba(245, 158, 11"] .btn,
@@ -870,6 +871,7 @@ tbody tr:hover {
   background: rgba(168, 85, 247, 0.15) !important;
   border-color: rgba(147, 51, 234, 0.45) !important;
   color: #581C87 !important;
+  box-shadow: none !important;
 }
 
 /* ==========================================================================

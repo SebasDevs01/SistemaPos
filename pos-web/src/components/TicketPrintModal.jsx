@@ -121,10 +121,10 @@ ${ticketHTML}
             </div>
             <div>
               <h3 style={{ fontSize: "1.12rem", fontWeight: 800, color: "var(--text-main)", margin: 0 }}>
-                Factura de Venta POS
+                {sale.tituloModal || (sale.tituloTicket ? "Estado de Cuenta / Fiados" : "Factura de Venta POS")}
               </h3>
               <span style={{ fontSize: "0.76rem", color: "var(--text-muted)" }}>
-                Ticket #{sale.id} · {sale.cliente?.nombre || "Cliente Mostrador"}
+                {sale.subtituloModal || `Ticket #${sale.id} · ${sale.cliente?.nombre || "Cliente Mostrador"}`}
               </span>
             </div>
           </div>
@@ -150,7 +150,7 @@ ${ticketHTML}
               {storeCity && <div>{storeCity}</div>}
               <div>Tel: {storeTel}{storeWA}</div>
               <div style={{ borderTop: "1.5px dashed #000000", margin: "6px 0" }}></div>
-              <div style={{ fontWeight: 800, fontSize: "12px" }}>FACTURA DE VENTA</div>
+              <div style={{ fontWeight: 800, fontSize: "12px" }}>{sale.tituloTicket || "FACTURA DE VENTA"}</div>
               <div style={{ borderTop: "1.5px dashed #000000", margin: "6px 0" }}></div>
             </div>
 
@@ -180,9 +180,11 @@ ${ticketHTML}
                     </span>
                     <span>${Number(item.subtotal || 0).toLocaleString("es-CO")}</span>
                   </div>
-                  <div style={{ fontSize: "10px", color: "#000000", fontWeight: 600 }}>
-                    (${Number(item.precioUnitario || 0).toLocaleString("es-CO")} c/u)
-                  </div>
+                  {item.precioUnitario !== undefined && item.precioUnitario !== null && (
+                    <div style={{ fontSize: "10px", color: "#000000", fontWeight: 600 }}>
+                      (${Number(item.precioUnitario || 0).toLocaleString("es-CO")} c/u)
+                    </div>
+                  )}
                 </div>
               ))}
               <div style={{ borderTop: "1.5px dashed #000000", margin: "6px 0" }}></div>
@@ -200,7 +202,7 @@ ${ticketHTML}
                 borderRadius: "4px",
                 margin: "6px 0"
               }}>
-                <span>TOTAL A PAGAR:</span>
+                <span>{sale.totalLabel || (sale.tituloTicket ? "TOTAL ADEUDADO:" : "TOTAL A PAGAR:")}</span>
                 <span>${Number(sale.total || 0).toLocaleString("es-CO")} COP</span>
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", marginTop: "4px" }}>

@@ -110,6 +110,77 @@ export default function ClientsView({
     });
   };
 
+  // Imprimir ticket / factura con todo lo que debe el cliente
+  const handlePrintClientDebtTicket = (client) => {
+    if (!client) return;
+    if (!onPrintTicket) {
+      alert("La función de impresión de tickets no está disponible.");
+      return;
+    }
+    const debt = Number(client.saldoDeudor) || 0;
+    const debtSales = getClientDebtSales(client);
+    const debtRentals = getClientDebtRentals(client);
+
+    // Consolidar todos los productos que debe
+    const consolidatedItems = [];
+
+    debtSales.forEach(sale => {
+      const saleDateStr = new Date(sale.fecha || Date.now()).toLocaleDateString("es-CO", { day: "2-digit", month: "2-digit" });
+      const saleIdShort = String(sale.id || "").slice(-5);
+      (sale.items || []).forEach(item => {
+        consolidatedItems.push({
+          cantidad: item.cantidad || 1,
+          nombre: `[Fac #${saleIdShort} ${saleDateStr}] ${item.nombre}`,
+          subtotal: item.subtotal || (Number(item.precioUnitario || 0) * Number(item.cantidad || 1)),
+          precioUnitario: item.precioUnitario,
+          presentacion: item.presentacion,
+          talla: item.talla
+        });
+      });
+    });
+
+    debtRentals.forEach(rental => {
+      const rentalIdShort = String(rental.id || "").slice(-5);
+      consolidatedItems.push({
+        cantidad: 1,
+        nombre: `[Alquiler #${rentalIdShort}] ${rental.sillas ? `${rental.sillas} Sillas` : "Mobiliario"} (Pendiente)`,
+        subtotal: Number(rental.saldoPendiente || 0),
+        precioUnitario: Number(rental.saldoPendiente || 0)
+      });
+    });
+
+    // Si no hay ventas detalladas desglosadas en el historial pero sí saldo registrado en su perfil
+    if (consolidatedItems.length === 0 && debt > 0) {
+      consolidatedItems.push({
+        cantidad: 1,
+        nombre: "Saldo Pendiente en Cuenta Corriente (Fiado)",
+        subtotal: debt,
+        precioUnitario: debt
+      });
+    }
+
+    const debtTicketPayload = {
+      id: `DEUDA-${client.dni || String(client.id || "").slice(-4) || Date.now().toString().slice(-4)}`,
+      tituloTicket: "ESTADO DE CUENTA - FIADOS",
+      tituloModal: "Ticket de Cuenta Fiada",
+      subtituloModal: `Cliente: ${client.nombre} · Total Adeudado: $${debt.toLocaleString("es-CO")} COP`,
+      fecha: new Date().toISOString(),
+      cliente: {
+        nombre: client.nombre,
+        dni: client.dni,
+        telefono: client.telefono,
+        direccion: client.direccion
+      },
+      vendedor: "Caja Principal",
+      items: consolidatedItems,
+      total: debt,
+      totalLabel: "TOTAL ADEUDADO:",
+      metodoPago: "Cuenta Corriente / Fiado"
+    };
+
+    onPrintTicket(debtTicketPayload);
+  };
+
   const handleSave = async (e) => {
     e.preventDefault();
     if (!formData.nombre || !formData.dni) {
@@ -467,17 +538,52 @@ export default function ClientsView({
                     <span>Ver Productos que Debe y Facturas</span>
                   </button>
 
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "8px" }}>
+                  <div style={{ display: "flex", gap: "6px" }}>
+                    <button
+                      type="button"
+                      onClick={() => handlePrintClientDebtTicket(c)}
+                      className="btn btn-outline"
+                      style={{
+                        flex: 1,
+                        padding: "7px 8px",
+                        fontSize: "0.78rem",
+                        borderColor: "rgba(168, 85, 247, 0.45)",
+                        color: "var(--neon-purple, #c084fc)",
+                        background: "rgba(168, 85, 247, 0.08)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "5px",
+                        fontWeight: 700
+                      }}
+                      title="Generar e imprimir ticket / factura con todo lo que debe este cliente"
+                    >
+                      <Printer size={13} />
+                      <span>Ticket Deuda</span>
+                    </button>
+
                     <button
                       type="button"
                       onClick={() => handleSendWhatsAppReminder(c)}
                       className="btn btn-outline"
-                      style={{ flex: 1, padding: "6px 10px", fontSize: "0.78rem", borderColor: "rgba(16, 185, 129, 0.4)", color: "#34d399", background: "rgba(16, 185, 129, 0.08)", display: "flex", alignItems: "center", justifyContent: "center", gap: "6px" }}
+                      style={{
+                        flex: 1,
+                        padding: "7px 8px",
+                        fontSize: "0.78rem",
+                        borderColor: "rgba(16, 185, 129, 0.4)",
+                        color: "#34d399",
+                        background: "rgba(16, 185, 129, 0.08)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "5px"
+                      }}
                       title="Enviar recordatorio formal y amable de cobro por WhatsApp"
                     >
                       <MessageSquare size={13} color="#34d399" />
-                      <span>Cobrar WhatsApp</span>
+                      <span>WhatsApp</span>
                     </button>
+
                     <button
                       type="button"
                       onClick={() => {
@@ -485,10 +591,23 @@ export default function ClientsView({
                         setAbonoAmount(debt.toString());
                       }}
                       className="btn btn-primary"
-                      style={{ flex: 1, padding: "6px 12px", fontSize: "0.8rem", background: "#f59e0b", borderColor: "#f59e0b", color: "#000", fontWeight: 800, display: "flex", alignItems: "center", justifyContent: "center", gap: "4px" }}
+                      style={{
+                        flex: 1,
+                        padding: "7px 8px",
+                        fontSize: "0.78rem",
+                        background: "#f59e0b",
+                        borderColor: "#f59e0b",
+                        color: "#000",
+                        fontWeight: 800,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "4px"
+                      }}
+                      title="Registrar abono o pago"
                     >
-                      <DollarSign size={14} />
-                      <span>Abonar / Pagar</span>
+                      <DollarSign size={13} />
+                      <span>Abonar</span>
                     </button>
                   </div>
                 </div>
@@ -864,7 +983,19 @@ export default function ClientsView({
                   </div>
                 </div>
 
-                <div style={{ display: "flex", gap: "8px" }}>
+                <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+                  {clientDebt > 0 && onPrintTicket && (
+                    <button
+                      type="button"
+                      onClick={() => handlePrintClientDebtTicket(selectedClientForDebtDetails)}
+                      className="btn btn-outline"
+                      style={{ padding: "8px 12px", fontSize: "0.82rem", color: "var(--neon-purple, #c084fc)", borderColor: "rgba(168, 85, 247, 0.45)", background: "rgba(168, 85, 247, 0.08)", display: "flex", alignItems: "center", gap: "6px", fontWeight: 700 }}
+                      title="Imprimir ticket o factura con todo lo que debe este cliente"
+                    >
+                      <Printer size={14} />
+                      <span>Ticket Todo lo que Debe</span>
+                    </button>
+                  )}
                   {clientDebt > 0 && (
                     <button
                       type="button"

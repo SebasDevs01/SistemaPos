@@ -434,14 +434,15 @@ export default function App() {
 
   const loadAllData = async () => {
     try {
-      const [rents, inss, shift, clsg, cfg, usrs, loadedSales] = await Promise.all([
+      const [rents, inss, shift, clsg, cfg, usrs, loadedSales, loadedProducts] = await Promise.all([
         fetchRentals(),
         fetchInsurances(),
         getActiveShift(),
         fetchShiftClosings(),
         fetchStoreConfig(),
         fetchUsers(),
-        fetchSales()
+        fetchSales(),
+        fetchProducts()
       ]);
       setRentals(rents || []);
       setInsurances(inss || []);
@@ -451,6 +452,9 @@ export default function App() {
       if (usrs && usrs.length > 0) setUsers(usrs);
       if (loadedSales && loadedSales.length > 0) {
         setSales(deduplicateSales(loadedSales));
+      }
+      if (loadedProducts && loadedProducts.length > 0) {
+        setProducts(deduplicateProducts(loadedProducts));
       }
     } catch (err) {
       console.error("Error cargando datos:", err);

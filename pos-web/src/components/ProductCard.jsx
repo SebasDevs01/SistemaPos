@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { formatCOP } from '../utils/formatCOP';
+import { getProductImage } from '../data/initialData';
 import '../styles/ProductCard.css';
 
 export default function ProductCard({
@@ -40,8 +41,8 @@ export default function ProductCard({
     <div className={`product-card ${!product.available ? 'unavailable' : ''} ${isInCart ? 'in-cart' : ''}`}>
       <div className="product-card-img-wrap">
         <img
-          src={product.imageUrl}
-          alt={product.name}
+          src={getProductImage(product)}
+          alt={product.name || product.nombre}
           className="product-card-img"
           loading="lazy"
         />

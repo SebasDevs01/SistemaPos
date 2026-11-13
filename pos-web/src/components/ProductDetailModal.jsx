@@ -28,9 +28,14 @@ export default function ProductDetailModal({
   const isUnlimited = product.categoria === "Cintas" || Boolean(product.stockIlimitado) || Boolean(product.ventaPorMetro);
   const isAvailable = isUnlimited || Number(product.stock) > 0;
 
-  const allImages = Array.isArray(product.imagenes) && product.imagenes.length > 0
-    ? product.imagenes
-    : [getProductImage(product)];
+  const allImages = (() => {
+    if (Array.isArray(product.imagenes) && product.imagenes.length > 0) {
+      const valid = product.imagenes.filter(img => typeof img === 'string' && img.trim());
+      if (valid.length > 0) return valid;
+    }
+    const single = getProductImage(product);
+    return single ? [single] : [];
+  })();
 
   const currentImage = allImages[activeImgIndex] || allImages[0];
 
@@ -136,6 +141,9 @@ export default function ProductDetailModal({
                   height: '100%',
                   objectFit: 'cover'
                 }}
+                onError={(e) => {
+                  e.target.src = "https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?w=400&auto=format&fit=crop&q=60";
+                }}
               />
               <span style={{
                 position: 'absolute',
@@ -195,7 +203,14 @@ export default function ProductDetailModal({
                       flexShrink: 0
                     }}
                   >
-                    <img src={img} alt={`Thumb ${i + 1}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                    <img 
+                      src={img} 
+                      alt={`Thumb ${i + 1}`} 
+                      style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
+                      onError={(e) => {
+                        e.target.src = "https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?w=300&auto=format&fit=crop&q=60";
+                      }}
+                    />
                   </button>
                 ))}
               </div>

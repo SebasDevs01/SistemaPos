@@ -774,9 +774,24 @@ export default function ProductEditModal({
     lastInitKeyRef.current = initKey;
 
     if (product) {
-      const initialImages = Array.isArray(product.imagenes) && product.imagenes.length > 0
-        ? product.imagenes
-        : (product.imagen ? [product.imagen] : []);
+      let initialImages = [];
+      if (Array.isArray(product.imagenes) && product.imagenes.length > 0) {
+        initialImages = product.imagenes.filter(img => img && typeof img === 'string' && img.trim());
+      } else if (Array.isArray(product.images) && product.images.length > 0) {
+        initialImages = product.images.filter(img => img && typeof img === 'string' && img.trim());
+      } else if (Array.isArray(product.fotos) && product.fotos.length > 0) {
+        initialImages = product.fotos.filter(img => img && typeof img === 'string' && img.trim());
+      } else {
+        const found = [
+          product.imagen,
+          product.imageUrl,
+          product.image,
+          product.foto,
+          product.photoURL,
+          product.urlImagen
+        ].find(val => typeof val === 'string' && val.trim());
+        if (found) initialImages = [found.trim()];
+      }
 
       const cat = product.categoria || defaultCategory || 'Papelería';
       const isCinta = cat === 'Cintas' || Boolean(product.ventaPorMetro);
@@ -1326,6 +1341,7 @@ export default function ProductEditModal({
       precioPorGenero: isCalzadoRopa ? formData.precioPorGenero : undefined,
       imagen: mainImage,
       imagenes: formData.imagenes || [],
+      imageUrl: mainImage,
       costo: parseFloat(formData.precioCosto) || 0,
       precioCosto: parseFloat(formData.precioCosto) || 0,
       margenGanancia: Number(margenPorcentaje) || 50,

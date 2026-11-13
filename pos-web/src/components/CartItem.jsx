@@ -1,5 +1,6 @@
 import React from 'react';
 import { formatCOP } from '../utils/formatCOP';
+import { getProductImage } from '../data/initialData';
 
 export default function CartItem({ item, onUpdateQty, onRemove }) {
   const subtotal = item.price * item.qty;
@@ -7,10 +8,13 @@ export default function CartItem({ item, onUpdateQty, onRemove }) {
   return (
     <div className="cart-item-row">
       <img
-        src={item.imageUrl}
-        alt={item.name}
+        src={getProductImage(item)}
+        alt={item.name || item.nombre}
         className="cart-item-thumb"
         loading="lazy"
+        onError={(e) => {
+          e.target.src = "https://images.unsplash.com/photo-1583485088034-697b5bc54ccd?w=300&auto=format&fit=crop&q=60";
+        }}
       />
 
       <div className="cart-item-info">

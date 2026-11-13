@@ -347,8 +347,8 @@ export default function Header({
           {/* ── BADGE DE CONEXIÓN A INTERNET (ONLINE / OFFLINE) ── */}
           <div
             className={`network-badge ${!isOnline
-                ? "network-badge--offline"
-                : (pendingOpsCount > 0 ? "network-badge--syncing" : "network-badge--online")
+              ? "network-badge--offline"
+              : (pendingOpsCount > 0 ? "network-badge--syncing" : "network-badge--online")
               }`}
             onClick={async () => {
               const currentStatus = onCheckConnection ? await onCheckConnection() : isOnline;
@@ -381,8 +381,8 @@ export default function Header({
             </span>
             <span
               className={`network-dot ${!isOnline
-                  ? "network-dot--offline"
-                  : (pendingOpsCount > 0 ? "network-dot--syncing" : "network-dot--online")
+                ? "network-dot--offline"
+                : (pendingOpsCount > 0 ? "network-dot--syncing" : "network-dot--online")
                 }`}
             />
           </div>

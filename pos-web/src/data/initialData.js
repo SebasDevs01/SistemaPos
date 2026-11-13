@@ -57,10 +57,45 @@ export const INITIAL_USERS = [
 ];
 
 export const getProductImage = (prod) => {
-  if (prod?.imagenes && Array.isArray(prod.imagenes) && prod.imagenes.length > 0 && prod.imagenes[0]?.trim()) {
-    return prod.imagenes[0];
+  if (!prod) return "https://images.unsplash.com/photo-1585776245991-cf89dd7fc73a?w=400&auto=format&fit=crop&q=60";
+
+  // 1. Revisar arrays de imágenes (imagenes, images, fotos)
+  const candidateArrays = [prod.imagenes, prod.images, prod.fotos];
+  for (const arr of candidateArrays) {
+    if (Array.isArray(arr) && arr.length > 0) {
+      const first = arr.find(img => img && typeof img === 'string' && img.trim());
+      if (first) return first.trim();
+    } else if (typeof arr === 'string' && arr.trim()) {
+      try {
+        const parsed = JSON.parse(arr);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          const first = parsed.find(img => img && typeof img === 'string' && img.trim());
+          if (first) return first.trim();
+        }
+      } catch (_) {
+        if (arr.startsWith('http') || arr.startsWith('data:image')) return arr.trim();
+      }
+    }
   }
-  if (prod?.imagen && prod.imagen.trim()) return prod.imagen;
+
+  // 2. Revisar strings de imagen directa en cualquier propiedad común
+  const candidateSingles = [
+    prod.imagen,
+    prod.imageUrl,
+    prod.image,
+    prod.foto,
+    prod.photoURL,
+    prod.urlImagen,
+    prod.img,
+    prod.picture,
+    prod.thumbnail
+  ];
+  for (const single of candidateSingles) {
+    if (typeof single === 'string' && single.trim()) {
+      return single.trim();
+    }
+  }
+
   const cat = prod?.categoria || "Papelería";
   const name = (prod?.nombre || "").toLowerCase();
 

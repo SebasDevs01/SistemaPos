@@ -44,6 +44,8 @@ import {
   deleteProductById, 
   deduplicateProducts,
   fetchRentals, 
+  fetchRentalHistory,
+  subscribeToRentalHistory,
   saveRental, 
   deleteRentalById,
   deleteMultipleRentals,
@@ -198,6 +200,12 @@ export default function App() {
   const [rentals, setRentals] = useState(() => {
     try {
       const cached = localStorage.getItem("pos_rentals");
+      return cached ? JSON.parse(cached) : [];
+    } catch { return []; }
+  });
+  const [rentalHistory, setRentalHistory] = useState(() => {
+    try {
+      const cached = localStorage.getItem("pos_rentals_history");
       return cached ? JSON.parse(cached) : [];
     } catch { return []; }
   });
@@ -434,8 +442,9 @@ export default function App() {
 
   const loadAllData = async () => {
     try {
-      const [rents, inss, shift, clsg, cfg, usrs, loadedSales, loadedProducts] = await Promise.all([
+      const [rents, inss, shift, clsg, cfg, usrs, loadedSales, loadedProducts, loadedRentHist] = await Promise.all([
         fetchRentals(),
+        fetchRentalHistory(),
         fetchInsurances(),
         getActiveShift(),
         fetchShiftClosings(),
@@ -445,6 +454,7 @@ export default function App() {
         fetchProducts()
       ]);
       setRentals(rents || []);
+      if (loadedRentHist && loadedRentHist.length > 0) setRentalHistory(loadedRentHist);
       setInsurances(inss || []);
       setActiveShift(shift || null);
       setShiftClosings(clsg || []);
@@ -481,6 +491,11 @@ export default function App() {
     // 4. Alquileres en tiempo real (creación, devolución o eliminación)
     const unsubRentals = subscribeToRentals((updatedRentals) => {
       setRentals(updatedRentals);
+    });
+
+    // 4.1 Historial permanente indeleble de alquileres
+    const unsubRentHist = subscribeToRentalHistory((updatedHist) => {
+      setRentalHistory(updatedHist);
     });
 
     // 5. Seguros Escolares en tiempo real
@@ -560,6 +575,7 @@ export default function App() {
       unsubSales && unsubSales();
       unsubClients && unsubClients();
       unsubRentals && unsubRentals();
+      unsubRentHist && unsubRentHist();
       unsubInsurances && unsubInsurances();
       unsubClosings && unsubClosings();
       unsubConfig && unsubConfig();
@@ -1516,6 +1532,7 @@ export default function App() {
           {currentTab === "rentals" && (
             <RentalsView
               rentals={rentals}
+              rentalHistory={rentalHistory}
               onSaveRental={handleSaveRental}
               onReturnRental={handleReturnRental}
               onDeleteRental={handleDeleteRental}

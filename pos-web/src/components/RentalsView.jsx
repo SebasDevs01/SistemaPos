@@ -35,6 +35,7 @@ import { getRentalAlertInfo, isRentalOverdue } from "../utils/rentalUtils";
 
 export default function RentalsView({ 
   rentals = [], 
+  rentalHistory = [],
   onSaveRental, 
   onReturnRental, 
   onDeleteRental,
@@ -283,6 +284,23 @@ export default function RentalsView({
     }
   };
 
+  // Consolidar lista de historial permanente combinando rentalHistory y rentals
+  const fullHistoryList = useMemo(() => {
+    const map = new Map();
+    (rentalHistory || []).forEach(r => {
+      if (r && r.id) map.set(r.id, r);
+    });
+    (rentals || []).forEach(r => {
+      if (r && r.id) {
+        const prev = map.get(r.id);
+        map.set(r.id, { ...prev, ...r });
+      }
+    });
+    const arr = Array.from(map.values());
+    arr.sort((a, b) => new Date(b.fechaInicio || 0) - new Date(a.fechaInicio || 0));
+    return arr;
+  }, [rentalHistory, rentals]);
+
   // Métricas de registros devueltos para el limpiador
   const returnedRentals = rentals.filter(r => r.estado === "devuelto");
   const returnedCount = returnedRentals.length;
@@ -295,8 +313,11 @@ export default function RentalsView({
     return (now - t) > (30 * 24 * 60 * 60 * 1000);
   }).length;
 
+  // Fuente de datos según pestaña activa: si es 'historial' usa fullHistoryList, si no rentals
+  const sourceRentals = filterStatus === "historial" ? fullHistoryList : rentals;
+
   // Filtrar lista por estado, fechas y texto
-  const filteredRentals = rentals.filter(r => {
+  const filteredRentals = sourceRentals.filter(r => {
     const alertInfo = getAlertInfo(r);
 
     // 1. Filtro de estado
@@ -305,6 +326,7 @@ export default function RentalsView({
     if (filterStatus === "activos" && alertInfo.isReserva) return false;
     if (filterStatus === "activos" && (alertInfo.status !== "activo" && alertInfo.status !== "por_vencer")) return false;
     if (filterStatus === "devueltos" && alertInfo.status !== "devuelto") return false;
+    // Si filterStatus === "historial", se muestran todos sin importar el estado
 
     // 2. Filtro de fechas
     if (dateFilter !== "all") {
@@ -332,14 +354,16 @@ export default function RentalsView({
       }
     }
 
-    // 3. Filtro de búsqueda por texto
+    // 3. Filtro de búsqueda por texto (cliente, teléfono, ítem, observaciones, dirección, vendedor)
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase().trim();
       const matchName = (r.clienteNombre || "").toLowerCase().includes(q);
       const matchPhone = (r.clienteTelefono || "").includes(q);
       const matchItem = (r.item || "").toLowerCase().includes(q);
       const matchObs = (r.observaciones || "").toLowerCase().includes(q);
-      if (!matchName && !matchPhone && !matchItem && !matchObs) return false;
+      const matchDir = (r.clienteDireccion || "").toLowerCase().includes(q);
+      const matchVend = (r.vendedor || "").toLowerCase().includes(q);
+      if (!matchName && !matchPhone && !matchItem && !matchObs && !matchDir && !matchVend) return false;
     }
 
     return true;
@@ -632,7 +656,8 @@ export default function RentalsView({
               { id: "apartados", label: `🎄 Apartados / Diciembre (${apartadosCount})` },
               { id: "vencidos", label: `⚠️ Vencidos / Retraso (${overdueCount})` },
               { id: "activos", label: `🟢 Activos (${rentals.filter(r => r.estado !== "devuelto" && !r.esApartado && r.tipoOperacion !== "reserva" && !r.fechaEvento).length})` },
-              { id: "devueltos", label: `✅ Devueltos (${returnedCount})` }
+              { id: "devueltos", label: `✅ Devueltos (${returnedCount})` },
+              { id: "historial", label: `📜 Historial Permanente (${fullHistoryList.length})` }
             ].map(f => (
               <button
                 key={f.id}
@@ -850,6 +875,11 @@ export default function RentalsView({
                           🔒 Solo Depósito Dejado
                         </span>
                       )}
+                      {(rental.limpiadoDeBandeja || rental.historicoVenta) && (
+                        <span className="badge badge-purple" style={{ fontSize: "0.7rem", padding: "3px 7px", fontWeight: 800 }}>
+                          📜 Historial
+                        </span>
+                      )}
                       <span className={`badge ${alertInfo.color}`} style={{
                         fontSize: "0.72rem",
                         padding: "4px 8px",
@@ -986,6 +1016,18 @@ export default function RentalsView({
                           {new Date(rental.fechaEvento + (rental.horaEvento ? `T${rental.horaEvento}` : "T12:00:00")).toLocaleDateString("es-CO", { weekday: "short", day: "numeric", month: "long" })}
                           {rental.horaEvento ? ` a las ${rental.horaEvento}` : ""}
                         </strong>
+                      </div>
+                    )}
+                    {rental.vendedor && (
+                      <div style={{ gridColumn: "1 / -1", background: "rgba(99, 102, 241, 0.08)", padding: "7px 12px", borderRadius: "8px", border: "1px solid rgba(99, 102, 241, 0.2)", display: "flex", alignItems: "center", gap: "6px" }}>
+                        <span style={{ color: "var(--neon-indigo, #818cf8)", fontSize: "0.78rem", fontWeight: 700 }}>🧑‍💼 Alquilado por:</span>
+                        <strong style={{ color: "var(--text-main)", fontSize: "0.86rem" }}>{rental.vendedor}</strong>
+                      </div>
+                    )}
+                    {rental.fechaDevolucion && (
+                      <div style={{ gridColumn: "1 / -1", color: "#10b981", fontSize: "0.78rem", fontWeight: 600, display: "flex", alignItems: "center", gap: "6px" }}>
+                        <span>✅ Mobiliario devuelto:</span>
+                        <strong>{new Date(rental.fechaDevolucion).toLocaleString("es-CO")}</strong>
                       </div>
                     )}
                     {rental.clienteDireccion && (
@@ -1571,7 +1613,7 @@ export default function RentalsView({
             }}>
               <Info size={16} style={{ flexShrink: 0, marginTop: "2px" }} />
               <div>
-                <strong>Protección de seguridad:</strong> Solo se eliminarán los registros que ya fueron <strong>devueltos</strong> y cuyo stock ya reingresó a la tienda. Los alquileres activos o con alertas pendientes <strong>NUNCA</strong> serán borrados.
+                <strong>Historial 100% Protegido:</strong> Solo se retirarán de la bandeja activa de mostrador los registros ya <strong>devueltos</strong>. Todos los datos, clientes y quién los alquiló <strong>permanecen guardados para siempre en la pestaña "📜 Historial Permanente"</strong>. Los alquileres activos o con pendientes <strong>NUNCA</strong> serán tocados.
               </div>
             </div>
 

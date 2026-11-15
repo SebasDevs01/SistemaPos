@@ -40,6 +40,7 @@ const getInitialProducts = async () => {
 const PRODUCTS_COLLECTION = "productos";
 const SALES_COLLECTION = "ventas";
 const RENTALS_COLLECTION = "alquileres";
+const RENTALS_HISTORY_COLLECTION = "alquileres_historial";
 const CLIENTS_COLLECTION = "clientes";
 const CONFIG_COLLECTION = "configuracion";
 const USERS_COLLECTION = "usuarios";
@@ -536,6 +537,78 @@ export const fetchRentals = async () => {
   ]);
 };
 
+// ── Guardar en Historial Permanente Indeleble de Alquileres ──
+export const saveRentalToHistory = async (rental) => {
+  const rentalId = rental.id || `ALQ-${Date.now()}`;
+  const now = new Date().toISOString();
+  const historyData = {
+    ...rental,
+    id: rentalId,
+    fechaInicio: rental.fechaInicio || now,
+    vendedor: rental.vendedor || "Cajero POS",
+    updatedAt: now
+  };
+
+  try {
+    const docRef = doc(db, RENTALS_HISTORY_COLLECTION, rentalId);
+    await setDoc(docRef, historyData, { merge: true });
+  } catch (err) {
+    console.warn("Error guardando alquiler en historial permanente de Firestore:", err);
+  }
+
+  const current = getLocal("pos_rentals_history", []);
+  const index = current.findIndex(r => r.id === rentalId);
+  if (index >= 0) {
+    current[index] = { ...current[index], ...historyData };
+  } else {
+    current.unshift(historyData);
+  }
+  setLocal("pos_rentals_history", current);
+  return historyData;
+};
+
+// ── Obtener Historial Permanente de Alquileres ──
+export const fetchRentalHistory = async () => {
+  try {
+    const colRef = collection(db, RENTALS_HISTORY_COLLECTION);
+    const snapshot = await getDocs(query(colRef, orderBy("fechaInicio", "desc")));
+    if (!snapshot.empty) {
+      const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      list.sort((a, b) => new Date(b.fechaInicio || 0) - new Date(a.fechaInicio || 0));
+      setLocal("pos_rentals_history", list);
+      return list;
+    }
+  } catch (err) {
+    console.warn("Firestore rental history error:", err);
+  }
+  return getLocal("pos_rentals_history", []);
+};
+
+// ── Suscripción en tiempo real al Historial Permanente de Alquileres ──
+export const subscribeToRentalHistory = (callback) => {
+  try {
+    const colRef = collection(db, RENTALS_HISTORY_COLLECTION);
+    const unsub = onSnapshot(colRef, (snapshot) => {
+      if (!snapshot.empty) {
+        const list = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+        list.sort((a, b) => new Date(b.fechaInicio || 0) - new Date(a.fechaInicio || 0));
+        setLocal("pos_rentals_history", list);
+        callback(list);
+      } else {
+        const local = getLocal("pos_rentals_history", []);
+        callback(local);
+      }
+    }, (err) => {
+      console.warn("[Realtime] Error en listener de historial de alquileres:", err);
+      callback(getLocal("pos_rentals_history", []));
+    });
+    return unsub;
+  } catch (err) {
+    console.warn("[Realtime] No se pudo iniciar listener de historial de alquileres:", err);
+    return () => {};
+  }
+};
+
 export const saveRental = async (rental) => {
   const rentalId = rental.id || `ALQ-${Date.now()}`;
   const rentalData = {
@@ -543,7 +616,8 @@ export const saveRental = async (rental) => {
     id: rentalId,
     fechaInicio: rental.fechaInicio || new Date().toISOString(),
     duracionHoras: rental.duracionHoras || 24,
-    estado: rental.estado || "activo"
+    estado: rental.estado || "activo",
+    vendedor: rental.vendedor || "Cajero POS"
   };
 
   try {
@@ -552,6 +626,9 @@ export const saveRental = async (rental) => {
   } catch (err) {
     console.warn("Error guardando alquiler en Firestore:", err);
   }
+
+  // Guardar SIEMPRE en el Historial Permanente (indeleble)
+  saveRentalToHistory(rentalData).catch(console.warn);
 
   const current = getLocal("pos_rentals", []);
   const index = current.findIndex(r => r.id === rentalId);
@@ -571,6 +648,13 @@ export const deleteRentalById = async (rentalId) => {
   } catch (err) {
     console.warn("Error eliminando alquiler en Firestore:", err);
   }
+
+  // En el Historial Permanente NO se elimina: se marca como limpiado de bandeja
+  try {
+    const histDocRef = doc(db, RENTALS_HISTORY_COLLECTION, rentalId);
+    await setDoc(histDocRef, { limpiadoDeBandeja: true, fechaLimpieza: new Date().toISOString() }, { merge: true });
+  } catch (_) {}
+
   const current = getLocal("pos_rentals", []);
   const updated = current.filter(r => r.id !== rentalId);
   setLocal("pos_rentals", updated);
@@ -589,6 +673,18 @@ export const deleteMultipleRentals = async (rentalIds) => {
   } catch (err) {
     console.warn("Error eliminando alquileres por lote en Firestore:", err);
   }
+
+  // En el Historial Permanente NO se eliminan: se preservan con marca de archivo
+  try {
+    const batchHist = writeBatch(db);
+    const nowIso = new Date().toISOString();
+    rentalIds.forEach(id => {
+      const histDocRef = doc(db, RENTALS_HISTORY_COLLECTION, id);
+      batchHist.set(histDocRef, { limpiadoDeBandeja: true, fechaLimpieza: nowIso }, { merge: true });
+    });
+    await batchHist.commit();
+  } catch (_) {}
+
   const current = getLocal("pos_rentals", []);
   const idSet = new Set(rentalIds);
   const updated = current.filter(r => !idSet.has(r.id));

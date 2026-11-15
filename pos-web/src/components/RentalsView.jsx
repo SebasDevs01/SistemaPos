@@ -317,9 +317,19 @@ export default function RentalsView({
     return (now - t) > (30 * 24 * 60 * 60 * 1000);
   }).length;
 
-  // Fuente de datos según pestaña activa: si es 'historial' usa fullHistoryList, si no rentals
-  // Siempre filtramos por isValidRental para limpiar basura del localStorage
-  const sourceRentals = filterStatus === "historial" ? fullHistoryList : (rentals || []).filter(isValidRental);
+  // Fuente de datos según pestaña activa:
+  // - Para 'activos', 'vencidos' o 'apartados': opera sobre la bandeja activa.
+  // - Para 'todos', 'historial', 'devueltos' o cuando hay una búsqueda activa:
+  //   usa la lista completa consolidada fullHistoryList para que Omar Vargas, Fabio y todos los clientes aparezcan siempre.
+  const sourceRentals = useMemo(() => {
+    if (searchQuery.trim() !== "") {
+      return fullHistoryList;
+    }
+    if (filterStatus === "activos" || filterStatus === "vencidos" || filterStatus === "apartados") {
+      return (rentals || []).filter(isValidRental);
+    }
+    return fullHistoryList;
+  }, [filterStatus, fullHistoryList, rentals, searchQuery]);
 
   // Filtrar lista por estado, fechas y texto
   const filteredRentals = sourceRentals.filter(r => {
@@ -657,11 +667,11 @@ export default function RentalsView({
               <Filter size={14} /> Estado:
             </span>
             {[
-              { id: "todos", label: `Todos (${validRentals.length})` },
+              { id: "todos", label: `Todos (${fullHistoryList.length})` },
               { id: "apartados", label: `🎄 Apartados / Diciembre (${apartadosCount})` },
               { id: "vencidos", label: `⚠️ Vencidos / Retraso (${overdueCount})` },
               { id: "activos", label: `🟢 Activos (${validRentals.filter(r => r.estado !== "devuelto" && !r.esApartado && r.tipoOperacion !== "reserva" && !r.fechaEvento).length})` },
-              { id: "devueltos", label: `✅ Devueltos (${returnedCount})` },
+              { id: "devueltos", label: `✅ Devueltos (${fullHistoryList.filter(r => r.estado === "devuelto").length})` },
               { id: "historial", label: `📜 Historial Permanente (${fullHistoryList.length})` }
             ].map(f => (
               <button

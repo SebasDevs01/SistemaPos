@@ -19,6 +19,7 @@ import {
 import { db } from "../firebase/config";
 import { INITIAL_CLIENTS, STORE_CONFIG, INITIAL_USERS } from "../data/initialData";
 import { isUserSebastian } from "../utils/userUtils";
+import { isValidRental } from "../utils/rentalUtils";
 
 // INITIAL_PRODUCTS se carga desde /products.json en runtime (no en el bundle)
 // Esto reduce el bundle de build de ~2.5MB a ~1MB y evita crashes de memoria al compilar
@@ -500,45 +501,23 @@ export const fetchRentals = async () => {
     const colRef = collection(db, RENTALS_COLLECTION);
     const snapshot = await getDocs(query(colRef, orderBy("fechaInicio", "desc")));
     if (!snapshot.empty) {
-      const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(isValidRental);
       setLocal("pos_rentals", list);
       return list;
     }
   } catch (err) {
     console.warn("Firestore rentals error:", err);
   }
-  return getLocal("pos_rentals", [
-    {
-      id: "ALQ-DEMO-1",
-      clienteNombre: "Claudia Martínez",
-      clienteTelefono: "3124567890",
-      item: "Sillas Alquiler",
-      cantidad: 15,
-      precioTotal: 22500,
-      deposito: 20000,
-      fechaInicio: new Date(Date.now() - 26 * 60 * 60 * 1000).toISOString(), // Hace 26 horas (Vencido!)
-      duracionHoras: 24,
-      estado: "vencido", // 'activo', 'vencido', 'devuelto'
-      observaciones: "Alquiler para fiesta de cumpleaños familiar"
-    },
-    {
-      id: "ALQ-DEMO-2",
-      clienteNombre: "Carlos Gómez",
-      clienteTelefono: "3158901234",
-      item: "Sillas Alquiler + Mesa",
-      cantidad: 10,
-      precioTotal: 25000,
-      deposito: 30000,
-      fechaInicio: new Date(Date.now() - 10 * 60 * 60 * 1000).toISOString(), // Hace 10 horas (Activo)
-      duracionHoras: 24,
-      estado: "activo",
-      observaciones: "Devuelve mañana en la mañana"
-    }
-  ]);
+  const local = getLocal("pos_rentals", []);
+  return Array.isArray(local) ? local.filter(isValidRental) : [];
 };
 
 // ── Guardar en Historial Permanente Indeleble de Alquileres ──
 export const saveRentalToHistory = async (rental) => {
+  if (!isValidRental(rental)) {
+    console.warn("Intento de guardar alquiler inválido en historial:", rental);
+    return rental;
+  }
   const rentalId = rental.id || `ALQ-${Date.now()}`;
   const now = new Date().toISOString();
   const historyData = {
@@ -556,7 +535,7 @@ export const saveRentalToHistory = async (rental) => {
     console.warn("Error guardando alquiler en historial permanente de Firestore:", err);
   }
 
-  const current = getLocal("pos_rentals_history", []);
+  const current = getLocal("pos_rentals_history", []).filter(isValidRental);
   const index = current.findIndex(r => r.id === rentalId);
   if (index >= 0) {
     current[index] = { ...current[index], ...historyData };
@@ -573,15 +552,16 @@ export const fetchRentalHistory = async () => {
     const colRef = collection(db, RENTALS_HISTORY_COLLECTION);
     const snapshot = await getDocs(query(colRef, orderBy("fechaInicio", "desc")));
     if (!snapshot.empty) {
-      const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      list.sort((a, b) => new Date(b.fechaInicio || 0) - new Date(a.fechaInicio || 0));
+      const list = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })).filter(isValidRental);
+      list.sort((a, b) => new Date(b.fechaInicio || b.createdAt || 0) - new Date(a.fechaInicio || a.createdAt || 0));
       setLocal("pos_rentals_history", list);
       return list;
     }
   } catch (err) {
     console.warn("Firestore rental history error:", err);
   }
-  return getLocal("pos_rentals_history", []);
+  const local = getLocal("pos_rentals_history", []);
+  return Array.isArray(local) ? local.filter(isValidRental) : [];
 };
 
 // ── Suscripción en tiempo real al Historial Permanente de Alquileres ──
@@ -590,17 +570,18 @@ export const subscribeToRentalHistory = (callback) => {
     const colRef = collection(db, RENTALS_HISTORY_COLLECTION);
     const unsub = onSnapshot(colRef, (snapshot) => {
       if (!snapshot.empty) {
-        const list = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-        list.sort((a, b) => new Date(b.fechaInicio || 0) - new Date(a.fechaInicio || 0));
+        const list = snapshot.docs.map(d => ({ id: d.id, ...d.data() })).filter(isValidRental);
+        list.sort((a, b) => new Date(b.fechaInicio || b.createdAt || 0) - new Date(a.fechaInicio || a.createdAt || 0));
         setLocal("pos_rentals_history", list);
         callback(list);
       } else {
-        const local = getLocal("pos_rentals_history", []);
+        const local = getLocal("pos_rentals_history", []).filter(isValidRental);
         callback(local);
       }
     }, (err) => {
       console.warn("[Realtime] Error en listener de historial de alquileres:", err);
-      callback(getLocal("pos_rentals_history", []));
+      const local = getLocal("pos_rentals_history", []).filter(isValidRental);
+      callback(local);
     });
     return unsub;
   } catch (err) {
@@ -610,6 +591,10 @@ export const subscribeToRentalHistory = (callback) => {
 };
 
 export const saveRental = async (rental) => {
+  if (!isValidRental(rental)) {
+    console.warn("Intento de guardar alquiler inválido descartado:", rental);
+    return rental;
+  }
   const rentalId = rental.id || `ALQ-${Date.now()}`;
   const rentalData = {
     ...rental,
@@ -630,7 +615,7 @@ export const saveRental = async (rental) => {
   // Guardar SIEMPRE en el Historial Permanente (indeleble)
   saveRentalToHistory(rentalData).catch(console.warn);
 
-  const current = getLocal("pos_rentals", []);
+  const current = getLocal("pos_rentals", []).filter(isValidRental);
   const index = current.findIndex(r => r.id === rentalId);
   if (index >= 0) {
     current[index] = rentalData;
@@ -698,17 +683,17 @@ export const subscribeToRentals = (callback) => {
     const colRef = collection(db, RENTALS_COLLECTION);
     const unsub = onSnapshot(colRef, (snapshot) => {
       if (!snapshot.empty) {
-        const list = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-        list.sort((a, b) => new Date(b.fechaInicio || 0) - new Date(a.fechaInicio || 0));
+        const list = snapshot.docs.map(d => ({ id: d.id, ...d.data() })).filter(isValidRental);
+        list.sort((a, b) => new Date(b.fechaInicio || b.createdAt || 0) - new Date(a.fechaInicio || a.createdAt || 0));
         setLocal("pos_rentals", list);
         callback(list);
       } else {
-        const local = getLocal("pos_rentals", []);
+        const local = getLocal("pos_rentals", []).filter(isValidRental);
         callback(local);
       }
     }, (err) => {
       console.warn("[Realtime] Error en listener de alquileres:", err);
-      callback(getLocal("pos_rentals", []));
+      callback(getLocal("pos_rentals", []).filter(isValidRental));
     });
     return unsub;
   } catch (err) {

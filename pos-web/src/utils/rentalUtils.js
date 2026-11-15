@@ -235,11 +235,13 @@ export const getRentalAlertInfo = (rental, now = Date.now()) => {
   }
 
   // 3. Alquiler estándar de mostrador / inmediato
-  const start = new Date(rental.fechaInicio || Date.now()).getTime();
-  const elapsedMs = now - start;
+  const rawDate = rental.fechaInicio || rental.createdAt || Date.now();
+  const parsedDate = new Date(rawDate);
+  const start = !isNaN(parsedDate.getTime()) ? parsedDate.getTime() : Date.now();
+  const elapsedMs = Math.max(0, now - start);
   const elapsedHours = Math.floor(elapsedMs / (1000 * 60 * 60));
   const elapsedMinutes = Math.floor((elapsedMs % (1000 * 60 * 60)) / (1000 * 60));
-  const maxHours = rental.duracionHoras || 24;
+  const maxHours = Number(rental.duracionHoras) || 24;
 
   if (elapsedHours >= maxHours) {
     const extraHours = elapsedHours - maxHours;
@@ -294,4 +296,41 @@ export const getRentalAlertInfo = (rental, now = Date.now()) => {
  */
 export const isRentalOverdue = (rental, now = Date.now()) => {
   return getRentalAlertInfo(rental, now).isOverdue;
+};
+
+/**
+ * Valida si un objeto de alquiler es un registro válido con datos reales
+ * y descarta registros nulos, vacíos o corruptos.
+ */
+export const isValidRental = (r) => {
+  if (!r || typeof r !== "object") return false;
+  if (!r.id || String(r.id).trim() === "") return false;
+
+  const rawName = String(r.clienteNombre || "").trim();
+  const rawItem = String(r.item || "").trim();
+  const rawPhone = String(r.clienteTelefono || "").trim();
+  const rawTotal = Number(r.precioTotal);
+  const rawCant = Number(r.cantidad || (Number(r.cantidadSillas || 0) + Number(r.cantidadMesas || 0)));
+
+  // Validaciones de contenido real
+  const hasValidName = rawName !== "" && rawName.toLowerCase() !== "cliente";
+  const hasValidItem = rawItem !== "";
+  const hasValidTotal = !isNaN(rawTotal) && rawTotal > 0;
+  const hasValidCant = !isNaN(rawCant) && rawCant > 0;
+  const hasValidPhone = rawPhone !== "" && rawPhone !== "0" && rawPhone.toLowerCase() !== "sin teléfono";
+
+  // Un registro real debe tener al menos:
+  // 1) Nombre de cliente válido O teléfono válido
+  // Y 2) Algún artículo, cantidad o total coherente
+  if ((hasValidName || hasValidPhone) && (hasValidItem || hasValidCant || hasValidTotal)) {
+    return true;
+  }
+
+  // Si tiene clienteNombre válido aunque no tenga total explícito
+  if (hasValidName && (hasValidItem || hasValidCant || r.fechaInicio || r.createdAt)) {
+    return true;
+  }
+
+  // Descartar registros vacíos o nulos
+  return false;
 };

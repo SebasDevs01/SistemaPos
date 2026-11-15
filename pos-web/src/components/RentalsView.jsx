@@ -31,7 +31,7 @@ import RentalTicketModal from "./RentalTicketModal";
 import RentalOrderModal from "./RentalOrderModal";
 import PaymentEvidenceUploader from "./PaymentEvidenceUploader";
 import MathPriceInput from "./MathPriceInput";
-import { getRentalAlertInfo, isRentalOverdue } from "../utils/rentalUtils";
+import { getRentalAlertInfo, isRentalOverdue, isValidRental } from "../utils/rentalUtils";
 
 export default function RentalsView({ 
   rentals = [], 
@@ -114,20 +114,22 @@ export default function RentalsView({
   const totalStockMesas = Number(tableProduct ? tableProduct.stock : 2);
 
   // Calcular métricas de unidades que están actualmente fuera físicamente de la tienda (activas)
-  const activeRentedChairs = rentals
+  // Usamos solo registros válidos para evitar NaN en los cálculos de stock
+  const validRentals = (rentals || []).filter(isValidRental);
+  const activeRentedChairs = validRentals
     .filter(r => r.estado !== "devuelto" && r.estado !== "reservado" && !r.esApartado && r.tipoOperacion !== "reserva" && (String(r.item || "").toLowerCase().includes("silla") || Number(r.cantidadSillas || 0) > 0))
     .reduce((sum, r) => sum + Number(r.cantidadSillas || (String(r.item || "").toLowerCase().includes("silla") ? r.cantidad : 0) || 0), 0);
 
-  const activeRentedTables = rentals
+  const activeRentedTables = validRentals
     .filter(r => r.estado !== "devuelto" && r.estado !== "reservado" && !r.esApartado && r.tipoOperacion !== "reserva" && (String(r.item || "").toLowerCase().includes("mesa") || Number(r.cantidadMesas || 0) > 0))
     .reduce((sum, r) => sum + Number(r.cantidadMesas || (String(r.item || "").toLowerCase().includes("mesa") && !String(r.item || "").toLowerCase().includes("silla") ? r.cantidad : 0) || 0), 0);
 
   // Unidades apartadas para eventos futuros (aún físicamente en la tienda)
-  const futureReservedChairs = rentals
+  const futureReservedChairs = validRentals
     .filter(r => r.estado !== "devuelto" && (r.estado === "reservado" || r.esApartado || r.tipoOperacion === "reserva") && (String(r.item || "").toLowerCase().includes("silla") || Number(r.cantidadSillas || 0) > 0))
     .reduce((sum, r) => sum + Number(r.cantidadSillas || (String(r.item || "").toLowerCase().includes("silla") ? r.cantidad : 0) || 0), 0);
 
-  const futureReservedTables = rentals
+  const futureReservedTables = validRentals
     .filter(r => r.estado !== "devuelto" && (r.estado === "reservado" || r.esApartado || r.tipoOperacion === "reserva") && (String(r.item || "").toLowerCase().includes("mesa") || Number(r.cantidadMesas || 0) > 0))
     .reduce((sum, r) => sum + Number(r.cantidadMesas || (String(r.item || "").toLowerCase().includes("mesa") && !String(r.item || "").toLowerCase().includes("silla") ? r.cantidad : 0) || 0), 0);
 
@@ -143,7 +145,7 @@ export default function RentalsView({
   const totalRentedTables = activeRentedTables;
 
   // Conteo de apartados / reservas (fechas especiales como Diciembre)
-  const apartadosRentals = rentals.filter(r => r.estado === "reservado" || r.tipoOperacion === "reserva" || r.esApartado);
+  const apartadosRentals = validRentals.filter(r => r.estado === "reservado" || r.tipoOperacion === "reserva" || r.esApartado);
   const apartadosCount = apartadosRentals.length;
 
   // Wrapper local para pasar el timestamp reactivo "now"
@@ -287,22 +289,24 @@ export default function RentalsView({
   // Consolidar lista de historial permanente combinando rentalHistory y rentals
   const fullHistoryList = useMemo(() => {
     const map = new Map();
-    (rentalHistory || []).forEach(r => {
+    // Primero poblar desde historial (Firestore)
+    (rentalHistory || []).filter(isValidRental).forEach(r => {
       if (r && r.id) map.set(r.id, r);
     });
-    (rentals || []).forEach(r => {
+    // Luego pisar con datos frescos de alquileres activos
+    (rentals || []).filter(isValidRental).forEach(r => {
       if (r && r.id) {
         const prev = map.get(r.id);
         map.set(r.id, { ...prev, ...r });
       }
     });
     const arr = Array.from(map.values());
-    arr.sort((a, b) => new Date(b.fechaInicio || 0) - new Date(a.fechaInicio || 0));
+    arr.sort((a, b) => new Date(b.fechaInicio || b.createdAt || 0) - new Date(a.fechaInicio || a.createdAt || 0));
     return arr;
   }, [rentalHistory, rentals]);
 
-  // Métricas de registros devueltos para el limpiador
-  const returnedRentals = rentals.filter(r => r.estado === "devuelto");
+  // Métricas de registros devueltos para el limpiador (solo registros válidos)
+  const returnedRentals = (rentals || []).filter(r => isValidRental(r) && r.estado === "devuelto");
   const returnedCount = returnedRentals.length;
   const returnedOlder7Count = returnedRentals.filter(r => {
     const t = new Date(r.fechaDevolucion || r.fechaInicio).getTime();
@@ -314,7 +318,8 @@ export default function RentalsView({
   }).length;
 
   // Fuente de datos según pestaña activa: si es 'historial' usa fullHistoryList, si no rentals
-  const sourceRentals = filterStatus === "historial" ? fullHistoryList : rentals;
+  // Siempre filtramos por isValidRental para limpiar basura del localStorage
+  const sourceRentals = filterStatus === "historial" ? fullHistoryList : (rentals || []).filter(isValidRental);
 
   // Filtrar lista por estado, fechas y texto
   const filteredRentals = sourceRentals.filter(r => {
@@ -369,7 +374,7 @@ export default function RentalsView({
     return true;
   });
 
-  const overdueCount = rentals.filter(r => isRentalOverdue(r, now)).length;
+  const overdueCount = (rentals || []).filter(r => isValidRental(r) && isRentalOverdue(r, now)).length;
 
   // Ejecutar limpieza de alquileres devueltos
   const handleExecuteClear = async () => {
@@ -652,10 +657,10 @@ export default function RentalsView({
               <Filter size={14} /> Estado:
             </span>
             {[
-              { id: "todos", label: `Todos (${rentals.length})` },
+              { id: "todos", label: `Todos (${validRentals.length})` },
               { id: "apartados", label: `🎄 Apartados / Diciembre (${apartadosCount})` },
               { id: "vencidos", label: `⚠️ Vencidos / Retraso (${overdueCount})` },
-              { id: "activos", label: `🟢 Activos (${rentals.filter(r => r.estado !== "devuelto" && !r.esApartado && r.tipoOperacion !== "reserva" && !r.fechaEvento).length})` },
+              { id: "activos", label: `🟢 Activos (${validRentals.filter(r => r.estado !== "devuelto" && !r.esApartado && r.tipoOperacion !== "reserva" && !r.fechaEvento).length})` },
               { id: "devueltos", label: `✅ Devueltos (${returnedCount})` },
               { id: "historial", label: `📜 Historial Permanente (${fullHistoryList.length})` }
             ].map(f => (
@@ -826,7 +831,12 @@ export default function RentalsView({
         ) : (
           filteredRentals.map(rental => {
             const alertInfo = getAlertInfo(rental);
-            const startDate = new Date(rental.fechaInicio);
+            // Fecha de inicio con fallback seguro para evitar "Invalid Date"
+            const rawFecha = rental.fechaInicio || rental.createdAt;
+            const startDateObj = rawFecha ? new Date(rawFecha) : null;
+            const startDate = startDateObj && !isNaN(startDateObj.getTime()) ? startDateObj : new Date();
+            // Precio protegido contra NaN
+            const precioTotal = Math.max(0, Number(rental.precioTotal) || 0);
 
             return (
               <div 
@@ -955,21 +965,21 @@ export default function RentalsView({
                   }}>
                     <div>
                       <span style={{ color: "var(--text-muted)", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.4px" }}>Artículo:</span>
-                      <div style={{ fontWeight: 700, color: "var(--text-main)", fontSize: "0.92rem", marginTop: "2px" }}>{rental.item}</div>
+                      <div style={{ fontWeight: 700, color: "var(--text-main)", fontSize: "0.92rem", marginTop: "2px" }}>{rental.item || "Mobiliario"}</div>
                     </div>
                     <div>
                       <span style={{ color: "var(--text-muted)", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.4px" }}>Cantidad:</span>
-                      <div style={{ fontWeight: 800, color: "var(--neon-blue)", fontSize: "1rem", marginTop: "2px" }}>{rental.cantidad} Unidades</div>
+                      <div style={{ fontWeight: 800, color: "var(--neon-blue)", fontSize: "1rem", marginTop: "2px" }}>{Number(rental.cantidad) || (Number(rental.cantidadSillas || 0) + Number(rental.cantidadMesas || 0)) || "—"} Unidades</div>
                     </div>
                     <div>
                       <span style={{ color: "var(--text-muted)", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.4px" }}>Valor Alquiler:</span>
-                      <div className="price-tag" style={{ color: "var(--neon-emerald)", fontWeight: 800, fontSize: "0.95rem", marginTop: "2px" }}>${Number(rental.precioTotal).toLocaleString()} COP</div>
+                      <div className="price-tag" style={{ color: "var(--neon-emerald)", fontWeight: 800, fontSize: "0.95rem", marginTop: "2px" }}>${precioTotal.toLocaleString("es-CO")} COP</div>
                     </div>
                     <div>
                       <span style={{ color: "var(--text-muted)", fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.4px" }}>Depósito Garantía:</span>
                       <div style={{ display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap", marginTop: "2px" }}>
                         <span className="price-tag" style={{ color: "var(--neon-amber)", fontWeight: 800, fontSize: "0.95rem" }}>
-                          ${Number(rental.deposito || 0).toLocaleString()} COP
+                          ${Math.max(0, Number(rental.deposito) || 0).toLocaleString("es-CO")} COP
                         </span>
                         {rental.estado === "devuelto" ? (
                           Number(rental.depositoMontoRetenido || 0) > 0 ? (
@@ -1105,7 +1115,7 @@ export default function RentalsView({
                   {/* Cronómetro y fechas */}
                   <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", display: "flex", flexDirection: "column", gap: "4px", marginBottom: "16px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                      <Calendar size={14} /> Salida: {startDate.toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+                      <Calendar size={14} /> Salida: {startDate.toLocaleString("es-CO", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
                     </div>
                     {alertInfo.elapsedText && (
                       <div style={{ 

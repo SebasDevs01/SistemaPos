@@ -12,7 +12,7 @@ import KeyboardModal from "./components/KeyboardModal";
 import LoginView from "./components/LoginView";
 import SplashScreen from "./components/SplashScreen";
 import ShiftBlockedModal from "./components/ShiftBlockedModal";
-import { isRentalOverdue } from "./utils/rentalUtils";
+import { isRentalOverdue, isValidRental } from "./utils/rentalUtils";
 
 // ─ Code-splitting: todas las vistas cargadas bajo demanda (incluyendo POS e Inventario)
 const PosView = lazy(() => import("./components/PosView"));
@@ -200,13 +200,15 @@ export default function App() {
   const [rentals, setRentals] = useState(() => {
     try {
       const cached = localStorage.getItem("pos_rentals");
-      return cached ? JSON.parse(cached) : [];
+      const parsed = cached ? JSON.parse(cached) : [];
+      return Array.isArray(parsed) ? parsed.filter(isValidRental) : [];
     } catch { return []; }
   });
   const [rentalHistory, setRentalHistory] = useState(() => {
     try {
       const cached = localStorage.getItem("pos_rentals_history");
-      return cached ? JSON.parse(cached) : [];
+      const parsed = cached ? JSON.parse(cached) : [];
+      return Array.isArray(parsed) ? parsed.filter(isValidRental) : [];
     } catch { return []; }
   });
   const [insurances, setInsurances] = useState(() => {
@@ -453,8 +455,8 @@ export default function App() {
         fetchSales(),
         fetchProducts()
       ]);
-      setRentals(rents || []);
-      if (loadedRentHist && loadedRentHist.length > 0) setRentalHistory(loadedRentHist);
+      setRentals((rents || []).filter(isValidRental));
+      if (loadedRentHist && loadedRentHist.length > 0) setRentalHistory(loadedRentHist.filter(isValidRental));
       setInsurances(inss || []);
       setActiveShift(shift || null);
       setShiftClosings(clsg || []);
@@ -490,12 +492,12 @@ export default function App() {
 
     // 4. Alquileres en tiempo real (creación, devolución o eliminación)
     const unsubRentals = subscribeToRentals((updatedRentals) => {
-      setRentals(updatedRentals);
+      setRentals((updatedRentals || []).filter(isValidRental));
     });
 
     // 4.1 Historial permanente indeleble de alquileres
     const unsubRentHist = subscribeToRentalHistory((updatedHist) => {
-      setRentalHistory(updatedHist);
+      setRentalHistory((updatedHist || []).filter(isValidRental));
     });
 
     // 5. Seguros Escolares en tiempo real
@@ -553,7 +555,7 @@ export default function App() {
         } else if (event.key === "pos_clients" && Array.isArray(event.data)) {
           setClients(event.data);
         } else if (event.key === "pos_rentals" && Array.isArray(event.data)) {
-          setRentals(event.data);
+          setRentals(event.data.filter(isValidRental));
         } else if (event.key === "pos_insurances" && Array.isArray(event.data)) {
           setInsurances(event.data);
         } else if (event.key === "pos_active_shift") {
